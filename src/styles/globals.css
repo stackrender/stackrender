@@ -1,0 +1,51 @@
+.react-flow__attribution {
+    display: none;
+}
+
+
+
+.text-editable {
+    @apply dark:group-hover:bg-slate-900 group-hover:bg-slate-100 group-hover:ring-[0.5px] rounded-md cursor-pointer;
+}
+
+
+.react-flow__node.selected {
+    transition: box-shadow 0.3s ease;
+    /* Add transition */
+   /* box-shadow: 0px 0px 15px 0px hsl(var(--heroui-secondary-50)), 0px 2px 30px 0px hsl(var(--heroui-secondary-50)), 0px 0px 1px 0px hsl(var(--heroui-secondary-50));
+*/
+}
+.noselect {
+    user-select: none;
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+/Edge */
+}
+
+
+
+
+.sidebar-item[data-active="true"] svg {
+    color :  hsl(var(--heroui-primary-900));
+
+}
+
+div[data-slot="input-wrapper"] {
+    outline : none ; 
+    border-width: 1px;
+    
+}
+
+div[data-slot="mainWrapper"] button[data-slot="trigger"] {
+    
+    outline : none ; 
+    border-width: 1px;
+}
+
+
+div[data-slot="content"] hr[role="separator"] { 
+    display:  none ;
+}
