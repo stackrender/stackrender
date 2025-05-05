@@ -6,6 +6,7 @@ import Table from "./table/table";
 import '@xyflow/react/dist/style.css';
 import { Relationship } from "./table/relationship";
 import DBController from "./db-controller/db-controller";
+import { useQuery } from "@powersync/react";
 
 interface DatabaseProps {
     initialTables?: TableType
@@ -172,6 +173,10 @@ const DatabasePage: React.FC<DatabaseProps> = ({ initialTables }) => {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
+    const { data  , isLoading , error ,  isFetching  } = useQuery('SELECT *  FROM data_types ;' );
+
+
+    console.log (data)
 
     const nodeTypes = useMemo(() => ({ table: Table }), []);
     const onConnect = useCallback((params: any) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
