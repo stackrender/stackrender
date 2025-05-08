@@ -1,24 +1,19 @@
-import { column, Schema, Table } from '@powersync/web';
-
-export const DATATYPE_TABLE = 'dataTypes';
-
-
-const data_types = new Table(
-  {
-    name: column.text,
-  },
-);
-
  
+import { DrizzleAppSchema, wrapPowerSyncWithDrizzle } from '@powersync/drizzle-driver';
+import { data_types } from './data-type-schema';
+import { tables, tablesRelations } from './table-schema';
+import { fields, fieldsRelations } from './field-schema';
 
-export const AppSchema = new Schema({
-  data_types,
- 
-});
+export const drizzleSchema = {
+  data_types , 
+  tables , 
+  fields , 
 
-export type Database = (typeof AppSchema)['types'];
-export type DataTypesRecord = Database['data_types'];
-// OR:
-// export type Todo = RowType<typeof todos>;
- 
 
+  // relationships 
+  tablesRelations , 
+  fieldsRelations 
+};
+
+// Infer the PowerSync schema from your Drizzle schema
+export const AppSchema = new DrizzleAppSchema(drizzleSchema);

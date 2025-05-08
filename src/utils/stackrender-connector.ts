@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { AbstractPowerSyncDatabase, PowerSyncBackendConnector } from '@powersync/web';
+import { AbstractPowerSyncDatabase, PowerSyncBackendConnector, UpdateType  } from '@powersync/web';
 
 export type DemoConfig = {
     backendUrl: string;
@@ -52,9 +52,9 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
     }
 
     async uploadData(database: AbstractPowerSyncDatabase): Promise<void> {
- 
+
         const transaction = await database.getNextCrudTransaction();
- 
+
         if (!transaction) {
             return;
         }
@@ -66,6 +66,10 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
         try {
             let batch: any[] = [];
             for (let operation of transaction.crud) {
+
+                if (operation.op != UpdateType.DELETE  && Object.keys(operation.opData as any).length == 0) 
+                    continue
+                
                 let payload = {
                     op: operation.op,
                     table: operation.table,
@@ -74,19 +78,20 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
                 };
                 batch.push(payload);
             }
+            if (batch.length > 0) {
 
-            const response = await fetch(`${this.config.backendUrl}/api/data`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ batch })
-            });
+                const response = await fetch(`${this.config.backendUrl}/api/data`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ batch })
+                });
 
-            if (!response.ok) {
-                throw new Error(`Received ${response.status} from /api/data: ${await response.text()}`);
+                if (!response.ok) {
+                    throw new Error(`Received ${response.status} from /api/data: ${await response.text()}`);
+                }
             }
-
             await transaction.complete(
                 import.meta.env.VITE_CHECKPOINT_MODE == CheckpointMode.CUSTOM
                     ? await this.getCheckpoint(this._clientId)
@@ -103,7 +108,7 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
      * when custom Write Checkpoints are enabled during build.
      */
     async getCheckpoint(client_id: string) {
-        
+
         const r = await fetch(`${this.config.backendUrl}/api/data/checkpoint`, {
             method: 'PUT',
             headers: {

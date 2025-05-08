@@ -36,7 +36,11 @@ export const en = {
                 many_to_many : "Many to Many" , 
             }  , 
             delete : "Delete" , 
-            
+            field_setting : "Field Setting" , 
+            table_actions : "Field Actions" , 
+            field_note : "Field note" , 
+            delete_field : "Delete Field" , 
+          
         }, 
         table : { 
             double_click : "Double click to edit"

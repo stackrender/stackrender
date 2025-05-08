@@ -1,12 +1,12 @@
-import { Table as TableType } from "@/lib/interfaces/table";
+ 
 import { addEdge, applyEdgeChanges, applyNodeChanges, Background, Controls, MiniMap, ReactFlow, useEdgesState, useNodesState, useReactFlow } from "@xyflow/react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import Table from "./table/table";
-
 import '@xyflow/react/dist/style.css';
 import { Relationship } from "./table/relationship";
-import DBController from "./db-controller/db-controller";
-import { useQuery } from "@powersync/react";
+import DBController from "./db-controller/db-controller"; 
+import { Table as TableType} from "@/lib/schemas/table-schema";
+ 
 
 interface DatabaseProps {
     initialTables?: TableType
@@ -173,18 +173,14 @@ const DatabasePage: React.FC<DatabaseProps> = ({ initialTables }) => {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-    const { data  , isLoading , error ,  isFetching  } = useQuery('SELECT *  FROM data_types ;' );
-
-
-    console.log (data)
-
+ 
     const nodeTypes = useMemo(() => ({ table: Table }), []);
     const onConnect = useCallback((params: any) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
 
     return (
         <div className="w-full h-screen flex">
-            <DBController/>
+            <DBController />
             <ReactFlow
                 nodes={nodes}
                 edges={edges}

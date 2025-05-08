@@ -1,0 +1,36 @@
+import { sqliteTable, text, real, integer } from 'drizzle-orm/sqlite-core';
+import { tables } from './table-schema';
+import { data_types } from './data-type-schema';
+import { InferInsertModel, InferSelectModel, relations } from 'drizzle-orm';
+
+
+export const fields = sqliteTable("fields", {
+    id: text("id").primaryKey().notNull(),
+    tableId: text("tableId")
+        .notNull()
+        .references(() => tables.id, { onDelete: "cascade" }),
+
+    name: text("name").notNull(),
+    isPrimary: integer("isPrimary", { mode: "boolean" }),
+    unique: integer("unique", { mode: "boolean" }),
+    nullable: integer("nullable", { mode: "boolean" }),
+    defaultValue: text("defaultValue"),
+    note: text("note"),
+    typeId: text("typeId").references(() => data_types.id, { onDelete: "cascade" }),
+    sequence: integer("sequence").default(0),
+});
+
+export const fieldsRelations = relations(fields, ({ one }) => ({
+    table: one(tables, {
+        fields: [fields.tableId],
+        references: [tables.id],
+    }),
+}));
+
+
+export interface FieldType extends InferSelectModel<typeof fields> {
+    sequence: number
+};
+
+
+export interface FieldInsertType extends InferInsertModel<typeof fields> { }; 
