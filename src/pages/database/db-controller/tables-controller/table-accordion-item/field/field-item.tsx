@@ -63,7 +63,6 @@ const FieldItem: React.FC<Props> = ({ field }) => {
         } as FieldType);
     }
 
-
     const toggleNullable = (nullable: boolean) => {
         editField({
             id: field.id,

@@ -50,6 +50,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
     return (
         <div className="w-full">
             <Accordion
+                isCompact
                 variant={"light"} selectionMode="multiple" selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys as any}>
                 <AccordionItem key="fields" aria-label="Fields"
                     indicator={({ isOpen }) => (
@@ -92,7 +93,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                         </div>
                     )}
                     classNames={{
-                        trigger: "hover:bg-default"
+                        trigger: "hover:bg-default h-6"
                     }}
                     subtitle={
                         <div className="flex gap-2 items-center font-medium p-1 w-full hover:underline text-slate-500 hover:text-slate-600 transition-all duration-200">
@@ -114,7 +115,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                         </div>
                     )}
                     classNames={{
-                        trigger: "hover:bg-default"
+                        trigger: "hover:bg-default h-6"
                     }}
                     subtitle={
                         <div className="flex gap-2 items-center font-medium p-1 w-full hover:underline text-slate-500 hover:text-slate-600 transition-all duration-200">

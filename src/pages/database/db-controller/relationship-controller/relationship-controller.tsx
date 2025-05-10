@@ -1,10 +1,16 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip"
-import { Accordion, AccordionItem, Button, Input } from "@heroui/react"
+import { Accordion, AccordionItem, Button, Input, useDisclosure } from "@heroui/react"
 import { Code, List, ListCollapse, Table, Workflow } from "lucide-react"
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RelationshipAccordionHeader from "./relationship-accordion-item/relationship-accordion-header";
 import RelationshipAccordionBody from "./relationship-accordion-item/relationship-accordion-body";
+import Modal from "@/components/modal/modal";
+import CreateRelationshipForm from "./create-relationship-form/create-relationship-form";
+import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
+import { useDatabase } from "@/providers/database-provider/database-provider";
+import { v4 } from "uuid";
+
 
 
 
@@ -14,10 +20,26 @@ interface Props {
 
 
 const RelationshipController: React.FC<Props> = ({ }) => {
-    const [items, setItems] = useState(["Item 1", "Item 2", "Item 3", "Item 4"]);
-
-
+    const [relationship, setRelationship] = useState<RelationshipInsertType | undefined>(undefined);
+    const [isValid, setIsValid] = useState<boolean>(false);
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { createRelationship, relationships } = useDatabase();
     const { t } = useTranslation();
+    const [selectedRelationship, setSelectedRelationship] = useState(new Set([]));
+
+    const addRelationship = useCallback(() => {
+
+        const newRelationshipId: string = v4();
+
+        createRelationship({
+            id: newRelationshipId,
+            ...relationship,
+            createdAt: new Date().toISOString()
+        } as RelationshipInsertType);
+
+        setSelectedRelationship(new Set([newRelationshipId]) as any);
+    }, [relationship]);
+
 
     return (
         <div className="w-full h-full flex flex-col gap-2">
@@ -34,6 +56,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                                         //setShowDBML((value) => !value)
                                         console.log("hello world ")
                                     }
+
                                 >
                                     <ListCollapse className="size-4" />
                                 </Button>
@@ -62,6 +85,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                     variant="solid"
                     radius="sm"
                     color="primary"
+                    onPressEnd={onOpen}
                     startContent={
                         <Workflow className="h-4 w-4 " />
                     }
@@ -75,26 +99,44 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                 <Accordion
                     hideIndicator
                     dividerProps={{
-                        className : "bg-default-200"
+                        className: "bg-default-200"
                     }}
+                    isCompact
+                    selectedKeys={selectedRelationship}
+                    onSelectionChange={setSelectedRelationship as any}
                 >
-                    {items.map(item => (
+                    {relationships.map((relationship: RelationshipType) => (
                         <AccordionItem
-                            key={item}
-                            aria-label={item}
+                            key={relationship.id}
+                            aria-label={relationship.id}
                             classNames={{
-                                trigger: "w-full hover:bg-default transition-all duration-200",
-                                base: "rounded-md  p-0 overflow-hidden",
+                                trigger: "w-full hover:bg-default transition-all duration-200 h-12",
+                                base: "rounded-md p-0 overflow-hidden",
                             }}
                             subtitle={
-                                <RelationshipAccordionHeader/>
+                                <RelationshipAccordionHeader relationship={relationship} />
                             }
                         >
-                            <RelationshipAccordionBody/>
+                            <RelationshipAccordionBody relationship={relationship} />
                         </AccordionItem>
                     ))}
                 </Accordion>
             </div>
+            <Modal
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                title={t("db_controller.create_relationship")}
+                actionName={t("modal.create")}
+                className="min-w-[520px]"
+                isDisabled={!isValid}
+                actionHandler={addRelationship}
+
+            >
+                <CreateRelationshipForm
+                    onRelationshipChanges={setRelationship}
+                    onValidationChanges={setIsValid}
+                />
+            </Modal>
         </div>
     )
 }

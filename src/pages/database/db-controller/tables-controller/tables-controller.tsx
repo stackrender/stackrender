@@ -101,13 +101,15 @@ const TablesController: React.FC<Props> = ({ }) => {
                     variant="splitted"
                     selectedKeys={selectedTable}
                     onSelectionChange={setSelectedTable as any}
+                    isCompact
+                    
                 >
                     {tables.map((table: TableType) => (
                         <AccordionItem
                             key={table.id}
                             aria-label={table.name}
                             classNames={{
-                                trigger: "w-full hover:bg-default transition-all duration-200",
+                                trigger: "w-full h-12 hover:bg-default transition-all duration-200",
                                 base: "rounded-md shadow p-0 overflow-hidden",
                             }}
                             subtitle={

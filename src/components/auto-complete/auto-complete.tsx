@@ -4,18 +4,18 @@ import { Key } from "react";
 
 interface AutocompleteProps {
 
-    items: any[]
+    items?: any[]
     label?: string,
-    defaultSelection: string | undefined
+    defaultSelection?: string | undefined
     onSelectionChange?: (item: any) => void,
     placeholder?: string
+    isDisabled?: boolean
+    selectedItem?: Key 
 }
 
 
 
-const Autocomplete: React.FC<AutocompleteProps> = ({ items, label = "name", onSelectionChange, defaultSelection, placeholder }) => {
-
-
+const Autocomplete: React.FC<AutocompleteProps> = ({ items, label = "name", onSelectionChange, defaultSelection, placeholder, isDisabled, selectedItem }) => {
 
     const onItemChange = (item: Key | null) => {
         onSelectionChange && onSelectionChange(item);
@@ -23,18 +23,21 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ items, label = "name", onSe
 
     return (
         <HeroUiAutocomplete
+            radius="sm"
+            isDisabled={isDisabled}
             className="w-full"
-            defaultItems={items}
+            defaultItems={items || []}
             size="sm"
             onSelectionChange={onItemChange}
             defaultSelectedKey={defaultSelection as any}
             variant="bordered"
             aria-label={placeholder}
             placeholder={placeholder}
+            selectedKey={selectedItem as any }
         >
             {(item: any) => <AutocompleteItem key={item.id}>{item[label]}</AutocompleteItem>}
         </HeroUiAutocomplete>
     )
 }
 
-export default Autocomplete ; 
+export default Autocomplete; 

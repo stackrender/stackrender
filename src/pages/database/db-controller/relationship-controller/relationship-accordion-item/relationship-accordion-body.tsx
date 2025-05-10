@@ -1,45 +1,59 @@
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
-import { Button, Select, SelectItem } from "@heroui/react";
+import { Cardinality, RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
+import { useDatabase } from "@/providers/database-provider/database-provider";
+import { Button, Select, SelectItem, SharedSelection } from "@heroui/react";
 import { ChevronsLeftRightEllipsis, FileMinus2, FileOutput, SquareArrowLeft, SquareArrowRight, Trash2 } from "lucide-react";
+import { Key, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 
 
-interface Props {
-
+interface RelationshipAccordionBodyProps {
+    relationship: RelationshipType
 }
 
 
-export const cardinalities = [
-    { key: "one2one", label: "One to One" },
-    { key: "one2many", label: "One to Many" },
-    { key: "many2one", label: "Many to One" },
-    { key: "many2many", label: "Many 2 many" },
-
-];
 
 
 
-const RelationshipAccordionBody: React.FC<Props> = ({ }) => {
+const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ relationship }) => {
+    const [cardinality, setCardinality] = useState(new Set([relationship.cardinality]));
+    const { editRelationship, deleteRelationship } = useDatabase();
 
-    const {t } =  useTranslation() ; 
+    const { t } = useTranslation();
+
+
+    const changeCardinality = (keys: SharedSelection) => {
+
+        if (keys.anchorKey != relationship.cardinality)
+            editRelationship({
+                id: relationship.id,
+                cardinality: keys.anchorKey as Cardinality
+            } as RelationshipInsertType);
+
+        setCardinality(keys as any);
+    }
+    const removeRelationship = () => {
+        deleteRelationship(relationship.id);
+    }
     return (
         <div className="w-full p-2 space-y-4">
             <div className="flex">
                 <div className="w-full space-y-1">
                     <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm">
                         <FileOutput className="size-4" />
-                        {t("db_controller.primary_table")}
+                        {t("db_controller.source_table")}
                     </label>
                     <Tooltip>
                         <TooltipTrigger>
                             <span className="truncate text-left text-sm">
-                                users(id)
+                                {relationship.sourceTable.name}({relationship.sourceField.name})
                             </span>
                         </TooltipTrigger>
                         <TooltipContent>
-                            users(id)
+
+                            {relationship.sourceTable.name}({relationship.sourceField.name})
                         </TooltipContent>
                     </Tooltip>
                 </div>
@@ -47,18 +61,18 @@ const RelationshipAccordionBody: React.FC<Props> = ({ }) => {
                 <div className="w-full space-y-1">
                     <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm">
                         <FileMinus2 className="size-4" />
-                        {t("db_controller.referenced_table")}
+                        {t("db_controller.target_table")}
 
                     </label>
 
                     <Tooltip>
                         <TooltipTrigger>
                             <span className="truncate text-left text-sm ">
-                                products(user_id)
+                                {relationship.targetTable.name}({relationship.targetField.name})
                             </span>
                         </TooltipTrigger>
                         <TooltipContent>
-                            products(user_id)
+                            {relationship.targetTable.name}({relationship.targetField.name})
                         </TooltipContent>
                     </Tooltip>
                 </div>
@@ -72,16 +86,14 @@ const RelationshipAccordionBody: React.FC<Props> = ({ }) => {
                     className="w-full"
                     size="sm"
                     variant="bordered"
+                    selectedKeys={cardinality}
+                    onSelectionChange={changeCardinality}
+
                 >
-                        <SelectItem key={"one2one"}>{t("db_controller.cardinality.one_to_one")}</SelectItem>
-
-                        <SelectItem key={"one2many"}>{t("db_controller.cardinality.one_to_many")}</SelectItem>
-
-                        <SelectItem key={"many2one"}>{t("db_controller.cardinality.many_to_one")}</SelectItem>
-
-                        <SelectItem key={"many2many"}>{t("db_controller.cardinality.many_to_many")}</SelectItem>
-
-                   
+                    <SelectItem key={Cardinality.one_to_one}>{t("db_controller.cardinality.one_to_one")}</SelectItem>
+                    <SelectItem key={Cardinality.one_to_many}>{t("db_controller.cardinality.one_to_many")}</SelectItem>
+                    <SelectItem key={Cardinality.many_to_one}>{t("db_controller.cardinality.many_to_one")}</SelectItem>
+                    <SelectItem key={Cardinality.many_to_many}>{t("db_controller.cardinality.many_to_many")}</SelectItem>
                 </Select>
             </div>
             <div className="flex justify-center">
@@ -90,6 +102,7 @@ const RelationshipAccordionBody: React.FC<Props> = ({ }) => {
                     className="bg-transparent text-xs"
                     radius="sm"
                     size="sm"
+                    onPressEnd={removeRelationship}
                 >
                     <Trash2 className="mr-1 size-3.5 text-danger" />
                     <div className="text-danger font-semibold">

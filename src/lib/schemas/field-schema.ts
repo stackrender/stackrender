@@ -2,6 +2,7 @@ import { sqliteTable, text, real, integer } from 'drizzle-orm/sqlite-core';
 import { tables } from './table-schema';
 import { data_types } from './data-type-schema';
 import { InferInsertModel, InferSelectModel, relations } from 'drizzle-orm';
+import { relationships } from './relationship-schema';
 
 
 export const fields = sqliteTable("fields", {
@@ -24,7 +25,11 @@ export const fieldsRelations = relations(fields, ({ one }) => ({
     table: one(tables, {
         fields: [fields.tableId],
         references: [tables.id],
+
     }),
+    sourceRelations: one(relationships),
+    targetRelations: one(relationships),
+
 }));
 
 

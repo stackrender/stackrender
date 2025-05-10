@@ -49,3 +49,8 @@ div[data-slot="mainWrapper"] button[data-slot="trigger"] {
 div[data-slot="content"] hr[role="separator"] { 
     display:  none ;
 }
+
+
+button[data-slot="trogger"] {
+    background-color:  red !important;
+}

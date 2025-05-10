@@ -8,6 +8,7 @@ import { toCompilableQuery } from "@powersync/drizzle-driver";
 import { asc, desc, eq, sql } from "drizzle-orm";
 import { QueryResult } from "@powersync/web";
 import { FieldInsertType, fields, FieldType } from "@/lib/schemas/field-schema";
+import { RelationshipInsertType, relationships, RelationshipType } from "@/lib/schemas/relationship-schema";
 
 interface Props { children: React.ReactNode }
 
@@ -26,6 +27,18 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         })
     ));
 
+
+    const { data: relationshipsList } = useQuery(toCompilableQuery(
+        db.query.relationships.findMany({
+            with: {
+                sourceTable: true,
+                targetTable: true,
+                sourceField: true,
+                targetField: true,
+            },
+            orderBy: desc(tables.createdAt)
+        })
+    ));
     const { data: data_types } = useQuery(toCompilableQuery(
         db.query.data_types.findMany()
     ));
@@ -52,24 +65,32 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }
 
     const orderTableFields = async (fields: FieldType[]): Promise<QueryResult> => {
-
         const caseStatements = fields
             .map((field: FieldType, index: number) => `WHEN '${field.id}' THEN ${index}`)
             .join('\n  ');
-
         const ids = fields.map(u => `'${u.id}'`).join(',\n  ');
-
         const sql = `
-      UPDATE fields
-      SET sequence = CASE id
-        ${caseStatements}
-      END
-      WHERE id IN (
-        ${ids}
-      );`;
-
+            UPDATE fields
+            SET sequence = CASE id
+                ${caseStatements}
+            END
+            WHERE id IN (
+                ${ids}
+            );`;
         return await powerSyncDb.execute(sql)
     }
+
+    const createRelationship = async (relationship: RelationshipInsertType): Promise<QueryResult> => {
+        return await db.insert(relationships).values(relationship);
+    }
+    const editRelationship = async (relationship: RelationshipInsertType): Promise<QueryResult> => {
+        return await db.update(relationships).set(relationship).where(eq(relationships.id, relationship.id))
+    }
+    const deleteRelationship = async (id: string): Promise<QueryResult> => {
+        return await db.delete(relationships).where(eq(relationships.id, id));
+    }
+
+
     return (
 
         <DatabaseContext.Provider value={{
@@ -81,7 +102,13 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             editField,
             deleteField,
             orderTableFields,
+
+            createRelationship,
+            editRelationship,
+            deleteRelationship,
+
             tables: tablesList as TableType[],
+            relationships : relationshipsList  as RelationshipType[] , 
             data_types
         }}>
             {children}
