@@ -12,6 +12,9 @@ export const en = {
             close: "Close",
             create: "Create"
         },
+        color_picker : { 
+            default_color : "Default color"
+        } , 
         db_controller: {
             filter: "Filter",
             add_table: "Add Table",
@@ -53,6 +56,8 @@ export const en = {
             delete: "Delete",
             field_setting: "Field Setting",
             table_actions: "Field Actions",
+            actions : "Actions" , 
+            
             field_note: "Field note",
             delete_field: "Delete Field",
 

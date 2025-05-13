@@ -1,22 +1,26 @@
 import { colorOptions } from "@/lib/colors";
 import { Button, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
+import { Slash } from "lucide-react";
 import { useCallback, useState } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip/tooltip";
+import { useTranslation } from "react-i18next";
 
 interface ColorPickerProps {
     defaultColor?: string;
-    onChange?: (color: string) => void
+    onChange?: (color: string | undefined) => void
 }
 
 
 
 const ColorPicker: React.FC<ColorPickerProps> = ({ defaultColor, onChange }) => {
-    const [color , setColor] = useState<string>( defaultColor as string ) ; 
+    const [color, setColor] = useState<string | undefined>(defaultColor as string);
     const [isOpen, setIsOpen] = useState(false);
+    const { t } = useTranslation();
 
-    const onSelect = useCallback((color: string) => {
+    const onSelect = useCallback((color: string | undefined) => {
         setIsOpen(false);
-        onChange && onChange(color) ; 
-        setColor ( color)
+        onChange && onChange(color);
+        setColor(color)
     }, [onChange])
 
     return (
@@ -26,7 +30,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ defaultColor, onChange }) => 
                     className="size-8 cursor-pointer rounded-md border-2 border-muted transition-shadow hover:shadow-md"
                     isIconOnly
                     style={{
-                        backgroundColor : color 
+                        backgroundColor: color ? color : undefined
                     }}
                 >
 
@@ -46,6 +50,26 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ defaultColor, onChange }) => 
 
                         </div>
                     ))}
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <div
+                                key={undefined}
+                                className="size-8 cursor-pointer rounded-md border-2 border-muted transition-shadow hover:shadow-md"
+                                style={{
+                                    backgroundColor: "white"
+                                }}
+                                onClick={() => onSelect(undefined)}
+                            >
+                                <Slash className="size-full text-danger-500" />
+
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            {t("color_picker.default_color")}
+                        </TooltipContent>
+                    </Tooltip>
+
+
                 </div>
             </PopoverContent>
         </Popover>

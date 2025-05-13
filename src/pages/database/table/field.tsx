@@ -1,54 +1,105 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
-import { Field as FieldType } from "@/lib/interfaces/field";
+import { FieldType } from "@/lib/schemas/field-schema";
+import { useDatabase } from "@/providers/database-provider/database-provider";
 import { Button, cn, select } from "@heroui/react";
 import { Handle, Position, useConnection } from "@xyflow/react";
-import { Check } from "lucide-react";
-import React, { useState } from "react";
+import { Check, KeyRound, Trash, Trash2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 
 
 interface Props {
     field: FieldType,
-    showHandles?: boolean
+    showHandles?: boolean,
+    highlight?: boolean
 }
 
 
+export const LEFT_PREFIX = "left_";
+export const RIGHT_PREFIX = "right_";
+export const TARGET_PREFIX = "target_";
 
-const Field: React.FC<Props> = ({ field, showHandles }) => {
+
+const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
 
     const [editMode, setEditMode] = useState<boolean>(false);
+    const { deleteField, editField } = useDatabase();
+    const [fieldName, setFieldName] = useState<string>(field.name);
+
+
+    useEffect(() => {
+        setFieldName(field.name);
+    }, [field.name]);
+
+
+
+    const removeField = () => {
+        deleteField(field.id)
+    }
+
+
+    const saveFieldName = () => {
+        editField({
+            id: field.id,
+            name: fieldName
+        } as FieldType);
+        setEditMode(false);
+    }
 
     const connection = useConnection();
- 
+    console.log(highlight)
     return (
-        <div className="group relative flex h-8 items-center justify-between gap-1 border-t px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out ">
+        <div className={cn(
+            "group relative flex h-8 items-center justify-between gap-1 border-t border-default px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out" , 
+            highlight ? "bg-primary/5" : ""
+        )}>
             {
                 !editMode &&
                 <>
                     <label
-                        className=" truncate  text-sm "
+                        className={cn(
+                            "truncate  text-xs text-slate-900",
+                            field.isPrimary ? "font-semibold" : ""
+                        )}
                         onDoubleClick={() => setEditMode(true)}
                     >
                         {field.name}
                     </label>
-                    <span className="content-center truncate text-right text-xs text-muted-foreground text-default-600" >
-                        {field.type.name.split(' ')[0]}
+                    <span className={cn("content-center truncate flex items-center h-full gap-1 text-right text-xs text-default-600 group-hover:hidden font-semibold text-icon",
+                        field.isPrimary ? "font-semibold text-slate-700" : ""
+                    )}>
+                        {field.isPrimary && <KeyRound className="size-3" />}  {field.type?.name?.split(' ')[0]}{field.nullable ? "?" : ""}
                     </span>
+
+                    <Button
+                        radius="none"
+                        isIconOnly
+                        variant="faded"
+                        size="sm"
+                        color="danger"
+                        className=" bg-transparent border-none hidden group-hover:flex "
+                        onPressEnd={removeField}
+
+                    >
+                        <Trash2 className="size-3" />
+                    </Button>
+
                 </>
             }
             {
                 editMode &&
                 <>
                     <input
-                        //                    ref={inputRef}
-                        onBlur={() => setEditMode(false)}
+
+                        onBlur={saveFieldName}
                         placeholder={field.name}
                         autoFocus
                         type="text"
-                        //  value={fieldName}
+                        value={fieldName}
                         onClick={(e) => e.stopPropagation()}
-                        //                        onChange={(e) => setFieldName(e.target.value)}
-                        className="rounded-md px-2 py-0.5 w-full border-[0.5px] border-blue-400  bg-slate-100 focus-visible:ring-0 dark:bg-slate-900  text-sm "
+                        onChange={(e) => setFieldName(e.target.value)}
+
+                        className="rounded-md outline-none px-2 py-0.5 w-full border-[0.5px] border-primary-700  bg-slate-100 focus-visible:ring-0 dark:bg-slate-900  text-sm "
 
                     />
                     <Button
@@ -56,12 +107,13 @@ const Field: React.FC<Props> = ({ field, showHandles }) => {
                         className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                         size="sm"
                         isIconOnly
-                        onPress={() => setEditMode(false)}
+                        onPress={saveFieldName}
                     >
-                        <Check className="size-4" />
+                        <Check className="size-3" />
                     </Button>
                 </>
             }
+
             <div className={
                 cn(
                     "absolute w-full left-0 ",
@@ -70,16 +122,14 @@ const Field: React.FC<Props> = ({ field, showHandles }) => {
                 <Handle
                     type="source"
                     position={Position.Left}
-                    id={"left-"+ field.id}
-                    className="w-4 h-4 border-3 bg-primary"
+                    id={LEFT_PREFIX + field.id}
+                    className="w-4 h-4 border-4 bg-primary"
                 />
                 <Handle
                     type="source"
                     position={Position.Right}
-                    className="w-4 h-4 border-3 bg-primary"
-                    
-                    id={"right-"+ field.id}
-                    
+                    className="w-4 h-4 border-4 bg-primary"
+                    id={RIGHT_PREFIX + field.id}
                 />
             </div>
             {
@@ -89,7 +139,7 @@ const Field: React.FC<Props> = ({ field, showHandles }) => {
                         !connection.inProgress ? "invisible" : "visible"
                     )} >
                     <Handle
-                        id={`${"target"}_${field.id}`}
+                        id={`${TARGET_PREFIX}${field.id}`}
                         className={
                             true
                                 ? '!absolute !left-0 !top-0 !h-full !w-full !transform-none !rounded-none !border-none !opacity-0'

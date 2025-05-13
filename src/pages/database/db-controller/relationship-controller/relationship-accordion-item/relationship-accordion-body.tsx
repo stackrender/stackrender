@@ -37,6 +37,9 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
     const removeRelationship = () => {
         deleteRelationship(relationship.id);
     }
+
+    if (!relationship.sourceTable || !relationship.targetTable) 
+        return;
     return (
         <div className="w-full p-2 space-y-4">
             <div className="flex">
@@ -48,12 +51,11 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
                     <Tooltip>
                         <TooltipTrigger>
                             <span className="truncate text-left text-sm">
-                                {relationship.sourceTable.name}({relationship.sourceField.name})
+                                {relationship.sourceTable?.name}({relationship.sourceField?.name})
                             </span>
                         </TooltipTrigger>
                         <TooltipContent>
-
-                            {relationship.sourceTable.name}({relationship.sourceField.name})
+                            {relationship.sourceTable?.name}({relationship.sourceField?.name})
                         </TooltipContent>
                     </Tooltip>
                 </div>
@@ -68,11 +70,11 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
                     <Tooltip>
                         <TooltipTrigger>
                             <span className="truncate text-left text-sm ">
-                                {relationship.targetTable.name}({relationship.targetField.name})
+                                {relationship.targetTable?.name}({relationship.targetField?.name})
                             </span>
                         </TooltipTrigger>
                         <TooltipContent>
-                            {relationship.targetTable.name}({relationship.targetField.name})
+                            {relationship.targetTable?.name}({relationship.targetField?.name})
                         </TooltipContent>
                     </Tooltip>
                 </div>

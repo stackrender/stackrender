@@ -19,17 +19,17 @@ export default {
             foreground: 'hsl(240 5.3% 26.1%)',
           },
           primary: {
-            DEFAULT: "#961FFE",
-            50: '#961FFE0D', // 5% opacity
-            100: '#961FFE1A', // 10% opacity
-            200: '#961FFE33', // 20% opacity
-            300: '#961FFE4D', // 30% opacity
-            400: '#961FFE66', // 40% opacity
-            500: '#961FFE80', // 50% opacity
-            600: '#961FFE99', // 60% opacity
-            700: '#961FFEB3', // 70% opacity
+            DEFAULT: "#9822ff",
+            50: '#9822ff0D', // 5% opacity
+            100: '#9822ff1A', // 10% opacity
+            200: '#9822ff33', // 20% opacity
+            300: '#9822ff4D', // 30% opacity
+            400: '#9822ff66', // 40% opacity
+            500: '#9822ff80', // 50% opacity
+            600: '#9822ff99', // 60% opacity
+            700: '#9822ffB3', // 70% opacity
             800: '#961FFFCC', // 80% opacity
-            900: '#961FFEE6', // 90% opacity
+            900: '#9822ffE6', // 90% opacity
           },
         },
       },
@@ -50,17 +50,17 @@ export default {
           } , 
 
           primary: {
-            DEFAULT: "#961FFE",
-            50: '#961FFE0D', // 5% opacity
-            100: '#961FFE1A', // 10% opacity
-            200: '#961FFE33', // 20% opacity
-            300: '#961FFE4D', // 30% opacity
-            400: '#961FFE66', // 40% opacity
-            500: '#961FFE80', // 50% opacity
-            600: '#961FFE99', // 60% opacity
-            700: '#961FFEB3', // 70% opacity
+            DEFAULT: "#9822ff",
+            50: '#9822ff0D', // 5% opacity
+            100: '#9822ff1A', // 10% opacity
+            200: '#9822ff33', // 20% opacity
+            300: '#9822ff4D', // 30% opacity
+            400: '#9822ff66', // 40% opacity
+            500: '#9822ff80', // 50% opacity
+            600: '#9822ff99', // 60% opacity
+            700: '#9822ffB3', // 70% opacity
             800: '#961FFFCC', // 80% opacity
-            900: '#961FFEE6', // 90% opacity
+            900: '#9822ffE6', // 90% opacity
           },
         },
       },

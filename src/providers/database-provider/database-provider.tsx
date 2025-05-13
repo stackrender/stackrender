@@ -5,7 +5,7 @@ import { db, powerSyncDb } from "../sync-provider/sync-provider";
 import { TableInsertType, tables, TableType } from "@/lib/schemas/table-schema";
 import { useQuery } from "@powersync/react";
 import { toCompilableQuery } from "@powersync/drizzle-driver";
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq, inArray, sql } from "drizzle-orm";
 import { QueryResult } from "@powersync/web";
 import { FieldInsertType, fields, FieldType } from "@/lib/schemas/field-schema";
 import { RelationshipInsertType, relationships, RelationshipType } from "@/lib/schemas/relationship-schema";
@@ -16,11 +16,14 @@ interface Props { children: React.ReactNode }
 const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
 
-    const { data: tablesList, isLoading, error } = useQuery(toCompilableQuery(
+    const { data: tablesList } = useQuery(toCompilableQuery(
         db.query.tables.findMany({
             with: {
                 fields: {
                     orderBy: asc(fields.sequence),
+                    with: {
+                        type: true
+                    }
                 }
             },
             orderBy: desc(tables.createdAt)
@@ -52,6 +55,9 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }
     const deleteTable = async (id: string): Promise<QueryResult> => {
         return await db.delete(tables).where(eq(tables.id, id));
+    }
+    const deleteMultiTables = async (ids: string[]): Promise<QueryResult> => {
+        return await db.delete(tables).where(inArray(tables.id, ids ))
     }
 
     const createField = async (field: FieldInsertType): Promise<QueryResult> => {
@@ -90,13 +96,44 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         return await db.delete(relationships).where(eq(relationships.id, id));
     }
 
+    const deleteMultiRelationships = async (ids: string[]): Promise<QueryResult> => {
+        return await db.delete(relationships).where(inArray(relationships.id, ids ))
+    }
 
+    const updateTablePositions = async (tables: TableInsertType[]): Promise<QueryResult> => {
+
+        const posXCases = tables
+            .map((table: TableInsertType) => `WHEN '${table.id}' THEN ${table.posX}`)
+            .join('\n  ');
+
+        const posYCases = tables
+            .map((table: TableInsertType) => `WHEN '${table.id}' THEN ${table.posY}`)
+            .join('\n  ');
+
+        const ids = tables.map((table: TableInsertType) => `'${table.id}'`).join(',\n  ');
+
+        const sql = `
+            UPDATE tables
+            SET 
+            posX = CASE id
+                ${posXCases}
+            END,
+            posY = CASE id
+                ${posYCases}
+            END
+            WHERE id IN (
+            ${ids}
+        );`;
+        return await powerSyncDb.execute(sql);
+    }
     return (
 
         <DatabaseContext.Provider value={{
             createTable,
             editTable,
             deleteTable,
+            updateTablePositions,
+            deleteMultiTables , 
 
             createField,
             editField,
@@ -106,9 +143,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             createRelationship,
             editRelationship,
             deleteRelationship,
+            deleteMultiRelationships ,
 
             tables: tablesList as TableType[],
-            relationships : relationshipsList  as RelationshipType[] , 
+            relationships: relationshipsList as RelationshipType[],
             data_types
         }}>
             {children}

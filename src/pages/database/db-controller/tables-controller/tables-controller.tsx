@@ -28,7 +28,6 @@ const TablesController: React.FC<Props> = ({ }) => {
         await createTable({
             id: newTableId,
             name: `table_${tables.length + 1}`,
-            color: randomColor(),
             createdAt: new Date().toISOString()
         });
 

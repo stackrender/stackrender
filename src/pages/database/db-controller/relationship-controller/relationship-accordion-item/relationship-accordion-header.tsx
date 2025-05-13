@@ -1,9 +1,8 @@
-import { useRelationshipName } from "@/components/hooks/use-relationship-name";
-import { randomColor } from "@/lib/colors";
+import { useRelationshipName } from "@/hooks/use-relationship-name";
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
-import { Button, cn, Input } from "@heroui/react";
-import { Check, ChevronRight, EllipsisVertical, Focus, Pencil } from "lucide-react";
+import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
+import { Check, ChevronRight, EllipsisVertical, Focus, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -19,8 +18,9 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
 
     const [editMode, setEditMode] = useState<boolean>(false);
     const { name: defaultName } = useRelationshipName(relationship);
-    const { editRelationship } = useDatabase();
-
+    const { editRelationship, deleteRelationship } = useDatabase();
+    const { t } = useTranslation();
+    const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
     const [name, setName] = useState<string>(relationship.name ? relationship.name : defaultName)
 
 
@@ -33,6 +33,11 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
         setEditMode(false);
     }
 
+    const onDeleteRelationship = () => {
+         
+        deleteRelationship(relationship.id);
+        setPopOverOpen(false);
+    }
     return (
         <div className="group w-full flex h-12 gap-1  flex p-2 items-center" >
             <div className={cn(
@@ -92,13 +97,40 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                             <Pencil className="size-4 text-icon" />
                         </Button>
                     </div>
-                    <Button
-                        size="sm"
-                        isIconOnly
-                        variant="light"
-                    >
-                        <EllipsisVertical className="size-4 text-slate-500" />
-                    </Button>
+
+
+
+                    <Popover placement="bottom" radius="sm" shadow="sm" showArrow isOpen={popOverOpen} onOpenChange={setPopOverOpen}>
+                        <PopoverTrigger>
+                            <Button
+                                size="sm"
+                                isIconOnly
+                                variant="light"
+                            >
+                                <EllipsisVertical className="size-4 text-slate-500" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[160px]" >
+                            <div className="w-full flex flex-col gap-2 ">
+                                <h3 className="font-semibold text-sm text-gray p-2">
+                                    {t("db_controller.actions")}
+                                </h3>
+                            </div>
+                            <hr className="text-default-200" />
+                            <Listbox aria-label="Actions" className="p-0 pb-1" >
+
+                                <ListboxItem
+                                    key="delete"
+                                    className="text-danger"
+                                    color="danger"
+                                    onPressEnd={onDeleteRelationship}
+                                    endContent={<Trash className="size-4" />}
+                                >
+                                    {t("db_controller.delete")}
+                                </ListboxItem>
+                            </Listbox>
+                        </PopoverContent>
+                    </Popover>
                 </>
             }
         </div>

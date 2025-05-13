@@ -1,8 +1,8 @@
-import { Table as TableType } from "@/lib/interfaces/table";
 
-import { Handle, Node, NodeProps, NodeResizer, Position } from "@xyflow/react";
 
-import React, { useCallback, useState } from 'react';
+import { Edge, Handle, Node, NodeProps, NodeResizer, Position, useReactFlow, useStore } from "@xyflow/react";
+
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Card, CardBody, CardHeader, cn, Divider, Input } from "@heroui/react";
 import {
     ChevronsLeftRight,
@@ -16,10 +16,16 @@ import {
     SquarePlus,
     SquareMinus,
     Divide,
+    Focus,
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
-import { Field } from "@/lib/interfaces/field";
+
 import FieldComponent from "./field";
+import { FieldType } from "@/lib/schemas/field-schema";
+import { TableType } from "@/lib/schemas/table-schema";
+import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useTranslation } from "react-i18next";
+import { RelationshipType } from "@/lib/schemas/relationship-schema";
 
 
 export const MAX_TABLE_SIZE = 450;
@@ -38,40 +44,64 @@ const Table: React.FC<NodeProps<TableProps>> = React.memo(({
     id,
     data: { table, },
 }) => {
-    const [editMode, setEditMode] = useState<boolean>(false);
 
- 
+    const [editMode, setEditMode] = useState<boolean>(false);
+    const [tableName, setTableName] = useState<string>(table.name);
+    const { editTable } = useDatabase();
+    const { t } = useTranslation();
+
+
+    useEffect(() => {
+        setTableName(table.name);
+    }, [table.name])
+
+    const saveTableName = async () => {
+        await editTable({ id: table.id, name: tableName });
+        setEditMode(false);
+    }
+    const edges = useStore((store) => Array.from(store.edges.values())) as Edge[];
+
+    const highlightedEdges: Edge[] = useMemo(() => {
+        return edges.filter((edge: Edge) => edge.animated || edge.selected);
+    }, [edges]);
+
+
+
+    console.log(highlightedEdges)
     return (
 
-        <div className={cn(
-            "w-full h-full bg-background  rounded-lg entity-card border-2   noselect ",
+        <Card className={cn(
+            "w-full h-full bg-background rounded-lg entity-card noselect overflow-visible ",
             selected
-                ? ' border-2 border-primary-500'
+                ? 'ring-1 ring-primary'
                 : '',
-
-        )}>
-            <div
-                className="h-2 rounded-t-[6px] "
-                style={{ backgroundColor: "rgb(255, 107, 138)" }}
-            ></div>
-
-      
-            <div className="group gap-2 flex h-9 items-center justify-between bg-default px-2 dark:bg-default">
-                <Table2 className="size-3.5 shrink-0 text-gray-600 dark:text-primary" />
+        )}
+            shadow="sm"
+        >
+            <div className="px-[2px] ">
+                <div
+                    className=" border-t-[4px] rounded-t-[6px] border-primary"
+                    style={{ borderColor: table.color as string }}
+                ></div>
+            </div>
+            <div className="group gap-2 flex h-9 items-center justify-between bg-default/50 px-2 dark:bg-default ">
+                <Table2 className="size-4 shrink-0 text-icon dark:text-primary" />
                 {
                     editMode && <>
                         <input
                             placeholder={table.name}
                             autoFocus
-                            onBlur={() => setEditMode(false)}
+                            onChange={(event: any) => setTableName(event.target.value)}
+                            value={tableName}
+                            onBlur={saveTableName}
                             type="text"
-                            className="rounded-md px-2 py-0.5 w-full border-[0.5px] border-blue-400  bg-slate-100 focus-visible:ring-0 dark:bg-slate-900  text-sm "
+                            className="rounded-md outline-none px-2 py-0.5 w-full border-[0.5px] border-primary-700 font-bold  bg-slate-100 focus-visible:ring-0 dark:bg-slate-900  text-sm "
                         />
                         <Button
                             variant="light"
                             className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                             size="sm"
-                            onClick={() => setEditMode(false)}
+                            onPressEnd={saveTableName}
                             isIconOnly
                         >
                             <Check className="size-3" />
@@ -91,7 +121,7 @@ const Table: React.FC<NodeProps<TableProps>> = React.memo(({
                                 </label>
                             </TooltipTrigger>
                             <TooltipContent>
-                                Double click to edit
+                                {t("table.double_click")}
                             </TooltipContent>
                         </Tooltip>
 
@@ -103,7 +133,7 @@ const Table: React.FC<NodeProps<TableProps>> = React.memo(({
                                 className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                                 isIconOnly
                             >
-                                <CircleDotDashed className="size-4" />
+                                <Focus className="size-4 text-icon" />
                             </Button>
                             <Button
 
@@ -123,26 +153,33 @@ const Table: React.FC<NodeProps<TableProps>> = React.memo(({
                 }
             </div>
 
-            <div>
-                <div
-                    className="transition-[max-height] duration-200 ease-in-out"
-                >
-                    {table.fields.map((field: Field) => (
-                        <FieldComponent
-                            key={field.id}
-                            field={field}
-                            showHandles={selected}
-                        />
-                    ))}
-                </div>
 
+            <div
+                className="transition-[max-height] duration-200 ease-in-out"
+            >
+                {table.fields.map((field: FieldType) => {
+
+                    const highlight: boolean = highlightedEdges.find((edge: any) =>
+                        (edge.data?.relationship as RelationshipType).sourceFieldId == field.id ||
+                        (edge.data?.relationship as RelationshipType).targetFieldId == field.id) != null;
+
+
+                    return (<FieldComponent
+                        key={field.id}
+                        field={field}
+                        showHandles={selected}
+                        highlight={highlight}
+
+                    />)
+                })}
             </div>
-        </div>
+
+        </Card>
 
     )
 });
 
-Table.displayName = 'table';
+
 
 export default Table;
 

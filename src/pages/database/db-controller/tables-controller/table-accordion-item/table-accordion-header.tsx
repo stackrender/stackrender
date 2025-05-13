@@ -1,8 +1,8 @@
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/tooltip/tooltip";
 
-import { Button, cn, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@heroui/react";
+import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@heroui/react";
 import { Check, ChevronRight, Copy, EllipsisVertical, FileKey, FileType, Focus, Pencil, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { TableType } from "@/lib/schemas/table-schema";
@@ -19,14 +19,15 @@ export interface TableAccordionHeaderProps {
 const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOpen }) => {
     const { editTable, deleteTable, createField } = useDatabase();
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
-    const style = {
-        borderLeft: "6px solid " + table.color,
-    };
-
     const [tableName, setTableName] = useState<string>(table.name);
 
     const { t } = useTranslation();
     const [editMode, setEditMode] = useState<boolean>(false);
+
+
+    useEffect(()=>   {
+        setTableName(table.name) ; 
+    } , [table.name])
 
     const saveTableName = async () => {
         await editTable({ id: table.id, name: tableName });
@@ -50,11 +51,12 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
             nullable: true,
         })
     }
-
-
+ 
     return (
-        <div className="group w-full flex h-12 gap-1 border-l-4 flex p-2 items-center"
-            style={style}
+        <div className="group w-full flex h-12 gap-1 border-l-4 flex p-2 items-center border-l-[6px] "
+            style={{
+                borderColor: table.color as string | undefined
+            }}
         >
             <div className={cn(
                 'tarnsition-all duration-200',
@@ -94,7 +96,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                         variant="bordered"
                         onBlur={saveTableName}
                         type="text"
-                        className="rounded-md px-2 py-0.5 w-full  border-blue-400  focus-visible:ring-0 dark:bg-slate-900  text-sm "
+                        className="rounded-md px-2 py-0.5 w-full  border-primary-700  focus-visible:ring-0 dark:bg-slate-900  text-sm "
                     />
                     <Button
                         variant="light"

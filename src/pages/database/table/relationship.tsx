@@ -1,7 +1,9 @@
-import { Relationship as RelationshipType } from "@/lib/interfaces/relationship";
-import { cn } from "@heroui/react";
-import { Edge, EdgeProps, getSmoothStepPath, Position, useReactFlow } from "@xyflow/react";
-import { useMemo } from "react";
+
+
+import { Cardinality, RelationshipType } from "@/lib/schemas/relationship-schema";
+import { card, cn } from "@heroui/react";
+import { Edge, EdgeProps, getBezierPath, getSmoothStepPath, InternalNode, Node, Position, useReactFlow } from "@xyflow/react";
+import React, { useMemo } from "react";
 
 
 
@@ -11,40 +13,31 @@ export type RelationshipProps = Edge<{
     selected?: boolean
 }, 'relationship-edge'>
 
-export const Relationship: React.FC<EdgeProps<RelationshipProps>> = ({
-    id,
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    source,
-    target,
-    selected,
-    data,
-}) => {
+const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
+
+    let { id, sourceX, sourceY, targetX, targetY, source, target, selected, data  , animated } = props;
     const { getInternalNode, getEdge } = useReactFlow();
-    //const { openRelationshipFromSidebar, selectSidebarSection } = useLayout();
-    //const { checkIfRelationshipRemoved, checkIfNewRelationship } = useDiff();
+
 
     const sourceNode = getInternalNode(source);
     const targetNode = getInternalNode(target);
     const edge = getEdge(id);
 
     const sourceHandle: 'left' | 'right' = edge?.sourceHandle?.startsWith?.(
-        "right-"
+        "right_"
     )
         ? 'right'
         : 'left';
 
     const sourceWidth = sourceNode?.measured.width ?? 0;
-    const sourceLeftX =
-        sourceHandle === 'left' ? sourceX + 3 : sourceX - sourceWidth - 10;
-    const sourceRightX =
-        sourceHandle === 'left' ? sourceX + sourceWidth + 9 : sourceX;
+    const sourceLeftX = sourceHandle === 'left' ? sourceX + 6 : sourceX - sourceWidth - 10;
+    const sourceRightX = sourceHandle === 'left' ? sourceX + sourceWidth + 10 : sourceX;
 
     const targetWidth = targetNode?.measured.width ?? 0;
-    const targetLeftX = targetX - 1;
-    const targetRightX = targetX + targetWidth + 10;
+    const targetLeftX = targetX - 2;
+    const targetRightX = targetX + targetWidth + 3;
+
+    
 
     const { sourceSide, targetSide } = useMemo(() => {
         const distances = {
@@ -84,12 +77,12 @@ export const Relationship: React.FC<EdgeProps<RelationshipProps>> = ({
                 sourceY,
                 targetX: targetSide === 'left' ? targetLeftX : targetRightX,
                 targetY,
-                borderRadius: 14,
+                borderRadius: 6,
                 sourcePosition:
                     sourceSide === 'left' ? Position.Left : Position.Right,
                 targetPosition:
                     targetSide === 'left' ? Position.Left : Position.Right,
-             //   offset: (edgeNumber + 1) * 14,
+
             }),
         [
             sourceSide,
@@ -100,20 +93,37 @@ export const Relationship: React.FC<EdgeProps<RelationshipProps>> = ({
             targetRightX,
             sourceY,
             targetY,
-         //   edgeNumber,
+
         ]
     );
+    const { startMarker, endMarker } = useMemo(() => {
+        const cardinality: Cardinality = data?.relationship.cardinality as Cardinality;
+        if (cardinality) {
+            const cardinalities: string[] = cardinality.split("_to_");
+            return {
+                startMarker: `${cardinalities[0]}_${"start"}${selected ? "_selected" : ""}`,
+                endMarker: `${cardinalities[1]}_${"end"}${selected ? "_selected" : ""}`
+            }
+        }
+        return {
+            startMarker: `${"one"}_${"start"}${selected ? "_selected" : ""}`,
+            endMarker: `${"many"}_${"end"}${selected ? "_selected" : ""}`
+        }
+    }, [data?.relationship.cardinality, selected]);
+
+
     return (
         <>
+
             <path
                 id={id}
                 d={edgePath}
-                //markerStart={`url(#${sourceMarker})`}
-                //markerEnd={`url(#${targetMarker})`}
+                markerStart={`url(#${startMarker})`}
+                markerEnd={`url(#${endMarker})`}
                 fill="none"
                 className={cn([
-                    'react-flow__edge-path',
-                    `!stroke-2 ${selected ? '!stroke-pink-600' : '!stroke-slate-400'}`,
+
+                    `!stroke-2  ${selected  ? '!stroke-primary' : 'stroke-slate-300'}`,
 
                 ])}
                 onClick={(e) => {
@@ -122,13 +132,18 @@ export const Relationship: React.FC<EdgeProps<RelationshipProps>> = ({
                         //                        openRelationshipInEditor();
                     }
                 }}
+                style={{
+                    strokeDasharray: (selected || animated) ? '5, 5' : '0',
+                    animation: (selected || animated) ? 'dash 0.5s linear infinite' : 'none',
+                }}
             />
+
             <path
                 d={edgePath}
                 fill="none"
                 strokeOpacity={0}
-                strokeWidth={20}
-                // eslint-disable-next-line tailwindcss/no-custom-classname
+                strokeWidth={16}
+
                 className="react-flow__edge-interaction"
                 onClick={(e) => {
                     if (e.detail === 2) {
@@ -136,5 +151,20 @@ export const Relationship: React.FC<EdgeProps<RelationshipProps>> = ({
                     }
                 }}
             />
+
         </>)
 }
+
+export default Relationship;
+
+/*
+
+
+
+
+
+  
+
+   
+
+*/

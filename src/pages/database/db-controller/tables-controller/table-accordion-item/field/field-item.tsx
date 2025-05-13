@@ -6,7 +6,7 @@ import { EllipsisVertical,  GripVertical, KeyRound, Trash2 } from "lucide-react"
 import { useTranslation } from "react-i18next";
 import { CSS } from "@dnd-kit/utilities";
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema";
-import { Key , useState } from "react";
+import { Key , useEffect, useState } from "react";
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import Autocomplete from "@/components/auto-complete/auto-complete";
 import ToggleButton from "@/components/toggle/toggle";
@@ -31,6 +31,10 @@ const FieldItem: React.FC<Props> = ({ field }) => {
     const style = {
         transform: CSS.Transform.toString(transform),
     };
+
+    useEffect(() => { 
+        setFieldName(field.name) ; 
+    } , [field.name])
 
     const removeField = () => {
         setPopOverOpen(false);

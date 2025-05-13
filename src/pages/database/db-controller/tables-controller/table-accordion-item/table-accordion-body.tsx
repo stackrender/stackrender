@@ -24,8 +24,9 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
     const { t } = useTranslation();
     const { editTable, createField } = useDatabase();
 
-    const onColorChange = useCallback((color: string) => {
-        editTable({ id: table.id, color } as TableType);
+    const onColorChange = useCallback((color: string | undefined) => {
+        console.log(color)
+        editTable({ id: table.id, color: color ? color : null } as TableType);
     }, [table]);
 
     const addField = (event: any) => {
@@ -42,8 +43,8 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
 
     const saveNote = () => {
         editTable({
-            id : table.id , 
-            note 
+            id: table.id,
+            note
         } as TableType)
     }
 
