@@ -52,7 +52,7 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
     
     return (
         <div className={cn(
-            "group relative flex h-8 items-center justify-between gap-1 border-t border-default px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out" , 
+            "group relative flex h-8 items-center justify-between gap-1 border-t border-default dark:border-default/5 px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-primary-500 transition-all duration-200 ease-in-out" , 
             highlight ? "bg-primary/5" : ""
         )}>
             {
@@ -60,14 +60,14 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
                 <>
                     <label
                         className={cn(
-                            "truncate  text-xs text-slate-900",
+                            "truncate  text-xs text-slate-900 dark:text-default-200",
                             field.isPrimary ? "font-semibold" : ""
                         )}
                         onDoubleClick={() => setEditMode(true)}
                     >
                         {field.name}
                     </label>
-                    <span className={cn("content-center truncate flex items-center h-full gap-1 text-right text-xs text-default-600 group-hover:hidden font-semibold text-icon",
+                    <span className={cn("content-center truncate flex items-center h-full gap-1 text-right text-xs text-default-600 group-hover:hidden font-semibold text-icon dark:text-default-200",
                         field.isPrimary ? "font-semibold text-slate-700" : ""
                     )}>
                         {field.isPrimary && <KeyRound className="size-3" />}  {field.type?.name?.split(' ')[0]}{field.nullable ? "?" : ""}
@@ -101,12 +101,12 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
                         onClick={(e) => e.stopPropagation()}
                         onChange={(e) => setFieldName(e.target.value)}
 
-                        className="rounded-md outline-none px-2 py-0.5 w-full border-[0.5px] border-primary-700  bg-slate-100 focus-visible:ring-0 dark:bg-slate-900  text-sm "
+                        className="rounded-md outline-none px-2 py-0.5 w-full border-[0.5px] border-primary-700  bg-slate-100 focus-visible:ring-0   text-sm dark:bg-transparent dark:text-white"
 
                     />
                     <Button
                         variant="light"
-                        className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                        className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-white"
                         size="sm"
                         isIconOnly
                         onPress={saveFieldName}
@@ -125,12 +125,12 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
                     type="source"
                     position={Position.Left}
                     id={LEFT_PREFIX + field.id}
-                    className="w-4 h-4 border-4 bg-primary"
+                    className="w-4 h-4 border-4 bg-primary dark:border-default-900"
                 />
                 <Handle
                     type="source"
                     position={Position.Right}
-                    className="w-4 h-4 border-4 bg-primary"
+                    className="w-4 h-4 border-4 bg-primary dark:border-default-900"
                     id={RIGHT_PREFIX + field.id}
                 />
             </div>

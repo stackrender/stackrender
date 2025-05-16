@@ -120,7 +120,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                             aria-label={relationship.id}
                             
                             classNames={{
-                                trigger: "w-full hover:bg-default transition-all duration-200 h-12",
+                                trigger: "w-full hover:bg-default transition-all duration-200 h-12 dark:bg-background dark:hover:bg-default-50",
                                 base: "rounded-md p-0 overflow-hidden",
                             }}
                             subtitle={

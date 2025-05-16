@@ -85,7 +85,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
         <div className="flex w-full gap-1 items-center " style={style} ref={setNodeRef} {...attributes}>
 
             <div {...listeners}>
-                <GripVertical className="size-4 text-icon cursor-move" />
+                <GripVertical className="size-4 text-icon cursor-move dark:text-default-400 dark:hover:text-white" />
             </div>
             <Input
                 variant="bordered"
@@ -130,7 +130,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                             isIconOnly
                             variant="light"
                         >
-                            <EllipsisVertical className="size-4 text-slate-500" />
+                            <EllipsisVertical className="size-4 text-slate-500 dark:text-default-600" />
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[210px]" >

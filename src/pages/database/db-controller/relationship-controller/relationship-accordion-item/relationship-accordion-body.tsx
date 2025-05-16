@@ -44,13 +44,13 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
         <div className="w-full p-2 space-y-4">
             <div className="flex">
                 <div className="w-full space-y-1">
-                    <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm">
-                        <FileOutput className="size-4" />
+                    <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm dark:text-default-600">
+                        <FileOutput className="size-4 " />
                         {t("db_controller.source_table")}
                     </label>
                     <Tooltip>
                         <TooltipTrigger>
-                            <span className="truncate text-left text-sm">
+                            <span className="truncate text-left text-sm dark:text-default-500">
                                 {relationship.sourceTable?.name}({relationship.sourceField?.name})
                             </span>
                         </TooltipTrigger>
@@ -61,7 +61,7 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
                 </div>
 
                 <div className="w-full space-y-1">
-                    <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm">
+                    <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm dark:text-default-600">
                         <FileMinus2 className="size-4" />
                         {t("db_controller.target_table")}
 
@@ -69,7 +69,7 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
 
                     <Tooltip>
                         <TooltipTrigger>
-                            <span className="truncate text-left text-sm ">
+                            <span className="truncate text-left text-sm dark:text-default-500 ">
                                 {relationship.targetTable?.name}({relationship.targetField?.name})
                             </span>
                         </TooltipTrigger>
@@ -80,7 +80,7 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
                 </div>
             </div>
             <div className="space-y-2">
-                <label className="flex text-sm font-medium flex text-slate-700 items-center gap-1">
+                <label className="flex text-sm font-medium flex text-slate-700 items-center gap-1 dark:text-default-600">
                     <ChevronsLeftRightEllipsis className="size-4 " />
                     {t('db_controller.cardinality.name')}
                 </label>

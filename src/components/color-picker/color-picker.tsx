@@ -27,7 +27,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ defaultColor, onChange }) => 
         <Popover placement="bottom" radius="sm" isOpen={isOpen} onOpenChange={(open) => setIsOpen(open)}>
             <PopoverTrigger>
                 <Button size="sm"
-                    className="size-8 cursor-pointer rounded-md border-2 border-muted transition-shadow hover:shadow-md"
+                    className="size-8 cursor-pointer rounded-md border-2 border-muted transition-shadow hover:shadow-md dark:border-default-100"
                     isIconOnly
                     style={{
                         backgroundColor: color ? color : undefined
@@ -41,7 +41,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ defaultColor, onChange }) => 
                     {colorOptions.map(color => (
                         <div
                             key={color}
-                            className="size-8 cursor-pointer rounded-md border-2 border-muted transition-shadow hover:shadow-md"
+                            className="size-8 cursor-pointer rounded-md border-2 border-muted transition-shadow hover:shadow-md dark:border-default-100"
                             style={{
                                 backgroundColor: color
                             }}
@@ -54,7 +54,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ defaultColor, onChange }) => 
                         <TooltipTrigger>
                             <div
                                 key={undefined}
-                                className="size-8 cursor-pointer rounded-md border-2 border-muted transition-shadow hover:shadow-md"
+                                className="size-8 cursor-pointer rounded-md border-2 border-muted transition-shadow hover:shadow-md dark:border-default-100"
                                 style={{
                                     backgroundColor: "white"
                                 }}

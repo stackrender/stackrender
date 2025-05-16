@@ -87,7 +87,7 @@ const FieldList: React.FC<Props> = ({ table }) => {
                 radius="sm"
 
                 startContent={
-                    <Plus className="size-4 text-icon" />
+                    <Plus className="size-4 text-icon dark:text-white" />
                 }
                 className="h-8 p-2 text-xs bg-transparent hover:bg-default text-gray font-semibold"
                 onPressEnd={addField}

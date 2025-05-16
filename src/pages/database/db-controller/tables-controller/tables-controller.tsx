@@ -9,6 +9,7 @@ import { useDatabase } from "@/providers/database-provider/database-provider";
 import { TableType } from "@/lib/schemas/table-schema";
 import { v4 } from "uuid"; 
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
+import { useTheme } from "next-themes";
 
 
 interface Props { }
@@ -42,8 +43,9 @@ const TablesController: React.FC<Props> = ({ }) => {
         }
     } , [focusedTableId]) ; 
     
-    const selectedTableId = selectedTable.values().next().value;
+    const selectedTableId = selectedTable.values().next().value; 
 
+    
     return (
         <div className="w-full h-full flex flex-col gap-2">
             <div className="flex items-center justify-between gap-4 py-1">
@@ -103,7 +105,7 @@ const TablesController: React.FC<Props> = ({ }) => {
 
                 <Accordion
                     hideIndicator
-                    variant="splitted"
+                    variant={   "splitted"}
                     selectedKeys={selectedTable}
                     onSelectionChange={setSelectedTable as any}
                     isCompact
@@ -114,8 +116,8 @@ const TablesController: React.FC<Props> = ({ }) => {
                             key={table.id}
                             aria-label={table.name}
                             classNames={{
-                                trigger: "w-full h-12 hover:bg-default transition-all duration-200",
-                                base: "rounded-md shadow p-0 overflow-hidden",
+                                trigger: "w-full h-12 hover:bg-default transition-all duration-200 dark:bg-background dark:hover:bg-default-50",
+                                base: "rounded-md shadow p-0 overflow-hidden dark:border-1 dark:border-default-100",
                             }}
                             subtitle={
                                 <TableAccordionHeader

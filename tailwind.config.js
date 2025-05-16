@@ -14,10 +14,6 @@ export default {
     themes: {
       dark: {
         colors: {
-          sidebar: {
-            DEFAULT: 'hsl(0 0% 98%)',
-            foreground: 'hsl(240 5.3% 26.1%)',
-          },
           primary: {
             DEFAULT: "#9822ff",
             50: '#9822ff0D', // 5% opacity
@@ -31,7 +27,7 @@ export default {
             800: '#961FFFCC', // 80% opacity
             900: '#9822ffE6', // 90% opacity
           },
-        },
+        }
       },
       light: {
         colors: {
@@ -45,9 +41,9 @@ export default {
             foreground: 'hsl(222.2 47.4% 11.2%)'
           },
 
-          icon : {
-            DEFAULT : "hsl(215.4 16.3% 46.9%)"
-          } , 
+          icon: {
+            DEFAULT: "hsl(215.4 16.3% 46.9%)"
+          },
 
           primary: {
             DEFAULT: "#9822ff",

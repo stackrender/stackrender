@@ -20,10 +20,10 @@ const ToggleButton: React.FC<ToggleProps> = ({ active = false, children, onToggl
         <Tooltip>
             <TooltipTrigger asChild>
                 <button className={
-                    cn("p-1 px-2 transition-all hover:bg-default rounded duration-200 ",
+                    cn("p-1 px-2 transition-all hover:bg-default rounded duration-200 dark:text-default-400",
                         className ? className : "",
                         active ?
-                            "text-slate-700 bg-default/80 " :
+                            "text-slate-700 bg-default/80 dark:text-white dark:bg-default/50" :
                             "text-icon"
                     )
                 }

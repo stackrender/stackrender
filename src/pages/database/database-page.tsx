@@ -19,6 +19,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/to
 import { Button } from "@heroui/react";
 import { LayoutGrid } from "lucide-react";
 import { adjustTablesPositions } from "@/utils/tables";
+import { useTheme } from "next-themes";
 
 
 
@@ -29,6 +30,8 @@ const DatabasePage: React.FC<never> = () => {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const { setIsConnectionInProgress } = useDiagram();
     const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
+
+ 
     const { fitView } = useReactFlow();
 
     const nodeTypes = useMemo(() => ({ table: Table }), []);
@@ -157,7 +160,7 @@ const DatabasePage: React.FC<never> = () => {
                 <div className="absolute top-[160px]">
 
                 </div>
-                <Controls>
+                <Controls >
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <span>
@@ -179,7 +182,7 @@ const DatabasePage: React.FC<never> = () => {
                     </Tooltip>
 
                 </Controls>
-                <Background className="bg-default/30" />
+                <Background className="bg-default/30 dark:bg-black" />
             </ReactFlow>
 
             <svg style={{ position: 'absolute', width: 0, height: 0 }}>

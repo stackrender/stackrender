@@ -59,16 +59,16 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                         onValueChange={setName}
                         onBlur={editRelationshipName}
                         type="text"
-                        className="rounded-md px-2 py-0.5 w-full  border-blue-400  focus-visible:ring-0 dark:bg-slate-900  text-sm "
+                        className="rounded-md px-2 py-0.5 w-full  border-blue-400 focus-visible:ring-0  text-sm "
                     />
                     <Button
                         variant="light"
-                        className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                        className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 "
                         size="sm"
                         onPress={editRelationshipName}
                         isIconOnly
                     >
-                        <Check className="size-4 text-icon" />
+                        <Check className="size-4 text-icon dark:text-white" />
                     </Button>
                 </>
             }
@@ -77,7 +77,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                 !editMode && <>
 
                     <label
-                        className="w-full  truncate px-2 py-1 text-sm font-semibold text-black"
+                        className="w-full  truncate px-2 py-1 text-sm font-semibold text-black dark:text-white"
                     >
                         {relationship.name ? relationship.name : defaultName}
                     </label>
@@ -89,7 +89,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                             variant="light"
                             onPressEnd={() => focusOnRelationship(relationship.id, true)}
                         >
-                            <Focus className="size-4 text-icon" />
+                            <Focus className="size-4 text-icon dark:text-white" />
                         </Button>
                         <Button
                             size="sm"
@@ -97,7 +97,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                             variant="light"
                             onPress={() => setEditMode(true)}
                         >
-                            <Pencil className="size-4 text-icon" />
+                            <Pencil className="size-4 text-icon dark:text-white" />
                         </Button>
                     </div>
 
@@ -110,7 +110,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                                 isIconOnly
                                 variant="light"
                             >
-                                <EllipsisVertical className="size-4 text-slate-500" />
+                                <EllipsisVertical className="size-4 text-slate-500 dark:text-white" />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-[160px]" >

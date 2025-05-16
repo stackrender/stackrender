@@ -40,8 +40,6 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
         setPopOverOpen(false);
     }
 
-
-
     const addField = () => {
         setPopOverOpen(false)
         createField({
@@ -54,7 +52,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
     }
 
     return (
-        <div className="group w-full flex h-12 gap-1 border-l-4 flex p-2 items-center border-l-[6px] "
+        <div className="group w-full flex h-12 gap-1 border-l-4 flex p-2 items-center border-l-[6px] border-default"
             style={{
                 borderColor: table.color as string | undefined
             }}
@@ -63,10 +61,9 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                 'tarnsition-all duration-200',
                 isOpen ? "rotate-[90deg]" : ""
             )}>
-                <ChevronRight className="size-4 text-icon" />
+                <ChevronRight className="size-4 text-icon dark:text-white" />
             </div>
-            <div className=" w-[1px] h-full bg-default-200">
-
+            <div className=" w-[1px] h-full bg-default-200 dark:bg-default-100">
             </div>
             {
                 !editMode &&
@@ -74,7 +71,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <label
-                                className="w-full text-editable truncate px-2 py-1 text-sm font-semibold text-black"
+                                className="w-full text-editable truncate px-2 py-1 text-sm font-semibold text-black dark:text-white"
                                 onDoubleClick={() => setEditMode(true)}
                             >
                                 {table.name}
@@ -97,16 +94,16 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                         variant="bordered"
                         onBlur={saveTableName}
                         type="text"
-                        className="rounded-md px-2 py-0.5 w-full  border-primary-700  focus-visible:ring-0 dark:bg-slate-900  text-sm "
+                        className="rounded-md px-2 py-0.5 w-full  border-primary-700  focus-visible:ring-0   text-sm  "
                     />
                     <Button
                         variant="light"
-                        className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+                        className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-white"
                         size="sm"
                         onPressEnd={saveTableName}
                         isIconOnly
                     >
-                        <Check className="size-4 text-icon" />
+                        <Check className="size-4 text-icon dark:text-white" />
                     </Button>
                 </>
             }
@@ -122,7 +119,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                             variant="light"
                             onPress={() => setEditMode(true)}
                         >
-                            <Pencil className="size-4 text-icon" />
+                            <Pencil className="size-4 text-icon dark:text-white" />
                         </Button>
                         <Button
                             size="sm"
@@ -130,7 +127,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                             variant="light"
                             onPressEnd={() => focusOnTable(table.id , true)}
                         >
-                            <Focus className="size-4 text-icon" />
+                            <Focus className="size-4 text-icon dark:text-white" />
                         </Button>
                     </div>
 
@@ -141,7 +138,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                 isIconOnly
                                 variant="light"
                             >
-                                <EllipsisVertical className="size-4 text-slate-500" />
+                                <EllipsisVertical className="size-4 text-slate-500 dark:text-white" />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-[160px]" >
@@ -156,14 +153,14 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                     key="add_field"
                                     onPressEnd={addField}
                                     endContent={
-                                        <FileType className="size-4 text-icon" />
+                                        <FileType className="size-4 text-icon dark:text-white" />
 
                                     }>
                                     Add Field
                                 </ListboxItem>
                                 <ListboxItem
                                     key="add_index"
-                                    endContent={<FileKey className="size-4 text-icon " />}
+                                    endContent={<FileKey className="size-4 text-icon dark:text-white" />}
                                     showDivider>
                                     Add Index
                                 </ListboxItem>
