@@ -1,6 +1,7 @@
 
 
 import { Cardinality, RelationshipType } from "@/lib/schemas/relationship-schema";
+import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { card, cn } from "@heroui/react";
 import { Edge, EdgeProps, getBezierPath, getSmoothStepPath, InternalNode, Node, Position, useReactFlow } from "@xyflow/react";
 import React, { useMemo } from "react";
@@ -15,8 +16,9 @@ export type RelationshipProps = Edge<{
 
 const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
 
-    let { id, sourceX, sourceY, targetX, targetY, source, target, selected, data  , animated } = props;
+    let { id, sourceX, sourceY, targetX, targetY, source, target, selected, data, animated } = props;
     const { getInternalNode, getEdge } = useReactFlow();
+    const { focusOnRelationship } = useDiagram();
 
 
     const sourceNode = getInternalNode(source);
@@ -37,7 +39,7 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
     const targetLeftX = targetX - 2;
     const targetRightX = targetX + targetWidth + 3;
 
-    
+
 
     const { sourceSide, targetSide } = useMemo(() => {
         const distances = {
@@ -122,14 +124,13 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
                 markerEnd={`url(#${endMarker})`}
                 fill="none"
                 className={cn([
-
-                    `!stroke-2  ${selected  ? '!stroke-primary' : 'stroke-slate-300'}`,
+     
+                    `!stroke-2  ${selected ? '!stroke-primary' : 'stroke-slate-300'}`,
 
                 ])}
                 onClick={(e) => {
                     if (e.detail === 2) {
-                        console.log("hello world");
-                        //                        openRelationshipInEditor();
+                        focusOnRelationship(data?.relationship.id as string);
                     }
                 }}
                 style={{
@@ -147,7 +148,7 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
                 className="react-flow__edge-interaction"
                 onClick={(e) => {
                     if (e.detail === 2) {
-                        //                      openRelationshipInEditor();
+                        focusOnRelationship(data?.relationship.id as string);
                     }
                 }}
             />
@@ -155,7 +156,7 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
         </>)
 }
 
-export default Relationship;
+export default React.memo(Relationship);
 
 /*
 

@@ -1,39 +1,39 @@
 
-import { addEdge, applyEdgeChanges, applyNodeChanges, Background, Connection, Controls, Edge, EdgeChange, EdgeRemoveChange, MiniMap, Node, NodeChange, NodePositionChange, NodeRemoveChange, NodeSelectionChange, OnEdgesChange, OnNodesChange, ReactFlow, useEdgesState, useNodesState, useReactFlow } from "@xyflow/react";
-import { SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
+import { addEdge, applyNodeChanges, Background, Connection, Controls, Edge, EdgeChange, EdgeRemoveChange, MiniMap, Node, NodeChange, NodePositionChange, NodeRemoveChange, NodeSelectionChange, OnEdgesChange, OnNodesChange, ReactFlow, useEdgesState, useNodesState, useReactFlow } from "@xyflow/react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Table from "./table/table";
 import '@xyflow/react/dist/style.css';
 import Relationship from "./table/relationship";
 import DBController from "./db-controller/db-controller";
-import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
+import { TableInsertType } from "@/lib/schemas/table-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import { useTableToNode } from "@/hooks/use-table-to-node";
 import { useRelationshipToEdge } from "@/hooks/use-relationship-to-edge";
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { v4 } from "uuid";
-import { LEFT_PREFIX, TARGET_PREFIX } from "./table/field";
+import { TARGET_PREFIX } from "./table/field";
 import CardinalityMarker from "@/components/cardinality-marker/cardinality-marker";
+import { areArraysEqual } from "@/utils/utils";
+import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
+import { Button } from "@heroui/react";
+import { LayoutGrid } from "lucide-react";
+import { adjustTablesPositions } from "@/utils/tables";
 
 
-interface DatabaseProps {
-    initialTables?: TableType
-}
 
-const edgeTypes = {
-    'relationship-edge': Relationship,
-};
-
-const DatabasePage: React.FC<DatabaseProps> = ({ initialTables }) => {
+const DatabasePage: React.FC<never> = () => {
 
     const { tables, relationships, updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabase();
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
-
-    useTableToNode(tables);
-    useRelationshipToEdge(relationships);
+    const { setIsConnectionInProgress } = useDiagram();
+    const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
+    const { fitView } = useReactFlow();
 
     const nodeTypes = useMemo(() => ({ table: Table }), []);
+    const edgeTypes = useMemo(() => ({ 'relationship-edge': Relationship }), []);
+
     const onConnect = useCallback((connection: Connection) => {
 
         createRelationship({
@@ -45,8 +45,9 @@ const DatabasePage: React.FC<DatabaseProps> = ({ initialTables }) => {
         } as RelationshipInsertType)
 
         setEdges((eds) => addEdge(connection, eds));
+        setIsConnectionInProgress(false);
 
-    }, [setEdges]);
+    }, []);
 
     const handleNodesChanges: OnNodesChange<never> = useCallback((changes: NodeChange<never>[]) => {
 
@@ -60,75 +61,124 @@ const DatabasePage: React.FC<DatabaseProps> = ({ initialTables }) => {
                 posY: change.position?.y
             } as TableInsertType)));
 
-
         if (nodeRemoveChanges.length > 0)
             deleteMultiTables(nodeRemoveChanges.map((change: NodeRemoveChange) => change.id));
 
-        onNodesChange(changes);
+        return onNodesChange(changes);
 
     }, [onNodesChange]);
 
-
     const handleEdgeChanges: OnEdgesChange<any> = useCallback((changes: EdgeChange<any>[]) => {
+
         const edgeRemoveChanges: EdgeRemoveChange[] = changes.filter((change: EdgeChange) => change.type == "remove") as EdgeRemoveChange[];
         if (edgeRemoveChanges.length > 0) {
             deleteMultiRelationships(edgeRemoveChanges.map((change: EdgeRemoveChange) => change.id))
         }
-        onEdgesChange(changes as EdgeChange<never>[]);
+        return onEdgesChange(changes as EdgeChange<never>[]);
     }, [onEdgesChange]);
 
 
-    const selectedTableIds: string[] = useMemo(() => {
-        return nodes.filter((node: Node) => node.selected).map((node: Node) => node.id)
+    useEffect(() => {
+        const newSelectedNodesIds: string[] = nodes.filter((node: Node) => node.selected).map((node: Node) => node.id)
+        if (areArraysEqual(newSelectedNodesIds, selectedNodeIds)) return; setSelectedNodeIds(newSelectedNodesIds);
     }, [nodes]);
 
-    const selectedRelationshipIds: string[] = useMemo(() => {
-        return relationships.filter((relationship: RelationshipType) =>
-            selectedTableIds.includes(relationship.sourceTableId) ||
-            selectedTableIds.includes(relationship.targetTableId)
-        ).map((relationship: RelationshipType) => relationship.id);
-    }, [selectedTableIds, relationships]);
 
-    
+    const selectedEdgeIds: string[] = useMemo(() => {
+        return relationships.filter((relationship: RelationshipType) =>
+            selectedNodeIds.includes(relationship.sourceTableId) ||
+            selectedNodeIds.includes(relationship.targetTableId)
+        ).map((relationship: RelationshipType) => relationship.id);
+    }, [selectedNodeIds, relationships]);
+
+
     useEffect(() => {
         setEdges((edges: any) => {
             return edges.map((edge: any) => {
-                const selected: boolean = selectedRelationshipIds.includes(edge.id);
+                const selected: boolean = selectedEdgeIds.includes(edge.id);
                 return {
-                    ...edge , 
-                    animated : selected , 
-                 
-                } as Edge 
+                    ...edge,
+                    animated: selected,
+                } as Edge
+
+
             })
-
         })
-    }, [setEdges, selectedRelationshipIds])
-    return (
-        <div className="w-full h-screen flex">
+    }, [selectedEdgeIds]);
 
+    const onConnectStart = useCallback(() => {
+        setIsConnectionInProgress(true);
+    }, []);
+
+
+    const onConnectEnd = useCallback(() => {
+        setIsConnectionInProgress(false);
+    }, []);
+
+
+    const adjustPositions = useCallback(async () => {
+
+        updateTablePositions(await adjustTablesPositions(nodes, relationships));
+        setTimeout(() => {
+            fitView({
+                duration: 500
+            })
+        }, 500)
+
+    }, [relationships, nodes])
+
+    useTableToNode(tables);
+    useRelationshipToEdge(relationships);
+
+    return (
+
+        <div className="w-full h-screen flex  relative">
             <DBController />
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
                 fitView
-                className="w-full h-full nodes-animated"
+                className="w-full h-full cursor-default"
                 onNodesChange={handleNodesChanges}
                 onEdgesChange={handleEdgeChanges}
                 onConnect={onConnect}
                 defaultEdgeOptions={{
-
                     type: 'relationship-edge',
                 }}
-                onlyRenderVisibleElements
+                //  onlyRenderVisibleElements
                 panOnDrag={true}
                 zoomOnScroll={true}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
                 snapGrid={[20, 20]}
-
+                onConnectStart={onConnectStart}
+                onConnectEnd={onConnectEnd}
             >
+                <div className="absolute top-[160px]">
 
-                <Controls />
+                </div>
+                <Controls>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <span>
+                                <Button
+                                    size="sm"
+                                    isIconOnly
+                                    variant="flat"
+                                    className="size-8 p-1 shadow-none"
+                                    onPressEnd={adjustPositions}
+
+                                >
+                                    <LayoutGrid className="size-4" />
+                                </Button>
+                            </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            Adjust Positions
+                        </TooltipContent>
+                    </Tooltip>
+
+                </Controls>
                 <Background className="bg-default/30" />
             </ReactFlow>
 
@@ -149,6 +199,7 @@ const DatabasePage: React.FC<DatabaseProps> = ({ initialTables }) => {
                 </defs>
             </svg>
         </div>
+
     )
 }
 

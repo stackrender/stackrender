@@ -6,6 +6,7 @@ import { useEffect } from "react";
 export const useTableToNode = (tables: TableType[]): void => {
     const { setNodes } = useReactFlow();
     useEffect(() => {
+
         const nodes = tables.map((table: TableType) => {
             return {
                 id: table.id,

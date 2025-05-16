@@ -1,6 +1,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 import { FieldType } from "@/lib/schemas/field-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { Button, cn, select } from "@heroui/react";
 import { Handle, Position, useConnection } from "@xyflow/react";
 import { Check, KeyRound, Trash, Trash2 } from "lucide-react";
@@ -11,7 +12,8 @@ import React, { useEffect, useState } from "react";
 interface Props {
     field: FieldType,
     showHandles?: boolean,
-    highlight?: boolean
+    highlight?: boolean , 
+    showTargetHandle? : boolean 
 }
 
 
@@ -25,7 +27,7 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
     const [editMode, setEditMode] = useState<boolean>(false);
     const { deleteField, editField } = useDatabase();
     const [fieldName, setFieldName] = useState<string>(field.name);
-
+    const {isConnectionInProgress} = useDiagram() ; 
 
     useEffect(() => {
         setFieldName(field.name);
@@ -46,8 +48,8 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
         setEditMode(false);
     }
 
-    const connection = useConnection();
-    console.log(highlight)
+ 
+    
     return (
         <div className={cn(
             "group relative flex h-8 items-center justify-between gap-1 border-t border-default px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out" , 
@@ -136,7 +138,7 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
                 <div className={
                     cn(
                         "absolute w-full left-0 ",
-                        !connection.inProgress ? "invisible" : "visible"
+                        !isConnectionInProgress ? "invisible" : "visible"
                     )} >
                     <Handle
                         id={`${TARGET_PREFIX}${field.id}`}

@@ -1,21 +1,12 @@
 
 
-import { Edge, Handle, Node, NodeProps, NodeResizer, Position, useReactFlow, useStore } from "@xyflow/react";
+import { Edge, Node, NodeProps, useConnection, useStore } from "@xyflow/react";
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Card, CardBody, CardHeader, cn, Divider, Input } from "@heroui/react";
+import { Button, Card, cn, } from "@heroui/react";
 import {
-    ChevronsLeftRight,
-    ChevronsRightLeft,
     Table2,
-    ChevronDown,
-    ChevronUp,
     Check,
-    CircleDotDashed,
-    SquareDot,
-    SquarePlus,
-    SquareMinus,
-    Divide,
     Focus,
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
@@ -25,49 +16,63 @@ import { FieldType } from "@/lib/schemas/field-schema";
 import { TableType } from "@/lib/schemas/table-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import { useTranslation } from "react-i18next";
-import { RelationshipType } from "@/lib/schemas/relationship-schema";
+import { RelationshipType } from "@/lib/schemas/relationship-schema"; 
+import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 
-
-export const MAX_TABLE_SIZE = 450;
-export const MID_TABLE_SIZE = 337;
-export const MIN_TABLE_SIZE = 224;
-export const TABLE_MINIMIZED_FIELDS = 10;
 
 export type TableProps = Node<{
-    table: TableType, isOverlapping?: boolean;
-    highlightOverlappingTables?: boolean;
+    table: TableType,
 }>
 
-const Table: React.FC<NodeProps<TableProps>> = React.memo(({
-    selected,
-    dragging,
-    id,
-    data: { table, },
-}) => {
+const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table } }) => {
 
     const [editMode, setEditMode] = useState<boolean>(false);
     const [tableName, setTableName] = useState<string>(table.name);
     const { editTable } = useDatabase();
-    const { t } = useTranslation();
 
+    const { focusOnTable } = useDiagram();
+    const { t } = useTranslation();
 
     useEffect(() => {
         setTableName(table.name);
     }, [table.name])
 
-    const saveTableName = async () => {
+    const saveTableName = useCallback(async () => {
         await editTable({ id: table.id, name: tableName });
         setEditMode(false);
-    }
-    const edges = useStore((store) => Array.from(store.edges.values())) as Edge[];
+    }, []);
+
+    const focus = useCallback(() => {
+        focusOnTable(table.id, false);
+    }, [])
+
+    const edges = useStore((store) => store.edges) as Edge[];
 
     const highlightedEdges: Edge[] = useMemo(() => {
         return edges.filter((edge: Edge) => edge.animated || edge.selected);
     }, [edges]);
 
+    const fields: React.ReactNode[] = useMemo(() => {
+        return table.fields.map((field: FieldType) => {
+            const highlight: boolean = highlightedEdges.find((edge: any) =>
+                (edge.data?.relationship as RelationshipType).sourceFieldId == field.id ||
+                (edge.data?.relationship as RelationshipType).targetFieldId == field.id) != null;
+
+            return (<FieldComponent
+                key={field.id}
+                field={field}
+                showHandles={selected}
+                highlight={highlight}
+            />)
+        })
+    }, [table.fields, selected, highlightedEdges]); 
+ 
+
+  
 
 
-    console.log(highlightedEdges)
+    // console.log ("re-render" , table.name)
+
     return (
 
         <Card className={cn(
@@ -132,61 +137,27 @@ const Table: React.FC<NodeProps<TableProps>> = React.memo(({
                                 size="sm"
                                 className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                                 isIconOnly
+                                onPressEnd={focus}
                             >
                                 <Focus className="size-4 text-icon" />
-                            </Button>
-                            <Button
-
-                                variant="light"
-                                size="sm"
-                                className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
-                                isIconOnly
-                            >
-                                {table.width !== MAX_TABLE_SIZE ? (
-                                    <ChevronsLeftRight className="size-4" />
-                                ) : (
-                                    <ChevronsRightLeft className="size-4" />
-                                )}
                             </Button>
                         </div>
                     </>
                 }
             </div>
-
-
-            <div
-                className="transition-[max-height] duration-200 ease-in-out"
-            >
-                {table.fields.map((field: FieldType) => {
-
-                    const highlight: boolean = highlightedEdges.find((edge: any) =>
-                        (edge.data?.relationship as RelationshipType).sourceFieldId == field.id ||
-                        (edge.data?.relationship as RelationshipType).targetFieldId == field.id) != null;
-
-
-                    return (<FieldComponent
-                        key={field.id}
-                        field={field}
-                        showHandles={selected}
-                        highlight={highlight}
-
-                    />)
-                })}
+            <div className="transition-[max-height] duration-200 ease-in-out">
+                {fields}
             </div>
-
         </Card>
 
     )
-});
+};
+
+export default React.memo(Table)
+//export default React.memo(Table ) ;
 
 
-
-export default Table;
-
-
-/*
-
- 
+/* 
                                 focused = { false}
                             tableNodeId={id}
                             field={field}

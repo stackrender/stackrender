@@ -28,6 +28,10 @@
 
 
 
+.react-flow__renderer {
+  cursor: default !important; /* or pointer, grab, etc. */ 
+}
+
 .sidebar-item[data-active="true"] svg {
     color :  hsl(var(--heroui-primary-900));
 
@@ -56,4 +60,35 @@ div[data-slot="content"] hr[role="separator"] {
   to {
     stroke-dashoffset: -10;
   }
+}
+
+
+
+
+/* Target the scrollbar */
+::-webkit-scrollbar {
+  width: 4px; /* Width of the scrollbar */
+  
+}
+
+/* Track (background of the scrollbar) */
+::-webkit-scrollbar-track {
+  background: hsl(210 40% 96.1%)  ; /* Light gray background */
+
+}
+
+/* Handle (the scroll thumb) */
+::-webkit-scrollbar-thumb {
+  background:  hsl(var(--heroui-default-300));    /* Darker gray */
+  border-radius: 6px; /* Rounded corners */
+   
+}
+
+
+
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+
+  background: hsl(var(--nextui-default-400));  /* Darker on hover */
 }

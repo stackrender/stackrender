@@ -12,9 +12,9 @@ const sidebarItemClass : string = "text-gray-700 size-4 data-[active=true]:text-
 
 const Sidebar: React.FC<SidebarProps> = ({ }) => {
     const { t , i18n } = useTranslation() ; 
-    console.log ( i18n.language)
+ 
     
-    console.log ()
+ 
     const location = useLocation() ; 
    
     const sidebarItems: SidebarItemProps[] = useMemo(() => [

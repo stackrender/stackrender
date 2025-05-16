@@ -25,7 +25,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
     const { editTable, createField } = useDatabase();
 
     const onColorChange = useCallback((color: string | undefined) => {
-        console.log(color)
+ 
         editTable({ id: table.id, color: color ? color : null } as TableType);
     }, [table]);
 

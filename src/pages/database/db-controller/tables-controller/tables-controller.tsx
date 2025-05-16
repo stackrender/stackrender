@@ -7,8 +7,8 @@ import TableAccordionHeader from "./table-accordion-item/table-accordion-header"
 import TableAccordionBody from "./table-accordion-item/table-accordion-body";
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import { TableType } from "@/lib/schemas/table-schema";
-import { v4 } from "uuid";
-import { randomColor } from "@/lib/colors";
+import { v4 } from "uuid"; 
+import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 
 
 interface Props { }
@@ -20,6 +20,7 @@ const TablesController: React.FC<Props> = ({ }) => {
     const { tables, createTable } = useDatabase();
     const { t } = useTranslation();
     const [selectedTable, setSelectedTable] = useState(new Set([]));
+    const { focusedTableId } = useDiagram();
 
 
     const addNewTable = useCallback(async () => {
@@ -35,7 +36,12 @@ const TablesController: React.FC<Props> = ({ }) => {
     }, [tables]);
 
 
-
+    useEffect(() => { 
+        if (focusedTableId) {
+            setSelectedTable(new Set([focusedTableId]) as any);
+        }
+    } , [focusedTableId]) ; 
+    
     const selectedTableId = selectedTable.values().next().value;
 
     return (
@@ -101,7 +107,7 @@ const TablesController: React.FC<Props> = ({ }) => {
                     selectedKeys={selectedTable}
                     onSelectionChange={setSelectedTable as any}
                     isCompact
-                    
+
                 >
                     {tables.map((table: TableType) => (
                         <AccordionItem

@@ -1,7 +1,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip"
 import { Accordion, AccordionItem, Button, Input, useDisclosure } from "@heroui/react"
 import { Code, List, ListCollapse, Table, Workflow } from "lucide-react"
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RelationshipAccordionHeader from "./relationship-accordion-item/relationship-accordion-header";
 import RelationshipAccordionBody from "./relationship-accordion-item/relationship-accordion-body";
@@ -10,6 +10,7 @@ import CreateRelationshipForm from "./create-relationship-form/create-relationsh
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import { v4 } from "uuid";
+import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 
 
 
@@ -26,6 +27,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
     const { createRelationship, relationships } = useDatabase();
     const { t } = useTranslation();
     const [selectedRelationship, setSelectedRelationship] = useState(new Set([]));
+    const { focusedRelationshipId } = useDiagram();
 
     const addRelationship = useCallback(() => {
 
@@ -40,6 +42,13 @@ const RelationshipController: React.FC<Props> = ({ }) => {
         setSelectedRelationship(new Set([newRelationshipId]) as any);
     }, [relationship]);
 
+
+    useEffect(() => {
+        if (focusedRelationshipId) {
+            setSelectedRelationship(new Set([focusedRelationshipId]) as any);
+        }
+
+    }, [focusedRelationshipId])
 
     return (
         <div className="w-full h-full flex flex-col gap-2">
@@ -109,12 +118,13 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                         <AccordionItem
                             key={relationship.id}
                             aria-label={relationship.id}
+                            
                             classNames={{
                                 trigger: "w-full hover:bg-default transition-all duration-200 h-12",
                                 base: "rounded-md p-0 overflow-hidden",
                             }}
                             subtitle={
-                                <RelationshipAccordionHeader relationship={relationship} />
+                                <RelationshipAccordionHeader relationship={relationship}  />
                             }
                         >
                             <RelationshipAccordionBody relationship={relationship} />

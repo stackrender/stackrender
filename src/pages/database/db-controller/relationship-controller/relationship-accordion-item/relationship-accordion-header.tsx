@@ -1,6 +1,7 @@
 import { useRelationshipName } from "@/hooks/use-relationship-name";
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
 import { Check, ChevronRight, EllipsisVertical, Focus, Pencil, Trash } from "lucide-react";
 import { useState } from "react";
@@ -21,7 +22,8 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
     const { editRelationship, deleteRelationship } = useDatabase();
     const { t } = useTranslation();
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
-    const [name, setName] = useState<string>(relationship.name ? relationship.name : defaultName)
+    const [name, setName] = useState<string>(relationship.name ? relationship.name : defaultName);
+    const { focusOnRelationship } = useDiagram();
 
 
     const editRelationshipName = () => {
@@ -34,7 +36,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
     }
 
     const onDeleteRelationship = () => {
-         
+
         deleteRelationship(relationship.id);
         setPopOverOpen(false);
     }
@@ -85,6 +87,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                             size="sm"
                             isIconOnly
                             variant="light"
+                            onPressEnd={() => focusOnRelationship(relationship.id, true)}
                         >
                             <Focus className="size-4 text-icon" />
                         </Button>

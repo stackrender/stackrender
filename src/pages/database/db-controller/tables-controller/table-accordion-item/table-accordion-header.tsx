@@ -9,6 +9,7 @@ import { TableType } from "@/lib/schemas/table-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import { v4 } from "uuid";
 import { getNextSequence } from "@/utils/field";
+import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 
 export interface TableAccordionHeaderProps {
     table: TableType,
@@ -23,11 +24,11 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
 
     const { t } = useTranslation();
     const [editMode, setEditMode] = useState<boolean>(false);
+    const { focusOnTable } = useDiagram();
 
-
-    useEffect(()=>   {
-        setTableName(table.name) ; 
-    } , [table.name])
+    useEffect(() => {
+        setTableName(table.name);
+    }, [table.name])
 
     const saveTableName = async () => {
         await editTable({ id: table.id, name: tableName });
@@ -51,7 +52,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
             nullable: true,
         })
     }
- 
+
     return (
         <div className="group w-full flex h-12 gap-1 border-l-4 flex p-2 items-center border-l-[6px] "
             style={{
@@ -114,13 +115,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                 !editMode && <>
                     <div className="hidden shrink-0 flex-row group-hover:flex">
 
-                        <Button
-                            size="sm"
-                            isIconOnly
-                            variant="light"
-                        >
-                            <Focus className="size-4 text-icon" />
-                        </Button>
+
                         <Button
                             size="sm"
                             isIconOnly
@@ -128,6 +123,14 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                             onPress={() => setEditMode(true)}
                         >
                             <Pencil className="size-4 text-icon" />
+                        </Button>
+                        <Button
+                            size="sm"
+                            isIconOnly
+                            variant="light"
+                            onPressEnd={() => focusOnTable(table.id , true)}
+                        >
+                            <Focus className="size-4 text-icon" />
                         </Button>
                     </div>
 
