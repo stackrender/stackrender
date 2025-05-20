@@ -1,4 +1,4 @@
-import Autocomplete from "@/components/auto-complete/auto-complete"; 
+import Autocomplete from "@/components/auto-complete/auto-complete";
 import { FieldType } from "@/lib/schemas/field-schema";
 import { RelationshipInsertType } from "@/lib/schemas/relationship-schema";
 import { TableType } from "@/lib/schemas/table-schema";
@@ -27,7 +27,9 @@ const CreateRelationshipForm: React.FC<CreateRelationshipFormProps> = ({ onRelat
     } as RelationshipInsertType)
 
 
-    const { tables } = useDatabase();
+    const { database } = useDatabase();
+    const { tables } = database;
+
     const { t } = useTranslation();
 
     const sourceFields: FieldType[] = useMemo(() => {
@@ -55,12 +57,12 @@ const CreateRelationshipForm: React.FC<CreateRelationshipFormProps> = ({ onRelat
     useEffect(() => setRelationship({ ...relationship, sourceFieldId: "" }), [sourceFields]);
     useEffect(() => setRelationship({ ...relationship, targetFieldId: "" }), [targetFields]);
 
-    useEffect(() => {    
+    useEffect(() => {
         onRelationshipChanges && onRelationshipChanges(relationship)
-    }, [relationship , sourceFields , targetFields]);
+    }, [relationship, sourceFields, targetFields]);
 
     useEffect(() => {
-        onValidationChanges && onValidationChanges ((relationship.sourceFieldId && relationship.targetFieldId && fieldTypesMatches) as boolean)
+        onValidationChanges && onValidationChanges((relationship.sourceFieldId && relationship.targetFieldId && fieldTypesMatches) as boolean)
     }, [relationship, fieldTypesMatches])
 
     return (
@@ -119,7 +121,7 @@ const CreateRelationshipForm: React.FC<CreateRelationshipFormProps> = ({ onRelat
                 </div>
             </div>
             {
-                !fieldTypesMatches && 
+                !fieldTypesMatches &&
                 <div className="w-full text-danger text-sm  ">
                     {t("db_controller.relationship_error")}
 

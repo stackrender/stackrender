@@ -1,12 +1,12 @@
 
 
 import { useSortable } from "@dnd-kit/sortable";
-import { Button,  Input, Popover, PopoverContent, PopoverTrigger, Switch, Textarea } from "@heroui/react";
-import { EllipsisVertical,  GripVertical, KeyRound, Trash2 } from "lucide-react";
+import { Button, Input, Popover, PopoverContent, PopoverTrigger, Switch, Textarea } from "@heroui/react";
+import { EllipsisVertical, GripVertical, KeyRound, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { CSS } from "@dnd-kit/utilities";
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema";
-import { Key , useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import Autocomplete from "@/components/auto-complete/auto-complete";
 import ToggleButton from "@/components/toggle/toggle";
@@ -24,17 +24,21 @@ const FieldItem: React.FC<Props> = ({ field }) => {
     const { deleteField, editField, data_types } = useDatabase();
 
     const [note, setNote] = useState<string | undefined>(field.note as string | undefined);
+    const [selectedType, setSelectedType] = useState<string | undefined>(field.typeId as string | undefined);
     const { t } = useTranslation();
 
-    const { attributes, listeners, setNodeRef, transform  } = useSortable({ id: field.id });
+    const { attributes, listeners, setNodeRef, transform } = useSortable({ id: field.id });
 
     const style = {
         transform: CSS.Transform.toString(transform),
     };
 
-    useEffect(() => { 
-        setFieldName(field.name) ; 
-    } , [field.name])
+    useEffect(() => {
+        setFieldName(field.name);
+    }, [field.name]);
+    useEffect(() => {
+        setSelectedType(field.typeId as string | undefined);
+    }, [field.typeId])
 
     const removeField = () => {
         setPopOverOpen(false);
@@ -65,6 +69,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
             id: field.id,
             typeId: key
         } as FieldType);
+        setSelectedType(key as string | undefined);
     }
 
     const toggleNullable = (nullable: boolean) => {
@@ -99,7 +104,8 @@ const FieldItem: React.FC<Props> = ({ field }) => {
             <Autocomplete
                 items={data_types}
                 onSelectionChange={updateFieldType}
-                defaultSelection={field.typeId as any}
+
+                selectedItem={selectedType}
                 placeholder={t("db_controller.type")}
             />
 

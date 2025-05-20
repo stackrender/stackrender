@@ -2,7 +2,7 @@
 import { Accordion, AccordionItem, Button, cn, Textarea } from "@heroui/react";
 import { ChevronLeft, FileKey, FileType, Key, MessageSquareQuote, Plus } from "lucide-react";
 
-import { MouseEventHandler, useCallback, useState } from "react";
+import { MouseEventHandler, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ColorPicker from "@/components/color-picker/color-picker";
 import FieldList from "./field/field-list";
@@ -48,6 +48,10 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
         } as TableType)
     }
 
+
+    useEffect(() => {
+        setNote(table.note ? table.note : "");
+    }, [table.note])
     return (
         <div className="w-full dark:bg-background">
             <Accordion

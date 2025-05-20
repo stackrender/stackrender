@@ -4,7 +4,7 @@ import { Cardinality, RelationshipInsertType, RelationshipType } from "@/lib/sch
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import { Button, Select, SelectItem, SharedSelection } from "@heroui/react";
 import { ChevronsLeftRightEllipsis, FileMinus2, FileOutput, SquareArrowLeft, SquareArrowRight, Trash2 } from "lucide-react";
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 
@@ -33,10 +33,15 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
             } as RelationshipInsertType);
 
         setCardinality(keys as any);
-    }
+    } 
+
     const removeRelationship = () => {
         deleteRelationship(relationship.id);
     }
+
+    useEffect(() => {
+        setCardinality(new Set([relationship.cardinality])) ; 
+    } , [relationship.cardinality])
 
     if (!relationship.sourceTable || !relationship.targetTable) 
         return;

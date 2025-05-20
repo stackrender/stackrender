@@ -24,7 +24,9 @@ const RelationshipController: React.FC<Props> = ({ }) => {
     const [relationship, setRelationship] = useState<RelationshipInsertType | undefined>(undefined);
     const [isValid, setIsValid] = useState<boolean>(false);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const { createRelationship, relationships } = useDatabase();
+    const { createRelationship, database } = useDatabase();
+    const { relationships } = database  ;
+
     const { t } = useTranslation();
     const [selectedRelationship, setSelectedRelationship] = useState(new Set([]));
     const { focusedRelationshipId } = useDiagram();
@@ -35,8 +37,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
 
         createRelationship({
             id: newRelationshipId,
-            ...relationship,
-            createdAt: new Date().toISOString()
+            ...relationship, 
         } as RelationshipInsertType);
 
         setSelectedRelationship(new Set([newRelationshipId]) as any);
@@ -118,13 +119,12 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                         <AccordionItem
                             key={relationship.id}
                             aria-label={relationship.id}
-                            
                             classNames={{
                                 trigger: "w-full hover:bg-default transition-all duration-200 h-12 dark:bg-background dark:hover:bg-default-50",
                                 base: "rounded-md p-0 overflow-hidden",
                             }}
                             subtitle={
-                                <RelationshipAccordionHeader relationship={relationship}  />
+                                <RelationshipAccordionHeader relationship={relationship} />
                             }
                         >
                             <RelationshipAccordionBody relationship={relationship} />

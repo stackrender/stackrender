@@ -6,10 +6,9 @@ import { useCallback, useEffect, useState } from "react";
 import TableAccordionHeader from "./table-accordion-item/table-accordion-header";
 import TableAccordionBody from "./table-accordion-item/table-accordion-body";
 import { useDatabase } from "@/providers/database-provider/database-provider";
-import { TableType } from "@/lib/schemas/table-schema";
-import { v4 } from "uuid"; 
+import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
+import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
-import { useTheme } from "next-themes";
 
 
 interface Props { }
@@ -18,7 +17,9 @@ interface Props { }
 const TablesController: React.FC<Props> = ({ }) => {
 
 
-    const { tables, createTable } = useDatabase();
+    const { database, createTable } = useDatabase();
+
+    const { tables } = database ;
     const { t } = useTranslation();
     const [selectedTable, setSelectedTable] = useState(new Set([]));
     const { focusedTableId } = useDiagram();
@@ -29,23 +30,22 @@ const TablesController: React.FC<Props> = ({ }) => {
 
         await createTable({
             id: newTableId,
-            name: `table_${tables.length + 1}`,
-            createdAt: new Date().toISOString()
-        });
+            name: `table_${tables.length + 1}`, 
+        } as TableInsertType);
 
         setSelectedTable(new Set([newTableId]) as any);
     }, [tables]);
 
 
-    useEffect(() => { 
+    useEffect(() => {
         if (focusedTableId) {
             setSelectedTable(new Set([focusedTableId]) as any);
         }
-    } , [focusedTableId]) ; 
-    
-    const selectedTableId = selectedTable.values().next().value; 
+    }, [focusedTableId]);
 
-    
+    const selectedTableId = selectedTable.values().next().value;
+
+
     return (
         <div className="w-full h-full flex flex-col gap-2">
             <div className="flex items-center justify-between gap-4 py-1">
@@ -105,7 +105,7 @@ const TablesController: React.FC<Props> = ({ }) => {
 
                 <Accordion
                     hideIndicator
-                    variant={   "splitted"}
+                    variant={"splitted"}
                     selectedKeys={selectedTable}
                     onSelectionChange={setSelectedTable as any}
                     isCompact

@@ -105,14 +105,14 @@ const Menu: React.FC<MenuProps> = ({ }) => {
                 children: [{
                     title: "Light",
                     clickHandler: () => {
-                        
-                        setTheme("light") ;
+
+                        setTheme("light");
                     }
                 }, {
                     title: "Dark",
                     clickHandler: () => {
-                    
-                        setTheme("dark") ;
+
+                        setTheme("dark");
                     }
                 }]
             }]
@@ -127,9 +127,13 @@ const Menu: React.FC<MenuProps> = ({ }) => {
     ], []);
 
 
-    return menu.map(menuItem => (
-        <DropdownMenu  {...menuItem} />
-    ))
+    return <div className="gap-1 flex">
+        {
+            menu.map((menuItem  , index ) => (
+                <DropdownMenu  {...menuItem} key={index} />
+            ))
+        }
+    </div>
 }
 
 

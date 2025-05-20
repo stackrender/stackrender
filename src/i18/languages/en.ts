@@ -66,6 +66,14 @@ export const en = {
         },
         table: {
             double_click: "Double click to edit"
+        } , 
+        control_buttons : { 
+            redo : "Redo" , 
+            undo : "Undo" , 
+            zoom_in : "Zoom In" , 
+            zoom_out : "Zoom Out" , 
+            adjust_positions : "Adjust Positions" , 
+            show_all : "Show all"
         }
     }
 

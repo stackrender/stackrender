@@ -5,6 +5,7 @@ import {
 import { InferInsertModel, InferSelectModel, relations } from 'drizzle-orm';
 import { tables, TableType } from './table-schema';
 import { fields, FieldType } from './field-schema';
+import { databases } from './database-schema';
 
 export const relationships = sqliteTable('relationships', {
     id: text('id').primaryKey().notNull(),
@@ -38,6 +39,10 @@ export const relationships = sqliteTable('relationships', {
         .notNull()
         .default('one_to_many'),
 
+
+
+    databaseId: text("databaseId").notNull().references(() => databases.id, { onDelete: "cascade" }),
+
     sourceAliasName: text('sourceAliasName'),
     targetAliasName: text('targetAliasName'),
     createdAt: text('createdAt'),
@@ -61,15 +66,19 @@ export const relationshipRelations = relations(relationships, ({ one }) => ({
         fields: [relationships.targetFieldId],
         references: [fields.id],
     }),
+    database: one(databases, {
+        fields: [relationships.databaseId],
+        references: [databases.id],
+    })
 }));
 
 
 export interface RelationshipType extends InferSelectModel<typeof relationships> {
-    sourceTable : TableType , 
-    targetTable : TableType ,
-    sourceField : FieldType ,
-    targetField : FieldType ,   
- };
+    sourceTable: TableType,
+    targetTable: TableType,
+    sourceField: FieldType,
+    targetField: FieldType,
+};
 
 export interface RelationshipInsertType extends InferInsertModel<typeof relationships> { };
 

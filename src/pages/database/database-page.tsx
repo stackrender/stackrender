@@ -20,18 +20,19 @@ import { Button } from "@heroui/react";
 import { LayoutGrid } from "lucide-react";
 import { adjustTablesPositions } from "@/utils/tables";
 import { useTheme } from "next-themes";
+import DatabaseControlButtons from "./database-control-buttons";
 
 
 
 const DatabasePage: React.FC<never> = () => {
 
-    const { tables, relationships, updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabase();
+    const { database, updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabase();
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const { setIsConnectionInProgress } = useDiagram();
     const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
 
- 
+    const { tables, relationships } = database  ; 
     const { fitView } = useReactFlow();
 
     const nodeTypes = useMemo(() => ({ table: Table }), []);
@@ -119,19 +120,18 @@ const DatabasePage: React.FC<never> = () => {
     }, []);
 
 
-    const adjustPositions = useCallback(async () => {
 
+    useTableToNode(tables);
+    useRelationshipToEdge(relationships);
+
+    const adjustPositions = useCallback(async () => {
         updateTablePositions(await adjustTablesPositions(nodes, relationships));
         setTimeout(() => {
             fitView({
                 duration: 500
             })
         }, 500)
-
-    }, [relationships, nodes])
-
-    useTableToNode(tables);
-    useRelationshipToEdge(relationships);
+    }, [relationships, nodes]);
 
     return (
 
@@ -157,32 +157,21 @@ const DatabasePage: React.FC<never> = () => {
                 onConnectStart={onConnectStart}
                 onConnectEnd={onConnectEnd}
             >
-                <div className="absolute top-[160px]">
 
-                </div>
-                <Controls >
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <span>
-                                <Button
-                                    size="sm"
-                                    isIconOnly
-                                    variant="flat"
-                                    className="size-8 p-1 shadow-none"
-                                    onPressEnd={adjustPositions}
+                <Controls
+                    position="bottom-center"
+                    showFitView={false}
+                    showZoom={false}
+                    showInteractive={false}
+                    className="shadow-none "
+                >
 
-                                >
-                                    <LayoutGrid className="size-4" />
-                                </Button>
-                            </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            Adjust Positions
-                        </TooltipContent>
-                    </Tooltip>
+                    <DatabaseControlButtons
+                        adjustPositions={adjustPositions}
+                    />
 
-                </Controls>
-                <Background className="bg-default/30 dark:bg-black" />
+                </Controls >
+                <Background />
             </ReactFlow>
 
             <svg style={{ position: 'absolute', width: 0, height: 0 }}>

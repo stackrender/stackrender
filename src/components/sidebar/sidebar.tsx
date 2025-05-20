@@ -8,33 +8,33 @@ interface SidebarProps {
     children?: React.ReactNode
 }
 
-const sidebarItemClass : string = "text-gray-700 dark:text-default-500 size-4 data-[active=true]:text-primary" ; 
+const sidebarItemClass: string = "text-gray-700 dark:text-default-500 size-4 data-[active=true]:text-primary";
 
 const Sidebar: React.FC<SidebarProps> = ({ }) => {
-    const { t  } = useTranslation() ; 
- 
+    const { t } = useTranslation();
 
-    const location = useLocation() ; 
-   
+
+    const location = useLocation();
+
     const sidebarItems: SidebarItemProps[] = useMemo(() => [
         {
             title: t("sidebar.tables"),
             icon: <TableProperties className={sidebarItemClass}></TableProperties>,
             href: "/database/tables",
-            isActive : location.pathname.endsWith("/database/tables")
+            isActive: location.pathname.endsWith("/database/tables")
         },
         {
             title: t("sidebar.relationships"),
-            icon: <Workflow   className={sidebarItemClass}></Workflow>,
+            icon: <Workflow className={sidebarItemClass}></Workflow>,
             href: "/database/relationships",
-            isActive : location.pathname.endsWith("/database/relationships")
+            isActive: location.pathname.endsWith("/database/relationships")
         },
 
         {
             title: "AI",
-            icon: <Sparkles  className={sidebarItemClass}></Sparkles>,
+            icon: <Sparkles className={sidebarItemClass}></Sparkles>,
             href: "/database/bot",
-            isActive : location.pathname.endsWith("/database/bot")
+            isActive: location.pathname.endsWith("/database/bot")
         },
         {
             type: "divider"
@@ -83,15 +83,16 @@ const Sidebar: React.FC<SidebarProps> = ({ }) => {
             icon: <BookOpen className={sidebarItemClass}></BookOpen>,
             href: "/database/ai-bot",
         },
-    ], []) ; 
+    ], []);
 
     return (
 
         <aside className="h-full z-[20] flex flex-col items-between py-2 justify-between sticky top-0 duration-500 w-12 bg-sidebar dark:bg-background border-r pt-[56px] dark:border-default-100">
             <div className="flex flex-col items-center gap-2">
                 {
-                    sidebarItems.map((item: SidebarItemProps) => (
+                    sidebarItems.map((item: SidebarItemProps , index : number) => (
                         <SidebarItem
+                            key={`top-${index}`}
                             {...item}
                         />
                     ))
@@ -99,8 +100,10 @@ const Sidebar: React.FC<SidebarProps> = ({ }) => {
             </div>
             <div className="flex flex-col items-center gap-2 ">
                 {
-                    bottomSidebarItems.map((item: SidebarItemProps) => (
+                    bottomSidebarItems.map((item: SidebarItemProps, index : number) => (
                         <SidebarItem
+                            key={`bottom-${index}`}
+
                             {...item}
                         />
                     ))

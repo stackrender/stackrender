@@ -13,7 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/to
 
 import FieldComponent from "./field";
 import { FieldType } from "@/lib/schemas/field-schema";
-import { TableType } from "@/lib/schemas/table-schema";
+import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import { useTranslation } from "react-i18next";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
@@ -31,20 +31,20 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table } }) =
     const { editTable } = useDatabase();
 
     const { focusOnTable } = useDiagram();
-    const { t } = useTranslation();
+    const { t } = useTranslation(); 
 
-    useEffect(() => {
+    useEffect(() => { 
         setTableName(table.name);
     }, [table.name])
 
     const saveTableName = useCallback(async () => {
-        await editTable({ id: table.id, name: tableName });
+        await editTable({ id: table.id, name: tableName } as TableInsertType);
         setEditMode(false);
-    }, []);
+    }, [tableName]);
 
     const focus = useCallback(() => {
         focusOnTable(table.id, false);
-    }, [])
+    }, [table])
 
     const edges = useStore((store) => store.edges) as Edge[];
 
@@ -117,7 +117,7 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table } }) =
                                         className=" w-full text-editable truncate px-2 py-0.5 text-sm font-bold dark:text-white dark:group-hover:bg-default-900"
                                         onDoubleClick={() => setEditMode(true)}
                                     >
-                                        {table.name}
+                                        {tableName}
                                     </label>
                                 </TooltipTrigger>
                                 <TooltipContent className="dark:bg-default-900">
@@ -150,22 +150,4 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table } }) =
 };
 
 export default React.memo(Table)
-//export default React.memo(Table ) ;
-
-
-/* 
-                                focused = { false}
-                            tableNodeId={id}
-                            field={field}
-                            highlighted={selectedRelEdges.some(
-                                (edge) =>
-                                    edge.data?.relationship
-                                        .sourceFieldId === field.id ||
-                                    edge.data?.relationship
-                                        .targetFieldId === field.id
-                            )}
-                            visible={visibleFields.includes(field)}
-                            isConnectable={!table.isView}
-                         
-
-*/
+ 

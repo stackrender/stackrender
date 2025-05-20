@@ -126,6 +126,7 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
                 className={cn([
      
                     `!stroke-2  ${selected ? '!stroke-primary' : 'stroke-slate-300 dark:stroke-default-500'}`,
+                    
 
                 ])}
                 onClick={(e) => {

@@ -13,6 +13,7 @@ export const powerSyncDb = new PowerSyncDatabase({
         dbFilename: 'stackrender.sqlite'
     },
     schema: AppSchema,
+    
 });
 
 export const db: PowerSyncSQLiteDatabase<typeof drizzleSchema> = wrapPowerSyncWithDrizzle(powerSyncDb, {

@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
- 
+
 import { FitViewOptions, useReactFlow } from "@xyflow/react";
 import { useNavigate } from "react-router-dom";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
@@ -15,7 +15,7 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     const navigate = useNavigate();
     const [focusedTableId, setFocusedTableId] = useState<string | undefined>(undefined)
     const [focusedRelationshipId, setFocusedRelationshipId] = useState<string | undefined>(undefined)
-    const [isConnectionInProgress , setIsConnectionInProgress] = useState<boolean>( false) ; 
+    const [isConnectionInProgress, setIsConnectionInProgress] = useState<boolean>(false);
 
     const focusOnTable = useCallback((id: string, transition: boolean = false) => {
         navigate("/database/tables");
@@ -44,7 +44,7 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
 
 
     const focusOnRelationship = useCallback((id: string, transition: boolean = false) => {
-          navigate("/database/relationships");
+        navigate("/database/relationships");
         setFocusedRelationshipId(id);
 
         setEdges((edges) =>
@@ -76,11 +76,11 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     const contextValue = useMemo(() => ({
         focusedTableId,
         focusedRelationshipId,
-        isConnectionInProgress , 
+        isConnectionInProgress,
         focusOnTable,
-        focusOnRelationship , 
-        setIsConnectionInProgress 
-    }), [focusedTableId, focusedRelationshipId, focusOnTable, focusOnRelationship , isConnectionInProgress , setIsConnectionInProgress ]);
+        focusOnRelationship,
+        setIsConnectionInProgress
+    }), [focusedTableId, focusedRelationshipId, focusOnTable, focusOnRelationship, isConnectionInProgress, setIsConnectionInProgress]);
     return (
         <DiagramContext.Provider
             value={contextValue}

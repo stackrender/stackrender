@@ -1,7 +1,7 @@
 import { colorOptions } from "@/lib/colors";
 import { Button, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
 import { Slash } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip/tooltip";
 import { useTranslation } from "react-i18next";
 
@@ -15,7 +15,11 @@ interface ColorPickerProps {
 const ColorPicker: React.FC<ColorPickerProps> = ({ defaultColor, onChange }) => {
     const [color, setColor] = useState<string | undefined>(defaultColor as string);
     const [isOpen, setIsOpen] = useState(false);
-    const { t } = useTranslation();
+    const { t } = useTranslation(); 
+
+    useEffect(() => {
+        setColor(defaultColor) ; 
+    } , [defaultColor])
 
     const onSelect = useCallback((color: string | undefined) => {
         setIsOpen(false);

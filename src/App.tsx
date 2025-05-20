@@ -11,6 +11,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 
+
 function App() {
 
   const appRoutes = useAppRoutes();
@@ -24,9 +25,11 @@ function App() {
           <ReactFlowProvider>
             <DatabaseProvider>
               <DiagramProvider>
+
                 <TooltipProvider delayDuration={0}>
                   {appRoutes}
                 </TooltipProvider>
+
               </DiagramProvider>
             </DatabaseProvider>
           </ReactFlowProvider>

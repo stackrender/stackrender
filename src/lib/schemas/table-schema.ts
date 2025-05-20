@@ -2,6 +2,7 @@ import { InferInsertModel, InferSelectModel, relations } from 'drizzle-orm';
 import { sqliteTable, text, real, integer } from 'drizzle-orm/sqlite-core';
 import { fields, FieldType } from './field-schema';
 import { relationships } from './relationship-schema';
+import { databases } from './database-schema';
 
 export const tables = sqliteTable('tables', {
     id: text('id')
@@ -9,7 +10,7 @@ export const tables = sqliteTable('tables', {
         .notNull()
         .unique(),
 
-    databaseId: text('databaseId'),
+    databaseId: text("databaseId").notNull().references(() => databases.id, { onDelete: "cascade" }),
 
     name: text('name').notNull(),
     posX: real('posX').notNull().default(0),
@@ -20,23 +21,29 @@ export const tables = sqliteTable('tables', {
     note: text('note'),
     sequence: integer('sequence').default(0),
     createdAt: text('createdAt'),
-
 });
 
 
-export const tablesRelations = relations(tables, ({ many }) => ({
+export const tablesRelations = relations(tables, ({ many, one }) => ({
     fields: many(fields),
     sourceRelations: many(relationships),
     targetRelations: many(relationships),
+    database: one(databases, {
+        fields: [tables.databaseId],
+        references: [databases.id],
+    })
 }));
 
 
 
 export interface TableType extends InferSelectModel<typeof tables> {
-    fields: FieldType[]
+    fields: FieldType[];
+
 };
 
 
 export interface TableInsertType extends InferInsertModel<typeof tables> {
-    fields?: FieldType[]
+    fields?: FieldType[];
+    
+    
 }; 

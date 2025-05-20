@@ -2,10 +2,10 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/tooltip/to
 
 import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@heroui/react";
 import { Check, ChevronRight, Copy, EllipsisVertical, FileKey, FileType, Focus, Pencil, Trash } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { TableType } from "@/lib/schemas/table-schema";
+import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import { v4 } from "uuid";
 import { getNextSequence } from "@/utils/field";
@@ -26,14 +26,15 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
     const [editMode, setEditMode] = useState<boolean>(false);
     const { focusOnTable } = useDiagram();
 
-    useEffect(() => {
+    useEffect(() => { 
         setTableName(table.name);
     }, [table.name])
 
-    const saveTableName = async () => {
-        await editTable({ id: table.id, name: tableName });
+    const saveTableName = useCallback(async() => {
+
+        await editTable({ id: table.id, name: tableName } as TableInsertType);
         setEditMode(false);
-    }
+    } , [tableName])  
 
     const onDeleteTable = async () => {
         deleteTable(table.id)
@@ -74,7 +75,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                 className="w-full text-editable truncate px-2 py-1 text-sm font-semibold text-black dark:text-white"
                                 onDoubleClick={() => setEditMode(true)}
                             >
-                                {table.name}
+                                {tableName}
                             </label>
                         </TooltipTrigger>
                         <TooltipContent>
