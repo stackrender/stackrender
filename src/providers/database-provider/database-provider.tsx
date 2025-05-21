@@ -1,8 +1,8 @@
 
-import DatabaseContext from "./database-context";
+import { DatabaseDataContext, DatabaseOperationsContext } from "./database-context";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { db, powerSyncDb } from "../sync-provider/sync-provider";
-import { TableInsertType, tables } from "@/lib/schemas/table-schema";
+import { TableInsertType, tables, TableType } from "@/lib/schemas/table-schema";
 import { useQuery } from "@powersync/react";
 import { toCompilableQuery } from "@powersync/drizzle-driver";
 import { asc, desc, eq, inArray, or } from "drizzle-orm";
@@ -113,6 +113,13 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         })
     }, [db]);
 
+
+    const getField = useCallback((tableId: string, id: string) => {
+        const table: TableType | undefined = (database as any).tables.find((table: TableType) => table.id == tableId);
+        if (table)
+            return table.fields.find((field: FieldType) => field.id == id);
+    }, [database])
+
     const orderTableFields = useCallback(async (fieldsList: FieldType[]): Promise<QueryResult> => {
         const caseStatements = fieldsList
             .map((field, index) => `WHEN '${field.id}' THEN ${index}`)
@@ -188,7 +195,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                         await tx.insert(fields).values(Object.values(operation.table.fields));
                 }
                 else if (operation.type === "UPDATE_TABLE") {
-            
+
                     await tx.update(tables).set(operation.changes).where(eq(tables.id, operation.tableId));
 
                 } else if (operation.type === "DELETE_TABLE") {
@@ -216,43 +223,52 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             }
         })
 
-    }, [db, currentDatabaseId])
+    }, [db, currentDatabaseId]);
+
     return (
 
-        <DatabaseContext.Provider value={{
-            createTable,
-            editTable,
-            deleteTable,
-            updateTablePositions,
-            deleteMultiTables,
-
-            createField,
-            editField,
-            deleteField,
-            orderTableFields,
-
-            createRelationship,
-            editRelationship,
-            deleteRelationship,
-            deleteMultiRelationships,
+        <DatabaseDataContext.Provider value={{
 
 
             data_types,
             database: database as unknown as DatabaseType,
             isLoading,
-            executeDbDiffOps
         }}>
-            {
-                !isLoading && database &&
-                <DatabaseHistoryProvider>
-                    {children}
-                </DatabaseHistoryProvider>
-            }
-        </DatabaseContext.Provider>
+            <DatabaseOperationsContext.Provider value={{
+                createTable,
+                editTable,
+                deleteTable,
+                updateTablePositions,
+                deleteMultiTables,
+
+                createField,
+                editField,
+                deleteField,
+                orderTableFields,
+                getField,
+
+                createRelationship,
+                editRelationship,
+                deleteRelationship,
+                deleteMultiRelationships,
+
+                executeDbDiffOps,
+            }}>
+
+
+                {
+                    !isLoading && database &&
+                    <DatabaseHistoryProvider>
+                        {children}
+                    </DatabaseHistoryProvider>
+                }
+            </DatabaseOperationsContext.Provider>
+        </DatabaseDataContext.Provider>
     )
 }
 
-export const useDatabase = () => useContext(DatabaseContext);
+export const useDatabase = () => useContext(DatabaseDataContext);
+export const useDatabaseOperations = () => useContext(DatabaseOperationsContext);
 
 export default DatabaseProvider;
 

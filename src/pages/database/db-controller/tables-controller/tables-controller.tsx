@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useState } from "react";
 import TableAccordionHeader from "./table-accordion-item/table-accordion-header";
 import TableAccordionBody from "./table-accordion-item/table-accordion-body";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
 import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
@@ -17,8 +17,8 @@ interface Props { }
 const TablesController: React.FC<Props> = ({ }) => {
 
 
-    const { database, createTable } = useDatabase();
-
+    const { database } = useDatabase();
+    const {createTable} = useDatabaseOperations() ; 
     const { tables } = database ;
     const { t } = useTranslation();
     const [selectedTable, setSelectedTable] = useState(new Set([]));

@@ -1,10 +1,10 @@
 import { useRelationshipName } from "@/hooks/use-relationship-name";
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
 import { Check, ChevronRight, EllipsisVertical, Focus, Pencil, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 
@@ -19,7 +19,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
 
     const [editMode, setEditMode] = useState<boolean>(false);
     const { name: defaultName } = useRelationshipName(relationship);
-    const { editRelationship, deleteRelationship } = useDatabase();
+    const { editRelationship, deleteRelationship } = useDatabaseOperations();
     const { t } = useTranslation();
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
     const [name, setName] = useState<string>(relationship.name ? relationship.name : defaultName);
@@ -40,6 +40,11 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
         deleteRelationship(relationship.id);
         setPopOverOpen(false);
     }
+
+
+    useEffect(() => {
+        setName(relationship.name ? relationship.name : defaultName) ; 
+    } , [relationship.name])
     return (
         <div className="group w-full flex h-12 gap-1  flex p-2 items-center" >
             <div className={cn(
@@ -137,7 +142,6 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                 </>
             }
         </div>
-
     )
 }
 

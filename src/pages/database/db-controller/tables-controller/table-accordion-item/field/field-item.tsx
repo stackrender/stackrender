@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { CSS } from "@dnd-kit/utilities";
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema";
 import { Key, useEffect, useState } from "react";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import Autocomplete from "@/components/auto-complete/auto-complete";
 import ToggleButton from "@/components/toggle/toggle";
 interface Props {
@@ -21,8 +21,9 @@ const FieldItem: React.FC<Props> = ({ field }) => {
     const [fieldName, setFieldName] = useState<string>(field.name);
 
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
-    const { deleteField, editField, data_types } = useDatabase();
-
+    const {  data_types } = useDatabase();
+    const {deleteField, editField} = useDatabaseOperations() ; 
+    
     const [note, setNote] = useState<string | undefined>(field.note as string | undefined);
     const [selectedType, setSelectedType] = useState<string | undefined>(field.typeId as string | undefined);
     const { t } = useTranslation();

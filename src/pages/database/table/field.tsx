@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 import { FieldType } from "@/lib/schemas/field-schema";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { Button, cn, select } from "@heroui/react";
 import { Handle, Position, useConnection } from "@xyflow/react";
@@ -12,8 +12,8 @@ import React, { useEffect, useState } from "react";
 interface Props {
     field: FieldType,
     showHandles?: boolean,
-    highlight?: boolean , 
-    showTargetHandle? : boolean 
+    highlight?: boolean,
+    showTargetHandle?: boolean
 }
 
 
@@ -25,20 +25,17 @@ export const TARGET_PREFIX = "target_";
 const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
 
     const [editMode, setEditMode] = useState<boolean>(false);
-    const { deleteField, editField } = useDatabase();
+    const { deleteField, editField } = useDatabaseOperations();
     const [fieldName, setFieldName] = useState<string>(field.name);
-    const {isConnectionInProgress} = useDiagram() ; 
+    const { isConnectionInProgress } = useDiagram();
 
     useEffect(() => {
         setFieldName(field.name);
     }, [field.name]);
 
-
-
     const removeField = () => {
         deleteField(field.id)
     }
-
 
     const saveFieldName = () => {
         editField({
@@ -48,11 +45,11 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
         setEditMode(false);
     }
 
- 
-    
+  //  console.log("render field ", field.name)
+
     return (
         <div className={cn(
-            "group relative flex h-8 items-center justify-between gap-1 border-t border-default dark:border-default/5 px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-primary-500 transition-all duration-200 ease-in-out" , 
+            "group relative flex h-8 items-center justify-between gap-1 border-t border-default dark:border-default/5 px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-primary-500 transition-all duration-200 ease-in-out",
             highlight ? "bg-primary/5" : ""
         )}>
             {
@@ -125,12 +122,12 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
                     type="source"
                     position={Position.Left}
                     id={LEFT_PREFIX + field.id}
-                    className="w-4 h-4 border-4 bg-primary dark:border-default-900"
+                    className="w-4 h-4 border-3 bg-primary dark:border-default-900"
                 />
                 <Handle
                     type="source"
                     position={Position.Right}
-                    className="w-4 h-4 border-4 bg-primary dark:border-default-900"
+                    className="w-4 h-4 border-3 bg-primary dark:border-default-900"
                     id={RIGHT_PREFIX + field.id}
                 />
             </div>

@@ -6,7 +6,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@heroui/theme/dist/components/(button|code|dropdown|input|kbd|link|navbar|snippet|toggle|popover|ripple|spinner|menu|divider|form|modal).js",
+    "./node_modules/@heroui/theme/dist/components/(button|code|dropdown|input|kbd|link|navbar|snippet|toggle|popover|ripple|spinner|menu|divider|form|modal|toast).js",
 
   ],
   darkMode: "class",

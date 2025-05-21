@@ -1,7 +1,7 @@
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 import { Cardinality, RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { Button, Select, SelectItem, SharedSelection } from "@heroui/react";
 import { ChevronsLeftRightEllipsis, FileMinus2, FileOutput, SquareArrowLeft, SquareArrowRight, Trash2 } from "lucide-react";
 import { Key, useEffect, useState } from "react";
@@ -19,7 +19,7 @@ interface RelationshipAccordionBodyProps {
 
 const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ relationship }) => {
     const [cardinality, setCardinality] = useState(new Set([relationship.cardinality]));
-    const { editRelationship, deleteRelationship } = useDatabase();
+    const { editRelationship, deleteRelationship } = useDatabaseOperations();
 
     const { t } = useTranslation();
 

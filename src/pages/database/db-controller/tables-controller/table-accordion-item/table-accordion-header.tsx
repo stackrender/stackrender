@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { v4 } from "uuid";
 import { getNextSequence } from "@/utils/field";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
@@ -18,7 +18,7 @@ export interface TableAccordionHeaderProps {
 
 
 const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOpen }) => {
-    const { editTable, deleteTable, createField } = useDatabase();
+    const { editTable, deleteTable, createField } = useDatabaseOperations();
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
     const [tableName, setTableName] = useState<string>(table.name);
 

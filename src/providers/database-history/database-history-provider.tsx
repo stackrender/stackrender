@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useRef } from "react";
 import DatabaseHistoryContext from "./database-history-context";
 import useUndo from 'use-undo';
-import { useDatabase } from "../database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "../database-provider/database-provider";
 import hash from 'object-hash';
 import { DBDiffOperation, mapDiffToDBDiffOperation, normalizeDatabase } from "@/utils/database";
 import { compare } from 'fast-json-patch';
@@ -12,7 +12,9 @@ interface Props { children: React.ReactNode };
 const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
 
     const udpateDbFlag = useRef(false);
-    const { database, executeDbDiffOps } = useDatabase();
+    const { database } = useDatabase();
+    const { executeDbDiffOps} = useDatabaseOperations() ; 
+    
     const [datatbaseState, { set, undo: undoChanges, redo: redoChanges, canUndo, canRedo }] = useUndo<DatabaseType>(database);
 
     useEffect(() => {
@@ -21,8 +23,6 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
         const databaseHash: string = hash(database, { algorithm: 'sha1' });
         if (presentHash != databaseHash)
             set(database);
-
-
     }, [database]);
 
 
@@ -47,15 +47,11 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
         const differences = compare(normalizedDatabase, normalizedPresent);
 
         if (differences && differences.length > 0) {
-
             const operations: DBDiffOperation[] = mapDiffToDBDiffOperation(differences);
             executeDbDiffOps(operations)
         }
 
     }, [datatbaseState.present]);
-
-
-
     return (
         <DatabaseHistoryContext.Provider
             value={{

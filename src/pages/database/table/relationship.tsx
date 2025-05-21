@@ -113,6 +113,7 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
         }
     }, [data?.relationship.cardinality, selected]);
 
+   // console.log ("render relationship " , props.data?.relationship.sourceTable.name , props.data?.relationship.targetTable.name)
 
     return (
         <>

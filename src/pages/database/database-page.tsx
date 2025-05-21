@@ -6,7 +6,7 @@ import '@xyflow/react/dist/style.css';
 import Relationship from "./table/relationship";
 import DBController from "./db-controller/db-controller";
 import { TableInsertType } from "@/lib/schemas/table-schema";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useTableToNode } from "@/hooks/use-table-to-node";
 import { useRelationshipToEdge } from "@/hooks/use-relationship-to-edge";
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
@@ -16,42 +16,60 @@ import CardinalityMarker from "@/components/cardinality-marker/cardinality-marke
 import { areArraysEqual } from "@/utils/utils";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
-import { Button } from "@heroui/react";
-import { LayoutGrid } from "lucide-react";
+import { addToast, Button, Image } from "@heroui/react";
+import { AlertTriangle, LayoutGrid } from "lucide-react";
 import { adjustTablesPositions } from "@/utils/tables";
 import { useTheme } from "next-themes";
 import DatabaseControlButtons from "./database-control-buttons";
+import useGetOverlappingNodes from "@/hooks/use-get-overlapping-nodes";
+import { FieldType } from "@/lib/schemas/field-schema";
 
 
 
 const DatabasePage: React.FC<never> = () => {
 
-    const { database, updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabase();
+    const { database } = useDatabase();
+    const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship, getField } = useDatabaseOperations(); 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
     const { setIsConnectionInProgress } = useDiagram();
     const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
-
-    const { tables, relationships } = database  ; 
+    const [isTableOverlappingPulsing, setIsTableOverlappingPulsing] = useState<boolean>(false);
+    const { tables, relationships } = database;
     const { fitView } = useReactFlow();
 
     const nodeTypes = useMemo(() => ({ table: Table }), []);
     const edgeTypes = useMemo(() => ({ 'relationship-edge': Relationship }), []);
 
     const onConnect = useCallback((connection: Connection) => {
+        const sourceFieldId: string | undefined = (connection.sourceHandle as string).split("_").pop();
+        const targetFieldId: string = (connection.targetHandle as string).replace(TARGET_PREFIX, "");
 
-        createRelationship({
-            id: v4(),
-            sourceTableId: connection.source,
-            targetTableId: connection.target,
-            sourceFieldId: (connection.sourceHandle as string).split("_").pop(),
-            targetFieldId: (connection.targetHandle as string).replace(TARGET_PREFIX, "")
-        } as RelationshipInsertType)
+        const sourceField: FieldType | undefined = getField(connection.source, sourceFieldId as string);
+        const targetField: FieldType | undefined = getField(connection.target, targetFieldId);
+        console.log(sourceField, targetField)
+        if (sourceField?.typeId == targetField?.typeId) {
 
-        setEdges((eds) => addEdge(connection, eds));
+            createRelationship({
+                id: v4(),
+                sourceTableId: connection.source,
+                targetTableId: connection.target,
+                sourceFieldId,
+                targetFieldId
+            } as RelationshipInsertType);
+
+            setEdges((eds) => addEdge(connection, eds));
+        } else {
+            addToast({
+                title: "Invalid Relationship",
+                description: "Relationship should be between primary key and foreign key of the same time",
+                color: "danger",
+            })
+        }
         setIsConnectionInProgress(false);
 
-    }, []);
+    }, [database]);
 
     const handleNodesChanges: OnNodesChange<never> = useCallback((changes: NodeChange<never>[]) => {
 
@@ -124,6 +142,7 @@ const DatabasePage: React.FC<never> = () => {
     useTableToNode(tables);
     useRelationshipToEdge(relationships);
 
+
     const adjustPositions = useCallback(async () => {
         updateTablePositions(await adjustTablesPositions(nodes, relationships));
         setTimeout(() => {
@@ -133,46 +152,127 @@ const DatabasePage: React.FC<never> = () => {
         }, 500)
     }, [relationships, nodes]);
 
+
+    const overlappingNodes = useGetOverlappingNodes();
+
+
+    useEffect(() => {
+        const overlappingIds = Array.from(overlappingNodes);
+
+        const previousOverlappingNodes = nodes.filter((node: Node) => node.data.overlapping);
+
+        if (!areArraysEqual(previousOverlappingNodes, overlappingIds)) {
+            setNodes((nodes: any) => {
+                return nodes.map((node: any) => {
+                    const isOverlaped: boolean = overlappingIds.includes(node.id);
+
+                    if (isOverlaped == node.data.overlapping)
+                        return node;
+                    else
+                        return {
+                            ...node,
+                            data: {
+                                ...node.data,
+                                overlapping: isOverlaped
+                            }
+                        }
+                })
+            })
+        }
+    }, [overlappingNodes]);
+
+
+    useEffect(() => {
+        setNodes((nodes: any) => {
+            return nodes.map((node: any) => {
+                if (!node.data.overlapping)
+                    return node;
+                else
+                    return {
+                        ...node,
+                        data: {
+                            ...node.data,
+                            pulsing: isTableOverlappingPulsing
+                        }
+                    }
+            })
+        })
+    }, [isTableOverlappingPulsing])
+
+    const pulsOverlappingTables = useCallback(() => {
+        setIsTableOverlappingPulsing(true);
+        setTimeout(() => setIsTableOverlappingPulsing(false), 200);
+    }, [])
+
     return (
 
         <div className="w-full h-screen flex  relative">
-            <DBController />
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                fitView
-                className="w-full h-full cursor-default"
-                onNodesChange={handleNodesChanges}
-                onEdgesChange={handleEdgeChanges}
-                onConnect={onConnect}
-                defaultEdgeOptions={{
-                    type: 'relationship-edge',
-                }}
-                //  onlyRenderVisibleElements
-                panOnDrag={true}
-                zoomOnScroll={true}
-                nodeTypes={nodeTypes}
-                edgeTypes={edgeTypes}
-                snapGrid={[20, 20]}
-                onConnectStart={onConnectStart}
-                onConnectEnd={onConnectEnd}
-            >
 
-                <Controls
-                    position="bottom-center"
-                    showFitView={false}
-                    showZoom={false}
-                    showInteractive={false}
-                    className="shadow-none "
+            <DBController />
+            <div className="relative w-full h-full">
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    fitView
+                    className="w-full h-full cursor-default"
+                    onNodesChange={handleNodesChanges}
+                    onEdgesChange={handleEdgeChanges}
+                    onConnect={onConnect}
+                    defaultEdgeOptions={{
+                        type: 'relationship-edge',
+                    }}
+                    //onlyRenderVisibleElements
+                    panOnDrag={true}
+                    zoomOnScroll={true}
+                    nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
+                    snapGrid={[20, 20]}
+                    onConnectStart={onConnectStart}
+                    onConnectEnd={onConnectEnd}
                 >
 
-                    <DatabaseControlButtons
-                        adjustPositions={adjustPositions}
-                    />
+                    <Controls
+                        position="bottom-center"
+                        showFitView={false}
+                        showZoom={false}
+                        showInteractive={false}
+                        className="shadow-none "
+                    >
 
-                </Controls >
-                <Background />
-            </ReactFlow>
+                        <DatabaseControlButtons
+                            adjustPositions={adjustPositions}
+                        />
+                    </Controls >
+
+                    <Background />
+                </ReactFlow>
+                <div
+                    className="absolute left-[12px]  top-[64px] "
+                >
+                    {
+                        overlappingNodes.size > 0 &&
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <span>
+                                    <Button
+                                        variant="shadow"
+                                        size="sm"
+                                        isIconOnly
+                                        color="danger"
+                                        className="size-8 p-1 "
+                                        onPressEnd={pulsOverlappingTables}
+                                    >
+                                        <AlertTriangle className="size-4 text-white" />
+                                    </Button>
+                                </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Overlapping Tables
+                            </TooltipContent>
+                        </Tooltip>
+                    }
+                </div>
+            </div>
 
             <svg style={{ position: 'absolute', width: 0, height: 0 }}>
                 <defs>

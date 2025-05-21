@@ -8,7 +8,7 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-ki
 import { FieldType } from "@/lib/schemas/field-schema";
 import { TableType } from "@/lib/schemas/table-schema";
 import { useCallback, useEffect, useState } from "react";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { v4 } from "uuid";
 import { getNextSequence } from "@/utils/field";
 
@@ -22,7 +22,7 @@ const FieldList: React.FC<Props> = ({ table }) => {
 
     const { t } = useTranslation();
     const [fields, setFields] = useState<FieldType[]>(table.fields);
-    const { createField, orderTableFields } = useDatabase();
+    const { createField, orderTableFields } = useDatabaseOperations();
 
     useEffect(() => {
         setFields(table.fields)

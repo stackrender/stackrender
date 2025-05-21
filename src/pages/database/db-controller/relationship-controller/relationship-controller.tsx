@@ -8,7 +8,7 @@ import RelationshipAccordionBody from "./relationship-accordion-item/relationshi
 import Modal from "@/components/modal/modal";
 import CreateRelationshipForm from "./create-relationship-form/create-relationship-form";
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 
@@ -24,8 +24,9 @@ const RelationshipController: React.FC<Props> = ({ }) => {
     const [relationship, setRelationship] = useState<RelationshipInsertType | undefined>(undefined);
     const [isValid, setIsValid] = useState<boolean>(false);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const { createRelationship, database } = useDatabase();
-    const { relationships } = database  ;
+    const { database } = useDatabase();
+    const { createRelationship, } = useDatabaseOperations();
+    const { relationships } = database;
 
     const { t } = useTranslation();
     const [selectedRelationship, setSelectedRelationship] = useState(new Set([]));
@@ -37,7 +38,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
 
         createRelationship({
             id: newRelationshipId,
-            ...relationship, 
+            ...relationship,
         } as RelationshipInsertType);
 
         setSelectedRelationship(new Set([newRelationshipId]) as any);

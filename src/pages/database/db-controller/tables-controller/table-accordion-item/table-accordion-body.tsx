@@ -8,7 +8,7 @@ import ColorPicker from "@/components/color-picker/color-picker";
 import FieldList from "./field/field-list";
 import IndexesList from "./index/indexes-list";
 import { TableType } from "@/lib/schemas/table-schema";
-import { useDatabase } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { getNextSequence } from "@/utils/field";
 import { v4 } from "uuid";
 
@@ -22,7 +22,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
     const [selectedKeys, setSelectedKeys] = useState(new Set(["fields"]));
     const [note, setNote] = useState<string>(table.note ? table.note : "");
     const { t } = useTranslation();
-    const { editTable, createField } = useDatabase();
+    const { editTable, createField } = useDatabaseOperations();
 
     const onColorChange = useCallback((color: string | undefined) => {
 

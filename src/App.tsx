@@ -9,6 +9,7 @@ import DatabaseProvider from "./providers/database-provider/database-provider";
 import DiagramProvider from "./providers/diagram-provider/diagram-provider";
 import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 
 
 
@@ -16,7 +17,8 @@ function App() {
 
   const appRoutes = useAppRoutes();
   return (
-    <NextUIProvider>
+    <HeroUIProvider>
+      <ToastProvider placement="bottom-right"/>
       <NextThemesProvider
         defaultTheme='system'
         attribute='class'
@@ -35,7 +37,7 @@ function App() {
           </ReactFlowProvider>
         </SyncProvider>
       </NextThemesProvider>
-    </NextUIProvider>
+    </HeroUIProvider>
   );
 }
 
