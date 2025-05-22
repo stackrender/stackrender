@@ -1,7 +1,7 @@
 import { useRelationshipName } from "@/hooks/use-relationship-name";
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
-import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
-import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
+import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
 import { Check, ChevronRight, EllipsisVertical, Focus, Pencil, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -23,7 +23,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
     const { t } = useTranslation();
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
     const [name, setName] = useState<string>(relationship.name ? relationship.name : defaultName);
-    const { focusOnRelationship } = useDiagram();
+    const { focusOnRelationship } = useDiagramOps();
 
 
     const editRelationshipName = () => {
@@ -43,8 +43,8 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
 
 
     useEffect(() => {
-        setName(relationship.name ? relationship.name : defaultName) ; 
-    } , [relationship.name])
+        setName(relationship.name ? relationship.name : defaultName);
+    }, [relationship.name])
     return (
         <div className="group w-full flex h-12 gap-1  flex p-2 items-center" >
             <div className={cn(

@@ -19,7 +19,7 @@ const useGetOverlappingNodes = (): Set<string> => {
             }
         }
         return overlaps
-    }, [nodes]) ; 
+    }, [nodes]);
     return overlappingNodes;
 }
 
@@ -47,9 +47,6 @@ function isNodesOverlapping(nodeA: Node, nodeB: Node) {
         top: nodeB.position.y,
         bottom: nodeB.position.y + nodeBHeight,
     };
-
-
-    
 
     return !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
 }

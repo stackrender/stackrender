@@ -1,7 +1,7 @@
 
 
 import { Edge, Node, NodeProps, useConnection, useStore } from "@xyflow/react";
-
+import hash from 'object-hash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Card, cn, } from "@heroui/react";
 import {
@@ -17,22 +17,26 @@ import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useTranslation } from "react-i18next";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
-import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
+import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import useGetRelatedEdges from "@/hooks/use-get-related-edges";
 
 export type TableProps = Node<{
     table: TableType,
     overlapping?: boolean,
     pulsing?: boolean,
+    highlightedEdges : Edge[] 
+
 }>
 
-const Table: React.FC<NodeProps<TableProps>> = (props) => {
-    const { selected, data: { table, overlapping = false, pulsing = false } } = props;
+const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overlapping = false, pulsing = false , highlightedEdges = [] } }) => {
+
+
     const [editMode, setEditMode] = useState<boolean>(false);
     const [tableName, setTableName] = useState<string>(table.name);
     const { editTable } = useDatabaseOperations();
-    const edges = useGetRelatedEdges(table.id as string);
-    const { focusOnTable } = useDiagram();
+
+  //  const edges = useGetRelatedEdges(table.id as string);
+    const { focusOnTable } = useDiagramOps();
     const { t } = useTranslation();
 
     useEffect(() => {
@@ -47,11 +51,13 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
     const focus = useCallback(() => {
         focusOnTable(table.id, false);
     }, [table])
-
+    /*
     const highlightedEdges: Edge[] = useMemo(() => {
         return edges.filter((edge: Edge) => edge.animated || edge.selected);
     }, [edges]);
+    */ 
 
+    
     const fields: React.ReactNode[] = useMemo(() => {
         return table.fields.map((field: FieldType) => {
             const highlight: boolean = highlightedEdges.find((edge: any) =>
@@ -66,25 +72,19 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
             />)
         })
     }, [table.fields, selected, highlightedEdges]);
-
-
-    useEffect(() => {
-        console.log("re-render ", table.name)
-
-    }, [useDatabase]) ; 
-
-    return (
+    
+    
+    console.log ("re-render " , table.name)
+    return (    
 
         <Card className={cn(
             "w-full h-full bg-background rounded-lg  noselect overflow-visible dark:bg-default-900",
             selected
                 ? 'ring-2 ring-primary'
                 : '',
-
             overlapping
                 ? 'ring-2  dark:ring-offset-default-900 ring-danger ring-offset-1 scale-105 shadow-danger '
                 : '',
-
             !pulsing
                 ? 'scale-100'
                 : '',
@@ -166,4 +166,12 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
     )
 };
 
-export default React.memo(Table)
+export default React.memo(Table, (previousState: any, newState: any) => {
+    const previousStateHash: string = hash(previousState.data);
+    const newStateHash: string = hash(newState.data);
+
+    
+
+
+    return previousStateHash == newStateHash && previousState.selected == newState.selected;
+})

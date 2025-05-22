@@ -14,7 +14,7 @@ import { v4 } from "uuid";
 import { TARGET_PREFIX } from "./table/field";
 import CardinalityMarker from "@/components/cardinality-marker/cardinality-marker";
 import { areArraysEqual } from "@/utils/utils";
-import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
+import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 import { addToast, Button, Image } from "@heroui/react";
 import { AlertTriangle, LayoutGrid } from "lucide-react";
@@ -23,17 +23,17 @@ import { useTheme } from "next-themes";
 import DatabaseControlButtons from "./database-control-buttons";
 import useGetOverlappingNodes from "@/hooks/use-get-overlapping-nodes";
 import { FieldType } from "@/lib/schemas/field-schema";
-
+import hash from "object-hash";
 
 
 const DatabasePage: React.FC<never> = () => {
 
-    const { database } = useDatabase();
-    const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship, getField } = useDatabaseOperations(); 
+    const { database, getField } = useDatabase();
+    const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabaseOperations();
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-    const { setIsConnectionInProgress } = useDiagram();
+    const { setIsConnectionInProgress } = useDiagramOps();
     const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
     const [isTableOverlappingPulsing, setIsTableOverlappingPulsing] = useState<boolean>(false);
     const { tables, relationships } = database;
@@ -48,7 +48,8 @@ const DatabasePage: React.FC<never> = () => {
 
         const sourceField: FieldType | undefined = getField(connection.source, sourceFieldId as string);
         const targetField: FieldType | undefined = getField(connection.target, targetFieldId);
-        console.log(sourceField, targetField)
+
+
         if (sourceField?.typeId == targetField?.typeId) {
 
             createRelationship({
@@ -73,7 +74,11 @@ const DatabasePage: React.FC<never> = () => {
 
     const handleNodesChanges: OnNodesChange<never> = useCallback((changes: NodeChange<never>[]) => {
 
-        const nodePositionChanges: NodePositionChange[] = changes.filter((change: NodeChange) => change.type == "position" && !change.dragging) as NodePositionChange[];
+        const nodePositionChanges: NodePositionChange[] = changes.filter((change: NodeChange) =>
+            change.type == "position" &&
+            !change.dragging
+        ) as NodePositionChange[];
+        
         const nodeRemoveChanges: NodeRemoveChange[] = changes.filter((change: NodeChange) => change.type == "remove");
 
         if (nodePositionChanges.length > 0)
@@ -115,15 +120,29 @@ const DatabasePage: React.FC<never> = () => {
 
 
     useEffect(() => {
+
         setEdges((edges: any) => {
             return edges.map((edge: any) => {
                 const selected: boolean = selectedEdgeIds.includes(edge.id);
+                return (edge.animated == selected) ? edge : { ...edge, animated: selected } as Edge;
+            })
+        });
+
+
+        setNodes((nodes: any) => {
+            return nodes.map((node: any) => {
+
+                const nodeHighlitedEdges: Edge[] = node.data.highlightedEdges;
+                const newHighlitedEdges: Edge[] = edges.filter((edge: Edge) => selectedEdgeIds.includes(edge.id) && (edge.source == node.id || edge.target == node.id));
+                console.log(nodeHighlitedEdges, newHighlitedEdges);
+
                 return {
-                    ...edge,
-                    animated: selected,
-                } as Edge
-
-
+                    ...node,
+                    data: {
+                        ...node.data,
+                        highlightedEdges: newHighlitedEdges
+                    }
+                }
             })
         })
     }, [selectedEdgeIds]);
@@ -154,7 +173,6 @@ const DatabasePage: React.FC<never> = () => {
 
 
     const overlappingNodes = useGetOverlappingNodes();
-
 
     useEffect(() => {
         const overlappingIds = Array.from(overlappingNodes);

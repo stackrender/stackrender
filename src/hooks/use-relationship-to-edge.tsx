@@ -23,7 +23,9 @@ export const useRelationshipToEdge = (relationships: RelationshipType[]): void =
             } as Edge
         })
 
+
         setEdges((edges: any) => {
+            
             return relationshipEdges.map((relationshipEdge: any) => {
                 const edge = edges.find((edge: Edge) => edge.id == relationshipEdge.id);
                 if (!edge)

@@ -51,7 +51,44 @@ const adjustTablesPositions = async (
 };
 
 
+
+const isTablesOverlapping = (tableA: TableType, tableB: TableType) => {
+    const tableAWidth: number = 224;
+    const tableAHeight: number = tableA.fields.length * 32 + 36;
+
+
+    const tableBWidth: number = 224;
+    const tableBHeight: number = tableB.fields.length * 32 + 36;
+ 
+    const a = {
+        left: tableA.posX,
+        right: tableA.posX + tableAWidth,
+        top: tableA.posY,
+        bottom: tableA.posY + tableAHeight,
+    };
+
+    const b = {
+        left: tableB.posX,
+        right: tableB.posX + tableBWidth,
+        top: tableB.posY,
+        bottom: tableB.posY + tableBHeight,
+    };
+
+    return !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
+}
+
+
+const getDefaultTableOverlapping = (table: TableType, tables: TableType[]): boolean => {
+    for (let index: number = 0; index < tables.length; index++) {
+        if ( table.id == tables[index].id) continue ; 
+        if (isTablesOverlapping(table, tables[index]))
+            return true;
+    }
+    return false;
+}
+
 export {
     adjustTablesPositions,
+    getDefaultTableOverlapping
 
 }

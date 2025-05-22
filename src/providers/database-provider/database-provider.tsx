@@ -1,6 +1,6 @@
 
 import { DatabaseDataContext, DatabaseOperationsContext } from "./database-context";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { db, powerSyncDb } from "../sync-provider/sync-provider";
 import { TableInsertType, tables, TableType } from "@/lib/schemas/table-schema";
 import { useQuery } from "@powersync/react";
@@ -223,38 +223,53 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             }
         })
 
-    }, [db, currentDatabaseId]);
+    }, [db]);
+
+
+
+    const databaseOpsValue = useMemo(() => ({
+        createTable,
+        editTable,
+        deleteTable,
+        updateTablePositions,
+        deleteMultiTables,
+        createField,
+        editField,
+        deleteField,
+        orderTableFields,
+
+        createRelationship,
+        editRelationship,
+        deleteRelationship,
+        deleteMultiRelationships,
+        executeDbDiffOps,
+    }), [
+        createTable,
+        editTable,
+        deleteTable,
+        updateTablePositions,
+        deleteMultiTables,
+        createField,
+        editField,
+        deleteField,
+        orderTableFields,
+
+        createRelationship,
+        editRelationship,
+        deleteRelationship,
+        deleteMultiRelationships,
+        executeDbDiffOps,
+    ]);
 
     return (
 
         <DatabaseDataContext.Provider value={{
-
-
             data_types,
             database: database as unknown as DatabaseType,
             isLoading,
+            getField,
         }}>
-            <DatabaseOperationsContext.Provider value={{
-                createTable,
-                editTable,
-                deleteTable,
-                updateTablePositions,
-                deleteMultiTables,
-
-                createField,
-                editField,
-                deleteField,
-                orderTableFields,
-                getField,
-
-                createRelationship,
-                editRelationship,
-                deleteRelationship,
-                deleteMultiRelationships,
-
-                executeDbDiffOps,
-            }}>
-
+            <DatabaseOperationsContext.Provider value={databaseOpsValue}>
 
                 {
                     !isLoading && database &&

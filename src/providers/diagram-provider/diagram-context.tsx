@@ -1,18 +1,18 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 
 
-export interface DiagramContextType { 
+interface DiagramDataContextType {
+    focusedTableId: string | undefined;
+    focusedRelationshipId: string | undefined;
+    isConnectionInProgress: boolean
+}
 
-    focusedTableId : string | undefined ; 
-    focusedRelationshipId : string | undefined; 
-    isConnectionInProgress : boolean 
-    
-    focusOnTable : ( id : string , transition? : boolean )  => void ,
-    focusOnRelationship :  ( id : string, transition? : boolean ) => void ,  
-    setIsConnectionInProgress : Dispatch<boolean>
-
-} 
+interface DiagramOpsContextType {
+    focusOnTable: (id: string, transition?: boolean) => void,
+    focusOnRelationship: (id: string, transition?: boolean) => void,
+    setIsConnectionInProgress: Dispatch<boolean>
+}
 
 
-
-export default createContext<DiagramContextType>({} as DiagramContextType);
+export const DiagramDataContext = createContext<DiagramDataContextType>({} as DiagramDataContextType);
+export const DiagramOpsContext = createContext<DiagramOpsContextType>({} as DiagramOpsContextType);

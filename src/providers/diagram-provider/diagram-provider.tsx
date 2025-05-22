@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { FitViewOptions, useReactFlow } from "@xyflow/react";
 import { useNavigate } from "react-router-dom";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
-import DiagramContext from "./diagram-context";
+import { DiagramDataContext, DiagramOpsContext } from "./diagram-context";
 
 
 
@@ -73,26 +73,35 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     }, [setFocusedRelationshipId]);
 
 
-    const contextValue = useMemo(() => ({
+    const contextDatatValue = useMemo(() => ({
         focusedTableId,
         focusedRelationshipId,
         isConnectionInProgress,
+    }), [focusedTableId, focusedRelationshipId, isConnectionInProgress,]);
+
+    const contextOpsValues = useMemo(() => ({
         focusOnTable,
         focusOnRelationship,
         setIsConnectionInProgress
-    }), [focusedTableId, focusedRelationshipId, focusOnTable, focusOnRelationship, isConnectionInProgress, setIsConnectionInProgress]);
+
+    }), [focusOnTable, focusOnRelationship, setIsConnectionInProgress])
     return (
-        <DiagramContext.Provider
-            value={contextValue}
+        <DiagramDataContext.Provider
+            value={contextDatatValue}
         >
-            {children}
-        </DiagramContext.Provider>
+            <DiagramOpsContext.Provider value={contextOpsValues}>
+                {children}
+            </DiagramOpsContext.Provider>
+
+        </DiagramDataContext.Provider>
     )
 
 }
 
 
-export const useDiagram = () => useContext(DiagramContext);
+export const useDiagram = () => useContext(DiagramDataContext);
+
+export const useDiagramOps = () => useContext(DiagramOpsContext);
 
 
 export default DiagramProvider; 

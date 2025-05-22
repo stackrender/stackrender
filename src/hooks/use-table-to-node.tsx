@@ -1,11 +1,12 @@
 
 import { TableType } from "@/lib/schemas/table-schema";
 import { Node, useReactFlow } from "@xyflow/react";
-import { useEffect } from "react";
-import useGetOverlappingNodes from "./use-get-overlapping-nodes";
+import { useEffect } from "react"; 
 import hash from 'object-hash';
+import { getDefaultTableOverlapping } from "@/utils/tables";
 export const useTableToNode = (tables: TableType[]): void => {
     const { setNodes } = useReactFlow();
+
 
     useEffect(() => {
 
@@ -13,13 +14,16 @@ export const useTableToNode = (tables: TableType[]): void => {
             return {
                 id: table.id,
                 type: "table",
-                
+
                 position: {
                     x: table.posX,
                     y: table.posY
                 },
                 data: {
-                    table, 
+                    table,
+                    overlapping : getDefaultTableOverlapping(table , tables) , 
+                    pulsing : false  , 
+                    highlightedEdges : []
                 },
                 style: {
                     width: 224
@@ -27,21 +31,7 @@ export const useTableToNode = (tables: TableType[]): void => {
             } as Node
         })
 
-
-        setNodes((nodes) => {
-
-            return tableNodes.map((tableNode: Node) => {
-                const node = nodes.find((node: Node) => node.id == tableNode.id);
-                if (!node) {
-                    return tableNode;
-                }
-
-                const hashNode: string = hash((node.data as any).table);
-                const hashTableNode: string = hash((tableNode.data as any).table);
-                return hashNode == hashTableNode ? node : tableNode;
-
-            })
-        })
+        setNodes (tableNodes) ; 
     }, [tables])
 
 }

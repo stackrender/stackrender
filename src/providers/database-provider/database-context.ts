@@ -15,8 +15,8 @@ interface DatabaseDataContextType {
 
     data_types: DataType[],
     database: DatabaseType,
-    isLoading: boolean,
-    // table operations 
+    isLoading: boolean, 
+    getField: (tableId: string, id: string) => FieldType | undefined,
 
 }
 
@@ -33,7 +33,6 @@ interface DatabaseOperationsContextType {
     editField: (field: FieldInsertType) => Promise<QueryResult>,
     deleteField: (id: string) => Promise<void>,
     orderTableFields: (fields: FieldType[]) => Promise<QueryResult>,
-    getField: (tableId: string, id: string) => FieldType | undefined,
     // relationship operations
     createRelationship: (relationship: RelationshipInsertType) => Promise<QueryResult>,
     editRelationship: (relationship: RelationshipInsertType) => Promise<QueryResult>,

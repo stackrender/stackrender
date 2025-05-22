@@ -1,4 +1,4 @@
-import { Edge, useStore } from "@xyflow/react";
+import { Edge, useReactFlow, useStore } from "@xyflow/react";
 import { useEffect, useState } from "react";
 import hash from 'object-hash';
 
@@ -6,19 +6,25 @@ import hash from 'object-hash';
 
 
 
-const useGetRelatedEdges = ( nodeId : string) => {
-    const edges = useStore((store) => store.edges) as Edge[];
+const useGetRelatedEdges = (nodeId: string) => {
+   
     const [relatedEdges, setRelatedEdges] = useState<Edge[]>([]);
+    const { getEdges } = useReactFlow();
 
+    const edges = getEdges();
+    
+    
     useEffect(() => {
+
         const newRelatedEdges: Edge[] = edges.filter((edge: Edge) => edge.source == nodeId || edge.target == nodeId);
-        setRelatedEdges((previousEdges :Edge[]) => {
-            return hash(newRelatedEdges) == hash(previousEdges) ? previousEdges : newRelatedEdges 
-        })
+        if (hash(newRelatedEdges) != hash(relatedEdges)) {
+            setRelatedEdges(newRelatedEdges)
+        }
+
     }, [edges, nodeId])
 
     return relatedEdges
-}   
+}
 
 
 export default useGetRelatedEdges; 

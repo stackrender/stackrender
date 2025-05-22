@@ -6,10 +6,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
-import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { v4 } from "uuid";
 import { getNextSequence } from "@/utils/field";
-import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
+import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 
 export interface TableAccordionHeaderProps {
     table: TableType,
@@ -24,17 +24,17 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
 
     const { t } = useTranslation();
     const [editMode, setEditMode] = useState<boolean>(false);
-    const { focusOnTable } = useDiagram();
+    const { focusOnTable } = useDiagramOps();
 
-    useEffect(() => { 
+    useEffect(() => {
         setTableName(table.name);
     }, [table.name])
 
-    const saveTableName = useCallback(async() => {
+    const saveTableName = useCallback(async () => {
 
         await editTable({ id: table.id, name: tableName } as TableInsertType);
         setEditMode(false);
-    } , [tableName])  
+    }, [tableName])
 
     const onDeleteTable = async () => {
         deleteTable(table.id)
@@ -126,7 +126,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                             size="sm"
                             isIconOnly
                             variant="light"
-                            onPressEnd={() => focusOnTable(table.id , true)}
+                            onPressEnd={() => focusOnTable(table.id, true)}
                         >
                             <Focus className="size-4 text-icon dark:text-white" />
                         </Button>
