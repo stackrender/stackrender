@@ -38,9 +38,14 @@ const DatabasePage: React.FC<never> = () => {
     const [isTableOverlappingPulsing, setIsTableOverlappingPulsing] = useState<boolean>(false);
     const { tables, relationships } = database;
     const { fitView } = useReactFlow();
-
     const nodeTypes = useMemo(() => ({ table: Table }), []);
     const edgeTypes = useMemo(() => ({ 'relationship-edge': Relationship }), []);
+
+
+
+    useTableToNode(tables);
+    useRelationshipToEdge(relationships);
+
 
     const onConnect = useCallback((connection: Connection) => {
         const sourceFieldId: string | undefined = (connection.sourceHandle as string).split("_").pop();
@@ -72,7 +77,8 @@ const DatabasePage: React.FC<never> = () => {
 
     }, [database]);
 
-    const handleNodesChanges: OnNodesChange<never> = useCallback((changes: NodeChange<never>[]) => {
+    const handleNodesChanges: OnNodesChange<never> = useCallback(async (changes: NodeChange<never>[]) => {
+
 
         const nodePositionChanges: NodePositionChange[] = changes.filter((change: NodeChange) =>
             change.type == "position" &&
@@ -82,7 +88,7 @@ const DatabasePage: React.FC<never> = () => {
         const nodeRemoveChanges: NodeRemoveChange[] = changes.filter((change: NodeChange) => change.type == "remove");
 
         if (nodePositionChanges.length > 0)
-            updateTablePositions(nodePositionChanges.map((change: NodePositionChange) => ({
+            await updateTablePositions(nodePositionChanges.map((change: NodePositionChange) => ({
                 id: change.id,
                 posX: change.position?.x,
                 posY: change.position?.y
@@ -94,6 +100,8 @@ const DatabasePage: React.FC<never> = () => {
         return onNodesChange(changes);
 
     }, [onNodesChange]);
+
+
 
     const handleEdgeChanges: OnEdgesChange<any> = useCallback((changes: EdgeChange<any>[]) => {
 
@@ -158,8 +166,7 @@ const DatabasePage: React.FC<never> = () => {
 
 
 
-    useTableToNode(tables);
-    useRelationshipToEdge(relationships);
+
 
 
     const adjustPositions = useCallback(async () => {
@@ -168,7 +175,7 @@ const DatabasePage: React.FC<never> = () => {
             fitView({
                 duration: 500
             })
-        }, 500)
+        }, 300)
     }, [relationships, nodes]);
 
 
@@ -239,7 +246,7 @@ const DatabasePage: React.FC<never> = () => {
                     defaultEdgeOptions={{
                         type: 'relationship-edge',
                     }}
-                    //onlyRenderVisibleElements
+                    onlyRenderVisibleElements
                     panOnDrag={true}
                     zoomOnScroll={true}
                     nodeTypes={nodeTypes}
@@ -262,7 +269,7 @@ const DatabasePage: React.FC<never> = () => {
                         />
                     </Controls >
 
-                    <Background className="bg-default/40 dark:bg-black"/>
+                    <Background className="bg-default/40 dark:bg-black" />
                 </ReactFlow>
                 <div
                     className="absolute left-[12px]  top-[64px] "

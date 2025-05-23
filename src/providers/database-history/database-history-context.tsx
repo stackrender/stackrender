@@ -12,6 +12,7 @@ export interface DatabaseHistoryContextType {
 
     canUndo : boolean ; 
     canRedo : boolean ; 
+    isProcessing : boolean ; 
 
     present : DatabaseType  ; 
 

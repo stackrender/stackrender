@@ -1,10 +1,10 @@
 const areArraysEqual = (a: string[], b: string[]): boolean => {
-  if (a.length !== b.length) return false;
+    if (a.length !== b.length) return false;
 
-  const sortedA = [...a].sort();
-  const sortedB = [...b].sort();
+    const sortedA = [...a].sort();
+    const sortedB = [...b].sort();
 
-  return sortedA.every((val, index) => val === sortedB[index]);
+    return sortedA.every((val, index) => val === sortedB[index]);
 };
 
 
@@ -52,9 +52,11 @@ function excludeFields(
 }
 
 
+ 
+
 
 export {
-    areArraysEqual , 
-    getTimestamp , 
+    areArraysEqual,
+    getTimestamp,
     excludeFields
 }

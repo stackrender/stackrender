@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { AbstractPowerSyncDatabase, PowerSyncBackendConnector, UpdateType  } from '@powersync/web';
+import { AbstractPowerSyncDatabase, PowerSyncBackendConnector, UpdateType } from '@powersync/web';
 
 export type DemoConfig = {
     backendUrl: string;
@@ -67,9 +67,9 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
             let batch: any[] = [];
             for (let operation of transaction.crud) {
 
-                if (operation.op != UpdateType.DELETE  && Object.keys(operation.opData as any).length == 0) 
+                if (operation.op != UpdateType.DELETE && Object.keys(operation.opData as any).length == 0)
                     continue
-                
+
                 let payload = {
                     op: operation.op,
                     table: operation.table,
@@ -92,6 +92,7 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
                     throw new Error(`Received ${response.status} from /api/data: ${await response.text()}`);
                 }
             }
+
             await transaction.complete(
                 import.meta.env.VITE_CHECKPOINT_MODE == CheckpointMode.CUSTOM
                     ? await this.getCheckpoint(this._clientId)

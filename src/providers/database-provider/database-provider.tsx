@@ -14,6 +14,7 @@ import { DBDiffOperation } from "@/utils/database";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { getTimestamp } from "@/utils/utils";
 
+
 interface Props { children: React.ReactNode }
 
 const DatabaseProvider: React.FC<Props> = ({ children }) => {
@@ -121,6 +122,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [database])
 
     const orderTableFields = useCallback(async (fieldsList: FieldType[]): Promise<QueryResult> => {
+
         const caseStatements = fieldsList
             .map((field, index) => `WHEN '${field.id}' THEN ${index}`)
             .join('\n  ');
@@ -134,6 +136,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
           ${ids}
         );`;
         return await powerSyncDb.execute(sql);
+
     }, [powerSyncDb]);
 
     const createRelationship = useCallback(async (relationship: RelationshipInsertType): Promise<QueryResult> => {
@@ -160,6 +163,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [db]);
 
     const updateTablePositions = useCallback(async (tableList: TableInsertType[]): Promise<QueryResult> => {
+
         const posXCases = tableList
             .map(table => `WHEN '${table.id}' THEN ${table.posX}`)
             .join('\n  ');
@@ -180,48 +184,52 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
           ${ids}
         );`;
         return await powerSyncDb.execute(sql);
+
     }, [powerSyncDb]);
 
     const executeDbDiffOps = useCallback(async (operations: DBDiffOperation[]) => {
+        try {
+            await db.transaction(async (tx) => {
 
-        await db.transaction(async (tx) => {
+                for (const operation of operations) {
 
-            for (const operation of operations) {
+                    if (operation.type == "CREATE_TABLE") {
+                        await tx.insert(tables).values(operation.table);
 
-                if (operation.type == "CREATE_TABLE") {
-                    await tx.insert(tables).values(operation.table);
+                        if (operation.table.fields && Object.values(operation.table.fields).length > 0)
+                            await tx.insert(fields).values(Object.values(operation.table.fields));
+                    }
+                    else if (operation.type === "UPDATE_TABLE") {
 
-                    if (operation.table.fields && Object.values(operation.table.fields).length > 0)
-                        await tx.insert(fields).values(Object.values(operation.table.fields));
+                        await tx.update(tables).set(operation.changes).where(eq(tables.id, operation.tableId));
+
+                    } else if (operation.type === "DELETE_TABLE") {
+                        await tx.delete(tables).where(eq(tables.id, operation.tableId));
+
+                    } else if (operation.type === "CREATE_FIELD") {
+                        await tx.insert(fields).values(operation.field);
+
+                    } else if (operation.type === "DELETE_FIELD") {
+                        await tx.delete(relationships).where(or(eq(relationships.sourceFieldId, operation.fieldId), eq(relationships.targetFieldId, operation.fieldId)));
+                        await tx.delete(fields).where(eq(fields.id, operation.fieldId));
+
+                    } else if (operation.type === "UPDATE_FIELD") {
+                        await tx.update(fields).set(operation.changes).where(eq(fields.id, operation.fieldId));
+
+                    } else if (operation.type === "CREATE_RELATIONSHIP") {
+                        await tx.insert(relationships).values(operation.relationship);
+
+                    } else if (operation.type === "DELETE_RELATIONSHIP") {
+                        await tx.delete(relationships).where(eq(relationships.id, operation.relationshipId));
+
+                    } else if (operation.type === "UPDATE_RELATIONSHIP") {
+                        await tx.update(relationships).set(operation.changes).where(eq(relationships.id, operation.relationshipId));
+                    }
                 }
-                else if (operation.type === "UPDATE_TABLE") {
-
-                    await tx.update(tables).set(operation.changes).where(eq(tables.id, operation.tableId));
-
-                } else if (operation.type === "DELETE_TABLE") {
-                    await tx.delete(tables).where(eq(tables.id, operation.tableId));
-
-                } else if (operation.type === "CREATE_FIELD") {
-                    await tx.insert(fields).values(operation.field);
-
-                } else if (operation.type === "DELETE_FIELD") {
-                    await tx.delete(relationships).where(or(eq(relationships.sourceFieldId, operation.fieldId), eq(relationships.targetFieldId, operation.fieldId)));
-                    await tx.delete(fields).where(eq(fields.id, operation.fieldId));
-
-                } else if (operation.type === "UPDATE_FIELD") {
-                    await tx.update(fields).set(operation.changes).where(eq(fields.id, operation.fieldId));
-
-                } else if (operation.type === "CREATE_RELATIONSHIP") {
-                    await tx.insert(relationships).values(operation.relationship);
-
-                } else if (operation.type === "DELETE_RELATIONSHIP") {
-                    await tx.delete(relationships).where(eq(relationships.id, operation.relationshipId));
-
-                } else if (operation.type === "UPDATE_RELATIONSHIP") {
-                    await tx.update(relationships).set(operation.changes).where(eq(relationships.id, operation.relationshipId));
-                }
-            }
-        })
+            })
+        } catch (error) { 
+            throw error
+        }
 
     }, [db]);
 

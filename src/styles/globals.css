@@ -1,89 +1,119 @@
 .react-flow__attribution {
-    display: none;
+  display: none;
 }
 
 
 
 .text-editable {
-    @apply dark:group-hover:bg-default-50 group-hover:bg-slate-100 group-hover:ring-[0.5px] group-hover:ring-primary-700  dark:group-hover:ring-white rounded-md cursor-pointer ;
+  @apply dark:group-hover:bg-default-50 group-hover:bg-slate-100 group-hover:ring-[0.5px] group-hover:ring-primary-700 dark:group-hover:ring-white rounded-md cursor-pointer;
 }
 
 
 .react-flow__node.selected {
-    transition: box-shadow 0.3s ease;
-    /* Add transition */
-   /* box-shadow: 0px 0px 15px 0px hsl(var(--heroui-secondary-50)), 0px 2px 30px 0px hsl(var(--heroui-secondary-50)), 0px 0px 1px 0px hsl(var(--heroui-secondary-50));
+  transition: box-shadow 0.3s ease;
+  /* Add transition */
+  /* box-shadow: 0px 0px 15px 0px hsl(var(--heroui-secondary-50)), 0px 2px 30px 0px hsl(var(--heroui-secondary-50)), 0px 0px 1px 0px hsl(var(--heroui-secondary-50));
 */
 }
+
 .noselect {
-    user-select: none;
-    -webkit-user-select: none;
-    /* Safari */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* IE10+/Edge */
+  user-select: none;
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+/Edge */
 }
 
 
+html,
+body {
 
+  user-select: none;
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+
+}
 
 .react-flow__renderer {
-  cursor: default !important; /* or pointer, grab, etc. */ 
+  cursor: default !important;
+  /* or pointer, grab, etc. */
 }
 
 .sidebar-item[data-active="true"] svg {
-    color :  hsl(var(--heroui-primary-900));
+  color: hsl(var(--heroui-primary-900));
 
 }
 
 div[data-slot="input-wrapper"] {
-    outline : none ; 
-    border-width: 1px;
-    
+  outline: none;
+  border-width: 1px;
+
 }
 
 div[data-slot="mainWrapper"] button[data-slot="trigger"] {
-    
-    outline : none ; 
-    border-width: 1px;
+
+  outline: none;
+  border-width: 1px;
 }
 
 
-div[data-slot="content"] hr[role="separator"] { 
-    display:  none ;
+div[data-slot="content"] hr[role="separator"] {
+  display: none;
 }
 
 
- 
+
 @keyframes dash {
   to {
     stroke-dashoffset: -10;
   }
 }
 
- 
+
 
 /* Target the scrollbar */
 ::-webkit-scrollbar {
-  width: 4px; /* Width of the scrollbar */
-  
+  width: 4px;
+  /* Width of the scrollbar */
+
 }
 
 /* Track (background of the scrollbar) */
- 
+
 
 /* Handle (the scroll thumb) */
 ::-webkit-scrollbar-thumb {
-  background:  hsl(var(--heroui-default-100));    /* Darker gray */
-  border-radius: 6px; /* Rounded corners */
-   
+  background: hsl(var(--heroui-default-100));
+  /* Darker gray */
+  border-radius: 6px;
+  /* Rounded corners */
+
 }
- 
+
 
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
 
-  background: hsl(var(--heroui-default-300));  /* Darker on hover */
+  background: hsl(var(--heroui-default-300));
+  /* Darker on hover */
+}
+
+
+
+.react-flow__node {
+  cursor: grab !important;
+}
+
+.react-flow__node:active {
+  cursor: grabbing !important;
+}
+
+.react-flow__pane {
+  cursor: default !important;
 }
