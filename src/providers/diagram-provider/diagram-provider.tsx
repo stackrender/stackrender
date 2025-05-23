@@ -76,15 +76,16 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     const contextDatatValue = useMemo(() => ({
         focusedTableId,
         focusedRelationshipId,
-        isConnectionInProgress,
-    }), [focusedTableId, focusedRelationshipId, isConnectionInProgress,]);
+
+    }), [focusedTableId, focusedRelationshipId,]);
 
     const contextOpsValues = useMemo(() => ({
         focusOnTable,
         focusOnRelationship,
-        setIsConnectionInProgress
+        setIsConnectionInProgress,
+        isConnectionInProgress,
 
-    }), [focusOnTable, focusOnRelationship, setIsConnectionInProgress])
+    }), [focusOnTable, focusOnRelationship, setIsConnectionInProgress, isConnectionInProgress])
     return (
         <DiagramDataContext.Provider
             value={contextDatatValue}

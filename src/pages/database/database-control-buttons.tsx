@@ -52,7 +52,7 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
     }, []);
  
     return (
-        <Navbar className="flex  rounded-md border-1 border-default-200 bg-transparent dark:border-default-800 " isBlurred
+        <Navbar className="flex  rounded-md border-1 border-default-200 bg-background dark:bg-transparent dark:border-default-800 " isBlurred
             classNames={{
                 wrapper: "h-14 p-2 gap-1",
             }}

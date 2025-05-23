@@ -1,19 +1,18 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 import { FieldType } from "@/lib/schemas/field-schema";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
-import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
+import { useDiagram, useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import { Button, cn, select } from "@heroui/react";
 import { Handle, Position, useConnection } from "@xyflow/react";
 import { Check, KeyRound, Trash, Trash2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-
+import hash from 'object-hash';
 
 interface Props {
     field: FieldType,
     showHandles?: boolean,
     highlight?: boolean,
-    showTargetHandle?: boolean
 }
 
 
@@ -22,30 +21,31 @@ export const RIGHT_PREFIX = "right_";
 export const TARGET_PREFIX = "target_";
 
 
-const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
-
+const Field: React.FC<Props> = (props) => {
+    const { field, showHandles, highlight } = props;
     const [editMode, setEditMode] = useState<boolean>(false);
     const { deleteField, editField } = useDatabaseOperations();
     const [fieldName, setFieldName] = useState<string>(field.name);
-    const { isConnectionInProgress } = useDiagram();
+    const { isConnectionInProgress } = useDiagramOps();
+
 
     useEffect(() => {
         setFieldName(field.name);
     }, [field.name]);
 
-    const removeField = () => {
+    const removeField = useCallback(() => {
         deleteField(field.id)
-    }
+    }, [])
 
-    const saveFieldName = () => {
+    const saveFieldName = useCallback(() => {
         editField({
             id: field.id,
             name: fieldName
         } as FieldType);
         setEditMode(false);
-    }
+    }, [fieldName])
 
-  //  console.log("render field ", field.name)
+ 
 
     return (
         <div className={cn(
@@ -62,7 +62,7 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
                         )}
                         onDoubleClick={() => setEditMode(true)}
                     >
-                        {field.name}
+                        {fieldName}
                     </label>
                     <span className={cn("content-center truncate flex items-center h-full gap-1 text-right text-xs text-default-600 group-hover:hidden font-semibold text-icon dark:text-default-200",
                         field.isPrimary ? "font-semibold text-slate-700" : ""
@@ -122,12 +122,12 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
                     type="source"
                     position={Position.Left}
                     id={LEFT_PREFIX + field.id}
-                    className="w-4 h-4 border-3 bg-primary dark:border-default-900"
+                    className="w-4 h-4 border-4 bg-primary dark:border-default-900"
                 />
                 <Handle
                     type="source"
                     position={Position.Right}
-                    className="w-4 h-4 border-3 bg-primary dark:border-default-900"
+                    className="w-4 h-4 border-4 bg-primary dark:border-default-900"
                     id={RIGHT_PREFIX + field.id}
                 />
             </div>
@@ -154,4 +154,6 @@ const Field: React.FC<Props> = ({ field, showHandles, highlight }) => {
 }
 
 
-export default React.memo(Field); 
+export default React.memo(Field, (previousState, newState) => {
+    return hash(previousState) == hash(newState);
+}); 

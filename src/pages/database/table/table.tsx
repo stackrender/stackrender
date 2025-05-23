@@ -35,7 +35,6 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
     const [tableName, setTableName] = useState<string>(table.name);
     const { editTable } = useDatabaseOperations();
 
-  //  const edges = useGetRelatedEdges(table.id as string);
     const { focusOnTable } = useDiagramOps();
     const { t } = useTranslation();
 
@@ -51,11 +50,7 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
     const focus = useCallback(() => {
         focusOnTable(table.id, false);
     }, [table])
-    /*
-    const highlightedEdges: Edge[] = useMemo(() => {
-        return edges.filter((edge: Edge) => edge.animated || edge.selected);
-    }, [edges]);
-    */ 
+    
 
     
     const fields: React.ReactNode[] = useMemo(() => {
@@ -74,7 +69,7 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
     }, [table.fields, selected, highlightedEdges]);
     
     
-    console.log ("re-render " , table.name)
+    
     return (    
 
         <Card className={cn(
@@ -169,9 +164,6 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
 export default React.memo(Table, (previousState: any, newState: any) => {
     const previousStateHash: string = hash(previousState.data);
     const newStateHash: string = hash(newState.data);
-
-    
-
 
     return previousStateHash == newStateHash && previousState.selected == newState.selected;
 })

@@ -19,11 +19,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/to
 import { addToast, Button, Image } from "@heroui/react";
 import { AlertTriangle, LayoutGrid } from "lucide-react";
 import { adjustTablesPositions } from "@/utils/tables";
-import { useTheme } from "next-themes";
+
 import DatabaseControlButtons from "./database-control-buttons";
 import useGetOverlappingNodes from "@/hooks/use-get-overlapping-nodes";
 import { FieldType } from "@/lib/schemas/field-schema";
-import hash from "object-hash";
+
 
 
 const DatabasePage: React.FC<never> = () => {
@@ -78,7 +78,7 @@ const DatabasePage: React.FC<never> = () => {
             change.type == "position" &&
             !change.dragging
         ) as NodePositionChange[];
-        
+
         const nodeRemoveChanges: NodeRemoveChange[] = changes.filter((change: NodeChange) => change.type == "remove");
 
         if (nodePositionChanges.length > 0)
@@ -120,22 +120,22 @@ const DatabasePage: React.FC<never> = () => {
 
 
     useEffect(() => {
-
         setEdges((edges: any) => {
             return edges.map((edge: any) => {
                 const selected: boolean = selectedEdgeIds.includes(edge.id);
                 return (edge.animated == selected) ? edge : { ...edge, animated: selected } as Edge;
             })
         });
+    }, [selectedEdgeIds]);
 
 
+    useEffect(() => {
         setNodes((nodes: any) => {
             return nodes.map((node: any) => {
-
-                const nodeHighlitedEdges: Edge[] = node.data.highlightedEdges;
-                const newHighlitedEdges: Edge[] = edges.filter((edge: Edge) => selectedEdgeIds.includes(edge.id) && (edge.source == node.id || edge.target == node.id));
-                console.log(nodeHighlitedEdges, newHighlitedEdges);
-
+                const newHighlitedEdges: Edge[] = edges.filter((edge: Edge) =>
+                    (edge.animated || edge.selected)
+                    && (edge.source == node.id || edge.target == node.id)
+                );
                 return {
                     ...node,
                     data: {
@@ -145,7 +145,7 @@ const DatabasePage: React.FC<never> = () => {
                 }
             })
         })
-    }, [selectedEdgeIds]);
+    }, [edges]);
 
     const onConnectStart = useCallback(() => {
         setIsConnectionInProgress(true);
@@ -262,7 +262,7 @@ const DatabasePage: React.FC<never> = () => {
                         />
                     </Controls >
 
-                    <Background />
+                    <Background className="bg-default/40 dark:bg-black"/>
                 </ReactFlow>
                 <div
                     className="absolute left-[12px]  top-[64px] "

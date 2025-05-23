@@ -82,6 +82,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                     <Input
                         //ref={filterInputRef}
                         type="text"
+                        
                         size="sm"
                         radius="sm"
                         variant="bordered"

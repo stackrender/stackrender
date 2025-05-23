@@ -16,14 +16,12 @@ interface Props { }
 
 const TablesController: React.FC<Props> = ({ }) => {
 
-
     const { database } = useDatabase();
     const {createTable} = useDatabaseOperations() ; 
     const { tables } = database ;
     const { t } = useTranslation();
     const [selectedTable, setSelectedTable] = useState(new Set([]));
     const { focusedTableId } = useDiagram();
-
 
     const addNewTable = useCallback(async () => {
         const newTableId: string = v4();
