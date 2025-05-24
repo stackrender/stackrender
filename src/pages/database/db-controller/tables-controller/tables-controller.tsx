@@ -9,47 +9,47 @@ import { useDatabase, useDatabaseOperations } from "@/providers/database-provide
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
 import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
-import { useViewport } from "@xyflow/react";
+import { useReactFlow, useViewport } from "@xyflow/react";
 
 
 interface Props { }
-const PADDING_X = 40 ; 
-const PADDING_Y = 80 ;
+const PADDING_X = 40;
+const PADDING_Y = 80;
 
 const TablesController: React.FC<Props> = ({ }) => {
 
     const { database } = useDatabase();
     const { createTable } = useDatabaseOperations();
+    const { getViewport } = useReactFlow();
     const { tables } = database;
-    const viewport = useViewport();
+    //const viewport = useViewport();
     const { t } = useTranslation();
     const [selectedTable, setSelectedTable] = useState(new Set([]));
     const { focusedTableId } = useDiagram();
 
     const addNewTable = useCallback(async () => {
         const newTableId: string = v4();
- 
+        const viewport = getViewport();
         const { x, y, zoom } = viewport;
         // Convert screen (0,0) to flow coordinates using viewport values
         const posX = -x / zoom + (PADDING_X / zoom);
         const posY = -y / zoom + (PADDING_Y / zoom);
 
-        
         await createTable({
             id: newTableId,
-            name: `table_${tables.length + 1}`, 
-            posX , 
-            posY , 
-            fields : [{
-                id : v4() , 
-                name  : "id" , 
-                isPrimary : true , 
-                unique : true 
+            name: `table_${tables.length + 1}`,
+            posX,
+            posY,
+            fields: [{
+                id: v4(),
+                name: "id",
+                isPrimary: true,
+                unique: true
             }]
         } as TableInsertType);
-        
+
         setSelectedTable(new Set([newTableId]) as any);
-    }, [tables, viewport]);
+    }, [tables, getViewport]);
 
 
     useEffect(() => {
@@ -59,6 +59,10 @@ const TablesController: React.FC<Props> = ({ }) => {
     }, [focusedTableId]);
 
     const selectedTableId = selectedTable.values().next().value;
+    useEffect(() => {
+
+        console.log("tables controller re-rendered")
+    }, [getViewport]);
 
 
     return (

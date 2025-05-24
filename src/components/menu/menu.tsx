@@ -1,8 +1,9 @@
 
 import { useTheme } from "next-themes";
 import DropdownMenu, { MenuDropdownProps } from "./menu-dropdown";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { menuItem } from "@heroui/react";
+import { useTranslation } from "react-i18next";
 
 
 
@@ -17,119 +18,87 @@ interface MenuProps {
 
 const Menu: React.FC<MenuProps> = ({ }) => {
 
-    const { resolvedTheme, setTheme } = useTheme()
+    const { setTheme } = useTheme()
 
 
-
-
+    const { t } = useTranslation();
     const menu: MenuDropdownProps[] = useMemo(() => [
         {
-            title: "File",
-
-            children: [{
-                title: "New"
-            },
-            {
-                title: "Open",
-                shortcut: "Ctnl + O"
-            }, {
-                title: "Save",
-                shortcut: "Ctnl + S",
-                divide: true
-            }, {
-                title: "Import",
-                divide: true,
-                children: [{
-                    title: ".json",
-                }, {
-                    title: ".dbml"
-                }, {
-                    title: "MySql"
-                }, {
-                    title: "Postgresql"
-                }]
-            }, {
-                title: "Export SQL",
-                children: [{
-                    title: "Generic",
-                }, {
-                    title: "MySql"
-                }, {
-                    title: "Postgresql"
-                }]
-            }, {
-                title: "Export ORM Models",
-                divide: true
-            }, {
-                title: "Delete Project",
-                theme: "danger"
-            }]
-        }, {
-            title: "Edit",
-            clickHandler: () => {
-                console.log("hello wo")
-            },
-
-            children: [{
-                title: "Undo",
-                isDisabled: true,
-            },
-            {
-                title: "Redo",
-
-                isDisabled: true,
-            }, {
-                title: "Clear",
-
-            }]
-        }, {
-            title: "View",
-            children: [{
-                title: "Hide Controller",
-                shortcut: "Ctnl + B",
-                divide: true
-            }, {
-                title: "Zoom on scroll",
-                divide: true,
-                children: [{
-                    title: "On"
-                }, {
-                    title: "Off"
-                }],
-
-            }, {
-                title: "Theme",
-                clickHandler: () => {
-                    console.log("hello wo")
+            title: t("menu.file"),
+            children: [
+                { title: t("menu.new") },
+                { title: t("menu.open"), shortcut: "Ctnl + O" },
+                { title: t("menu.save"), shortcut: "Ctnl + S", divide: true },
+                {
+                    title: t("menu.import"),
+                    divide: true,
+                    children: [
+                        { title: t("menu.json") },
+                        { title: t("menu.dbml") },
+                        { title: t("menu.mysql") },
+                        { title: t("menu.postgresql") },
+                    ],
                 },
-                children: [{
-                    title: "Light",
-                    clickHandler: () => {
-
-                        setTheme("light");
-                    }
-                }, {
-                    title: "Dark",
-                    clickHandler: () => {
-
-                        setTheme("dark");
-                    }
-                }]
-            }]
-        }, {
-            title: "Help",
-            children: [{
-                title: "Show Docs",
-            }, {
-                title: "Join Discord"
-            }]
-        }
-    ], []);
-
-
+                {
+                    title: t("menu.export_sql"),
+                    children: [
+                        { title: t("menu.generic") },
+                        { title: t("menu.mysql") },
+                        { title: t("menu.postgresql") },
+                    ],
+                },
+                { title: t("menu.export_orm_models"), divide: true },
+                { title: t("menu.delete_project"), theme: "danger" },
+            ],
+        },
+        {
+            title: t("menu.edit"),
+            clickHandler: () => console.log("hello wo"),
+            children: [
+                { title: t("menu.undo"), isDisabled: true },
+                { title: t("menu.redo"), isDisabled: true },
+                { title: t("menu.clear") },
+            ],
+        },
+        {
+            title: t("menu.view"),
+            children: [
+                { title: t("menu.hide_controller"), shortcut: "Ctnl + B", divide: true },
+                {
+                    title: t("menu.zoom_on_scroll"),
+                    divide: true,
+                    children: [
+                        { title: t("menu.on") },
+                        { title: t("menu.off") },
+                    ],
+                },
+                {
+                    title: t("menu.theme"),
+                    clickHandler: () => console.log("hello wo"),
+                    children: [
+                        {
+                            title: t("menu.light"),
+                            clickHandler: () => setTheme("light"),
+                        },
+                        {
+                            title: t("menu.dark"),
+                            clickHandler: () => setTheme("dark"),
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            title: t("menu.help"),
+            children: [
+                { title: t("menu.show_docs") },
+                { title: t("menu.join_discord") },
+            ],
+        },
+    ], [t]);
     return <div className="gap-1 flex">
         {
-            menu.map((menuItem  , index ) => (
+            menu.map((menuItem, index) => (
                 <DropdownMenu  {...menuItem} key={index} />
             ))
         }
@@ -137,4 +106,4 @@ const Menu: React.FC<MenuProps> = ({ }) => {
 }
 
 
-export default Menu; 
+export default React.memo(Menu); 

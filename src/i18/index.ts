@@ -28,7 +28,7 @@ i18n.use(LanguageDetector)
     .use(initReactI18next)
     .init({
         resources ,
-        lng: 'en', // 👈 set default language to French
+        lng: 'en',  
 
         interpolation: {
             escapeValue: false,

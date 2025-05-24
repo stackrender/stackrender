@@ -35,10 +35,11 @@ import DatabaseControlButtons from "./database-control-buttons";
 import { FieldType } from "@/lib/schemas/field-schema";
 import useHighlightedEdges from "@/hooks/use-highlighted-edges";
 import useOverlappingNodes from "@/hooks/use-overlapping-nodes";
+import { useTranslation } from "react-i18next";
 
-// Main functional component
+
 const DatabasePage: React.FC<never> = () => {
-
+    const { t } = useTranslation() ;  
     // Extract database state and operations
     const { database, getField } = useDatabase();
     const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabaseOperations();
@@ -83,14 +84,14 @@ const DatabasePage: React.FC<never> = () => {
         } else {
             // Show error toast if invalid relationship
             addToast({
-                title: "Invalid Relationship",
-                description: "Relationship should be between primary key and foreign key of the same time",
+                title: t("db_controller.invalid_relationship.title"),
+                description: t("db_controller.invalid_relationship.description"),
                 color: "danger",
             });
         }
 
         setIsConnectionInProgress(false);
-    }, [database]);
+    }, [database , t ]);
 
     // Called when nodes are updated (position changes or removed)
     const handleNodesChanges: OnNodesChange<never> = useCallback(async (changes: NodeChange<never>[]) => {
@@ -196,7 +197,7 @@ const DatabasePage: React.FC<never> = () => {
                     <Background className="bg-default/40 dark:bg-black" />
                 </ReactFlow>
                 <div
-                    className="absolute left-[12px]  top-[64px] "
+                    className="absolute left-[24px] bottom-[24px] "
                 >
                     {
                         isOverlapping &&
@@ -216,7 +217,7 @@ const DatabasePage: React.FC<never> = () => {
                                 </span>
                             </TooltipTrigger>
                             <TooltipContent>
-                                Overlapping Tables
+                                {t("table.overlapping_tables")}
                             </TooltipContent>
                         </Tooltip>
                     }
