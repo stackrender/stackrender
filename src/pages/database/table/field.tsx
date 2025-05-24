@@ -1,10 +1,10 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
+
 import { FieldType } from "@/lib/schemas/field-schema";
-import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
-import { useDiagram, useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
-import { Button, cn, select } from "@heroui/react";
-import { Handle, Position, useConnection } from "@xyflow/react";
-import { Check, KeyRound, Trash, Trash2 } from "lucide-react";
+import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
+import { Button, cn } from "@heroui/react";
+import { Handle, Position } from "@xyflow/react";
+import { Check, KeyRound, Trash2 } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
 import hash from 'object-hash';
@@ -45,11 +45,11 @@ const Field: React.FC<Props> = (props) => {
         setEditMode(false);
     }, [fieldName])
 
- 
+
 
     return (
         <div className={cn(
-            "group relative flex h-8 items-center justify-between gap-1 border-t border-default dark:border-default/5 px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-primary-500 transition-all duration-200 ease-in-out",
+            "group relative flex h-8 items-center justify-between gap-1 border-t border-default dark:border-default/5 px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-primary/5 transition-all duration-200 ease-in-out",
             highlight ? "bg-primary/5" : ""
         )}>
             {

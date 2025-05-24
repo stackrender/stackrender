@@ -42,8 +42,8 @@ const adjustTablesPositions = async (
         const node = layoutedGraph?.children?.find((n) => n.id === table.id);
         if (node) {
             // ELK positions are top-left, adjust to center like before
-            table.posX = node.x || 0 + (node.width / 2) + 112;  // 112 = half your fixed width
-            table.posY = node.y || 0 + (node.height / 2) + 75;  // 75 = half your fixed height
+            table.posX = node.x || 0 + (node.width / 2) + 112;  
+            table.posY = node.y || 0 + (node.height / 2) + 75;   
         }
     });
 
@@ -89,6 +89,7 @@ const getDefaultTableOverlapping = (table: TableType, tables: TableType[]): bool
 
 export {
     adjustTablesPositions,
-    getDefaultTableOverlapping
+    getDefaultTableOverlapping , 
+    isTablesOverlapping
 
 }

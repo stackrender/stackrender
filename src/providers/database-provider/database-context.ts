@@ -26,13 +26,13 @@ interface DatabaseOperationsContextType {
     createTable: (table: TableInsertType) => Promise<void>,
     editTable: (table: TableInsertType) => Promise<QueryResult>,
     deleteTable: (id: string) => Promise<void>,
-    updateTablePositions: (tables: TableInsertType[]) => Promise<QueryResult>,
+    updateTablePositions: (tables: TableInsertType[]) => Promise<void>,
     deleteMultiTables: (ids: string[]) => Promise<QueryResult>
     // field operations
     createField: (field: FieldInsertType) => Promise<QueryResult>,
     editField: (field: FieldInsertType) => Promise<QueryResult>,
     deleteField: (id: string) => Promise<void>,
-    orderTableFields: (fields: FieldType[]) => Promise<QueryResult>,
+    orderTableFields: (fields: FieldType[]) => Promise<void>,
     // relationship operations
     createRelationship: (relationship: RelationshipInsertType) => Promise<QueryResult>,
     editRelationship: (relationship: RelationshipInsertType) => Promise<QueryResult>,

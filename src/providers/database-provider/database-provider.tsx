@@ -1,7 +1,6 @@
-
 import { DatabaseDataContext, DatabaseOperationsContext } from "./database-context";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { db, powerSyncDb } from "../sync-provider/sync-provider";
+import { db } from "../sync-provider/sync-provider";
 import { TableInsertType, tables, TableType } from "@/lib/schemas/table-schema";
 import { useQuery } from "@powersync/react";
 import { toCompilableQuery } from "@powersync/drizzle-driver";
@@ -14,21 +13,23 @@ import { DBDiffOperation } from "@/utils/database";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { getTimestamp } from "@/utils/utils";
 
-
 interface Props { children: React.ReactNode }
 
 const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
     const [currentDatabaseId, setCurrentDatabaseId] = useState<string | undefined>(undefined);
 
+    // Fetch all databases
     const { data: databases, isLoading: loadingDatabases } = useQuery(toCompilableQuery(
         db.query.databases.findMany()
     ));
 
+    // Fetch all data types
     const { data: data_types, isLoading: loadingDataTypes } = useQuery(toCompilableQuery(
         db.query.data_types.findMany()
     ));
 
+    // Fetch the current database with nested tables, fields, and relationships
     let { data: database, isLoading: loadingCurrentDatabase } = useQuery(
         toCompilableQuery(
             db.query.databases.findFirst({
@@ -59,9 +60,11 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         )
     );
 
+    // Normalize result to single object
     if (database.length == 1)
         database = database[0] as any;
 
+    // Auto-select first database if none is selected
     useEffect(() => {
         if (databases.length > 0 && !currentDatabaseId) {
             setCurrentDatabaseId(databases[0].id);
@@ -70,21 +73,24 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
     const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;
 
+    // CRUD operations for Tables
     const createTable = useCallback(async (table: TableInsertType): Promise<void> => {
-
         if (currentDatabaseId) {
             await db.transaction(async (tx) => {
                 await tx.insert(tables).values({
                     ...table,
-                    databaseId: currentDatabaseId as string,
-                    createdAt: table.createdAt ? table.createdAt : getTimestamp()
+                    databaseId: currentDatabaseId,
+                    createdAt: table.createdAt || getTimestamp()
                 });
                 if (table.fields) {
-                    await tx.insert(fields).values(table.fields);
+                    await tx.insert(fields).values(
+                        table.fields.map((field: FieldInsertType) => ({ ...field, tableId: table.id }))
+                    );
                 }
             })
-        } else
+        } else {
             throw Error("No Database selected");
+        }
     }, [db, currentDatabaseId]);
 
     const editTable = useCallback(async (table: TableInsertType): Promise<QueryResult> => {
@@ -99,6 +105,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         return await db.delete(tables).where(inArray(tables.id, ids));
     }, [db]);
 
+    // CRUD operations for Fields
     const createField = useCallback(async (field: FieldInsertType): Promise<QueryResult> => {
         return await db.insert(fields).values(field);
     }, [db]);
@@ -107,6 +114,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         return await db.update(fields).set(field).where(eq(fields.id, field.id));
     }, [db]);
 
+    // Delete field and its related relationships
     const deleteField = useCallback(async (id: string): Promise<void> => {
         return await db.transaction(async (tx) => {
             await tx.delete(relationships).where(or(eq(relationships.sourceFieldId, id), eq(relationships.targetFieldId, id)));
@@ -114,37 +122,31 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         })
     }, [db]);
 
-
+    // Helper to find a field by table and field ID
     const getField = useCallback((tableId: string, id: string) => {
         const table: TableType | undefined = (database as any).tables.find((table: TableType) => table.id == tableId);
         if (table)
             return table.fields.find((field: FieldType) => field.id == id);
     }, [database])
 
-    const orderTableFields = useCallback(async (fieldsList: FieldType[]): Promise<QueryResult> => {
+    // Reorder fields in a table
+    const orderTableFields = useCallback(async (fieldsList: FieldType[]): Promise<void> => {
+        return await db.transaction(async (tx) => {
+            for (let index = 0; index < fieldsList.length; index++) {
+                await tx.update(fields).set({
+                    sequence: index
+                }).where(eq(fields.id, fieldsList[index].id))
+            }
+        })
+    }, [db]);
 
-        const caseStatements = fieldsList
-            .map((field, index) => `WHEN '${field.id}' THEN ${index}`)
-            .join('\n  ');
-        const ids = fieldsList.map(u => `'${u.id}'`).join(',\n  ');
-        const sql = `
-        UPDATE fields
-        SET sequence = CASE id
-          ${caseStatements}
-        END
-        WHERE id IN (
-          ${ids}
-        );`;
-        return await powerSyncDb.execute(sql);
-
-    }, [powerSyncDb]);
-
+    // CRUD operations for Relationships
     const createRelationship = useCallback(async (relationship: RelationshipInsertType): Promise<QueryResult> => {
         if (currentDatabaseId) {
             return await db.insert(relationships).values({
                 ...relationship,
                 databaseId: currentDatabaseId,
-                createdAt: relationship.createdAt ? relationship.createdAt : getTimestamp()
+                createdAt: relationship.createdAt || getTimestamp()
             });
         }
         throw Error("No database selected");
@@ -162,45 +164,29 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         return await db.delete(relationships).where(inArray(relationships.id, ids));
     }, [db]);
 
-    const updateTablePositions = useCallback(async (tableList: TableInsertType[]): Promise<QueryResult> => {
+    // Update table positions (for UI layout)
+    const updateTablePositions = useCallback(async (tableList: TableInsertType[]): Promise<void> => {
+        return await db.transaction(async (tx) => {
+            for (const table of tableList) {
+                await tx.update(tables).set({
+                    posX: (table as any).posX,
+                    posY: (table as any).posY
+                }).where(eq(tables.id, (table as any).id))
+            }
+        })
+    }, [db]);
 
-        const posXCases = tableList
-            .map(table => `WHEN '${table.id}' THEN ${table.posX}`)
-            .join('\n  ');
-        const posYCases = tableList
-            .map(table => `WHEN '${table.id}' THEN ${table.posY}`)
-            .join('\n  ');
-        const ids = tableList.map(table => `'${table.id}'`).join(',\n  ');
-        const sql = `
-        UPDATE tables
-        SET 
-        posX = CASE id
-          ${posXCases}
-        END,
-        posY = CASE id
-          ${posYCases}
-        END
-        WHERE id IN (
-          ${ids}
-        );`;
-        return await powerSyncDb.execute(sql);
-
-    }, [powerSyncDb]);
-
+    // Apply a list of diff operations to sync database
     const executeDbDiffOps = useCallback(async (operations: DBDiffOperation[]) => {
         try {
             await db.transaction(async (tx) => {
-
                 for (const operation of operations) {
-
                     if (operation.type == "CREATE_TABLE") {
                         await tx.insert(tables).values(operation.table);
-
                         if (operation.table.fields && Object.values(operation.table.fields).length > 0)
                             await tx.insert(fields).values(Object.values(operation.table.fields));
-                    }
-                    else if (operation.type === "UPDATE_TABLE") {
 
+                    } else if (operation.type === "UPDATE_TABLE") {
                         await tx.update(tables).set(operation.changes).where(eq(tables.id, operation.tableId));
 
                     } else if (operation.type === "DELETE_TABLE") {
@@ -227,13 +213,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                     }
                 }
             })
-        } catch (error) { 
+        } catch (error) {
             throw error
         }
-
     }, [db]);
-
-
 
     const databaseOpsValue = useMemo(() => ({
         createTable,
@@ -245,7 +228,6 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editField,
         deleteField,
         orderTableFields,
-
         createRelationship,
         editRelationship,
         deleteRelationship,
@@ -261,7 +243,6 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editField,
         deleteField,
         orderTableFields,
-
         createRelationship,
         editRelationship,
         deleteRelationship,
@@ -270,7 +251,6 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     ]);
 
     return (
-
         <DatabaseDataContext.Provider value={{
             data_types,
             database: database as unknown as DatabaseType,
@@ -278,7 +258,6 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             getField,
         }}>
             <DatabaseOperationsContext.Provider value={databaseOpsValue}>
-
                 {
                     !isLoading && database &&
                     <DatabaseHistoryProvider>
@@ -294,6 +273,3 @@ export const useDatabase = () => useContext(DatabaseDataContext);
 export const useDatabaseOperations = () => useContext(DatabaseOperationsContext);
 
 export default DatabaseProvider;
-
-
-

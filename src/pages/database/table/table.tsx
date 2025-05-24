@@ -1,6 +1,6 @@
 
 
-import { Edge, Node, NodeProps, useConnection, useStore } from "@xyflow/react";
+import { Edge, Node, NodeProps } from "@xyflow/react";
 import hash from 'object-hash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Card, cn, } from "@heroui/react";
@@ -14,21 +14,22 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/to
 import FieldComponent from "./field";
 import { FieldType } from "@/lib/schemas/field-schema";
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
-import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useTranslation } from "react-i18next";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
-import useGetRelatedEdges from "@/hooks/use-get-related-edges";
+
+
 
 export type TableProps = Node<{
     table: TableType,
     overlapping?: boolean,
     pulsing?: boolean,
-    highlightedEdges : Edge[] 
+    highlightedEdges: Edge[]
 
 }>
 
-const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overlapping = false, pulsing = false , highlightedEdges = [] } }) => {
+const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overlapping = false, pulsing = false, highlightedEdges = [] } }) => {
 
 
     const [editMode, setEditMode] = useState<boolean>(false);
@@ -50,9 +51,9 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
     const focus = useCallback(() => {
         focusOnTable(table.id, false);
     }, [table])
-    
 
-    
+
+
     const fields: React.ReactNode[] = useMemo(() => {
         return table.fields.map((field: FieldType) => {
             const highlight: boolean = highlightedEdges.find((edge: any) =>
@@ -67,15 +68,15 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
             />)
         })
     }, [table.fields, selected, highlightedEdges]);
-    
-    
-    
-    return (    
+
+
+
+    return (
 
         <Card className={cn(
             "w-full h-full bg-background rounded-lg  noselect overflow-visible dark:bg-default-900",
             selected
-                ? 'ring-2 ring-primary'
+                ? 'ring-2 ring-offset-1 ring-primary  dark:ring-offset-default-900'
                 : '',
             overlapping
                 ? 'ring-2  dark:ring-offset-default-900 ring-danger ring-offset-1 scale-105 shadow-danger '
@@ -164,6 +165,5 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
 export default React.memo(Table, (previousState: any, newState: any) => {
     const previousStateHash: string = hash(previousState.data);
     const newStateHash: string = hash(newState.data);
-
     return previousStateHash == newStateHash && previousState.selected == newState.selected;
 })

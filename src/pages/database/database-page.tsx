@@ -1,52 +1,66 @@
+// Importing necessary types and hooks from React Flow (XYFlow)
+import {
+    addEdge, Background, Connection, Controls, EdgeChange,
+    EdgeRemoveChange, NodeChange, NodePositionChange,
+    NodeRemoveChange, OnEdgesChange, OnNodesChange,
+    ReactFlow, useEdgesState, useNodesState, useReactFlow
+} from "@xyflow/react";
 
-import { addEdge, applyNodeChanges, Background, Connection, Controls, Edge, EdgeChange, EdgeRemoveChange, MiniMap, Node, NodeChange, NodePositionChange, NodeRemoveChange, NodeSelectionChange, OnEdgesChange, OnNodesChange, ReactFlow, useEdgesState, useNodesState, useReactFlow } from "@xyflow/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+// React built-ins
+import { useCallback, useMemo } from "react";
+
+// Custom components and styles
 import Table from "./table/table";
 import '@xyflow/react/dist/style.css';
 import Relationship from "./table/relationship";
 import DBController from "./db-controller/db-controller";
 import { TableInsertType } from "@/lib/schemas/table-schema";
+
+// Custom context providers and hooks
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useTableToNode } from "@/hooks/use-table-to-node";
 import { useRelationshipToEdge } from "@/hooks/use-relationship-to-edge";
-import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
+import { RelationshipInsertType } from "@/lib/schemas/relationship-schema";
+
+// Utils and constants
 import { v4 } from "uuid";
 import { TARGET_PREFIX } from "./table/field";
 import CardinalityMarker from "@/components/cardinality-marker/cardinality-marker";
-import { areArraysEqual } from "@/utils/utils";
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
-import { addToast, Button, Image } from "@heroui/react";
-import { AlertTriangle, LayoutGrid } from "lucide-react";
+import { addToast, Button } from "@heroui/react";
+import { AlertTriangle } from "lucide-react";
 import { adjustTablesPositions } from "@/utils/tables";
-
 import DatabaseControlButtons from "./database-control-buttons";
-import useGetOverlappingNodes from "@/hooks/use-get-overlapping-nodes";
 import { FieldType } from "@/lib/schemas/field-schema";
+import useHighlightedEdges from "@/hooks/use-highlighted-edges";
+import useOverlappingNodes from "@/hooks/use-overlapping-nodes";
 
-
-
+// Main functional component
 const DatabasePage: React.FC<never> = () => {
 
+    // Extract database state and operations
     const { database, getField } = useDatabase();
     const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabaseOperations();
+
+    // Node and edge state hooks
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
+    // Diagram-related state (e.g. connection in progress)
     const { setIsConnectionInProgress } = useDiagramOps();
-    const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
-    const [isTableOverlappingPulsing, setIsTableOverlappingPulsing] = useState<boolean>(false);
+
+    // Destructure tables and relationships from database
     const { tables, relationships } = database;
+
+    // Hook to allow zooming and centering the diagram
     const { fitView } = useReactFlow();
+
+    // Define custom node and edge types
     const nodeTypes = useMemo(() => ({ table: Table }), []);
     const edgeTypes = useMemo(() => ({ 'relationship-edge': Relationship }), []);
 
-
-
-    useTableToNode(tables);
-    useRelationshipToEdge(relationships);
-
-
+    // Called when a connection is made between fields
     const onConnect = useCallback((connection: Connection) => {
         const sourceFieldId: string | undefined = (connection.sourceHandle as string).split("_").pop();
         const targetFieldId: string = (connection.targetHandle as string).replace(TARGET_PREFIX, "");
@@ -54,9 +68,8 @@ const DatabasePage: React.FC<never> = () => {
         const sourceField: FieldType | undefined = getField(connection.source, sourceFieldId as string);
         const targetField: FieldType | undefined = getField(connection.target, targetFieldId);
 
-
+        // Check if both fields have the same type (valid relationship)
         if (sourceField?.typeId == targetField?.typeId) {
-
             createRelationship({
                 id: v4(),
                 sourceTableId: connection.source,
@@ -65,28 +78,29 @@ const DatabasePage: React.FC<never> = () => {
                 targetFieldId
             } as RelationshipInsertType);
 
+            // Add edge to the diagram
             setEdges((eds) => addEdge(connection, eds));
         } else {
+            // Show error toast if invalid relationship
             addToast({
                 title: "Invalid Relationship",
                 description: "Relationship should be between primary key and foreign key of the same time",
                 color: "danger",
-            })
+            });
         }
-        setIsConnectionInProgress(false);
 
+        setIsConnectionInProgress(false);
     }, [database]);
 
+    // Called when nodes are updated (position changes or removed)
     const handleNodesChanges: OnNodesChange<never> = useCallback(async (changes: NodeChange<never>[]) => {
-
-
         const nodePositionChanges: NodePositionChange[] = changes.filter((change: NodeChange) =>
-            change.type == "position" &&
-            !change.dragging
+            change.type == "position" && !change.dragging
         ) as NodePositionChange[];
 
         const nodeRemoveChanges: NodeRemoveChange[] = changes.filter((change: NodeChange) => change.type == "remove");
 
+        // Save new positions to the database
         if (nodePositionChanges.length > 0)
             await updateTablePositions(nodePositionChanges.map((change: NodePositionChange) => ({
                 id: change.id,
@@ -94,140 +108,50 @@ const DatabasePage: React.FC<never> = () => {
                 posY: change.position?.y
             } as TableInsertType)));
 
+        // Delete tables if removed
         if (nodeRemoveChanges.length > 0)
             deleteMultiTables(nodeRemoveChanges.map((change: NodeRemoveChange) => change.id));
 
         return onNodesChange(changes);
-
     }, [onNodesChange]);
 
-
-
+    // Called when edges (relationships) change
     const handleEdgeChanges: OnEdgesChange<any> = useCallback((changes: EdgeChange<any>[]) => {
-
         const edgeRemoveChanges: EdgeRemoveChange[] = changes.filter((change: EdgeChange) => change.type == "remove") as EdgeRemoveChange[];
+
+        // Delete relationships from database
         if (edgeRemoveChanges.length > 0) {
-            deleteMultiRelationships(edgeRemoveChanges.map((change: EdgeRemoveChange) => change.id))
+            deleteMultiRelationships(edgeRemoveChanges.map((change: EdgeRemoveChange) => change.id));
         }
+
         return onEdgesChange(changes as EdgeChange<never>[]);
     }, [onEdgesChange]);
 
-
-    useEffect(() => {
-        const newSelectedNodesIds: string[] = nodes.filter((node: Node) => node.selected).map((node: Node) => node.id)
-        if (areArraysEqual(newSelectedNodesIds, selectedNodeIds)) return; setSelectedNodeIds(newSelectedNodesIds);
-    }, [nodes]);
-
-
-    const selectedEdgeIds: string[] = useMemo(() => {
-        return relationships.filter((relationship: RelationshipType) =>
-            selectedNodeIds.includes(relationship.sourceTableId) ||
-            selectedNodeIds.includes(relationship.targetTableId)
-        ).map((relationship: RelationshipType) => relationship.id);
-    }, [selectedNodeIds, relationships]);
-
-
-    useEffect(() => {
-        setEdges((edges: any) => {
-            return edges.map((edge: any) => {
-                const selected: boolean = selectedEdgeIds.includes(edge.id);
-                return (edge.animated == selected) ? edge : { ...edge, animated: selected } as Edge;
-            })
-        });
-    }, [selectedEdgeIds]);
-
-
-    useEffect(() => {
-        setNodes((nodes: any) => {
-            return nodes.map((node: any) => {
-                const newHighlitedEdges: Edge[] = edges.filter((edge: Edge) =>
-                    (edge.animated || edge.selected)
-                    && (edge.source == node.id || edge.target == node.id)
-                );
-                return {
-                    ...node,
-                    data: {
-                        ...node.data,
-                        highlightedEdges: newHighlitedEdges
-                    }
-                }
-            })
-        })
-    }, [edges]);
-
+    // When user starts connecting fields
     const onConnectStart = useCallback(() => {
         setIsConnectionInProgress(true);
     }, []);
 
-
+    // When user ends connecting fields
     const onConnectEnd = useCallback(() => {
         setIsConnectionInProgress(false);
     }, []);
 
-
-
-
-
-
+    // Automatically reposition tables to avoid overlap and fit the view
     const adjustPositions = useCallback(async () => {
         updateTablePositions(await adjustTablesPositions(nodes, relationships));
         setTimeout(() => {
             fitView({
                 duration: 500
-            })
-        }, 300)
+            });
+        }, 300);
     }, [relationships, nodes]);
 
-
-    const overlappingNodes = useGetOverlappingNodes();
-
-    useEffect(() => {
-        const overlappingIds = Array.from(overlappingNodes);
-
-        const previousOverlappingNodes = nodes.filter((node: Node) => node.data.overlapping);
-
-        if (!areArraysEqual(previousOverlappingNodes, overlappingIds)) {
-            setNodes((nodes: any) => {
-                return nodes.map((node: any) => {
-                    const isOverlaped: boolean = overlappingIds.includes(node.id);
-
-                    if (isOverlaped == node.data.overlapping)
-                        return node;
-                    else
-                        return {
-                            ...node,
-                            data: {
-                                ...node.data,
-                                overlapping: isOverlaped
-                            }
-                        }
-                })
-            })
-        }
-    }, [overlappingNodes]);
-
-
-    useEffect(() => {
-        setNodes((nodes: any) => {
-            return nodes.map((node: any) => {
-                if (!node.data.overlapping)
-                    return node;
-                else
-                    return {
-                        ...node,
-                        data: {
-                            ...node.data,
-                            pulsing: isTableOverlappingPulsing
-                        }
-                    }
-            })
-        })
-    }, [isTableOverlappingPulsing])
-
-    const pulsOverlappingTables = useCallback(() => {
-        setIsTableOverlappingPulsing(true);
-        setTimeout(() => setIsTableOverlappingPulsing(false), 200);
-    }, [])
+    // Convert tables and relationships into flow elements
+    useTableToNode(tables);
+    useRelationshipToEdge(relationships);
+    useHighlightedEdges(nodes, relationships, edges);
+    const { isOverlapping, puls } = useOverlappingNodes(nodes);
 
     return (
 
@@ -275,7 +199,7 @@ const DatabasePage: React.FC<never> = () => {
                     className="absolute left-[12px]  top-[64px] "
                 >
                     {
-                        overlappingNodes.size > 0 &&
+                        isOverlapping &&
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <span>
@@ -285,7 +209,7 @@ const DatabasePage: React.FC<never> = () => {
                                         isIconOnly
                                         color="danger"
                                         className="size-8 p-1 "
-                                        onPressEnd={pulsOverlappingTables}
+                                        onPressEnd={puls}
                                     >
                                         <AlertTriangle className="size-4 text-white" />
                                     </Button>
