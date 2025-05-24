@@ -7,26 +7,28 @@ import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from 
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { FieldType } from "@/lib/schemas/field-schema";
 import { TableType } from "@/lib/schemas/table-schema";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { v4 } from "uuid";
 import { getNextSequence } from "@/utils/field";
-
+import hash from "object-hash" ; 
 
 interface Props {
-    table: TableType
+    tableFields: FieldType[] ; 
+    tableId : string ; 
 }
 
 
-const FieldList: React.FC<Props> = ({ table }) => {
+const FieldList: React.FC<Props> = ({ tableFields , tableId}) => {
 
     const { t } = useTranslation();
-    const [fields, setFields] = useState<FieldType[]>(table.fields);
+    const [fields, setFields] = useState<FieldType[]>(tableFields);
     const { createField, orderTableFields } = useDatabaseOperations();
 
     useEffect(() => {
-        setFields(table.fields)
-    }, [table.fields])
+
+        setFields(tableFields)
+    }, [tableFields])
 
     const sensors = useSensors(
         useSensor(PointerSensor)
@@ -53,14 +55,12 @@ const FieldList: React.FC<Props> = ({ table }) => {
     const addField = () => {
         createField({
             id: v4(),
-            name: `field_${table.fields.length + 1}`,
-            tableId: table.id,
+            name: `field_${fields.length + 1}`,
+            tableId: tableId,
             sequence: getNextSequence(fields) , 
             nullable: true,
         })
-    }
-
-
+    } 
     return (
         <div className="w-full space-y-2 no-select">
             <DndContext
@@ -99,4 +99,6 @@ const FieldList: React.FC<Props> = ({ table }) => {
 }
 
 
-export default FieldList; 
+export default React.memo(FieldList , (prevState , newState) => {
+    return hash(prevState) == hash(newState) ; 
+}); 

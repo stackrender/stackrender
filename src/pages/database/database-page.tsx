@@ -33,9 +33,9 @@ import { AlertTriangle } from "lucide-react";
 import { adjustTablesPositions } from "@/utils/tables";
 import DatabaseControlButtons from "./database-control-buttons";
 import { FieldType } from "@/lib/schemas/field-schema";
-import useHighlightedEdges from "@/hooks/use-highlighted-edges";
-import useOverlappingNodes from "@/hooks/use-overlapping-nodes";
+import useHighlightedEdges from "@/hooks/use-highlighted-edges"; 
 import { useTranslation } from "react-i18next";
+import useOverlappingTables from "@/hooks/use-overlapping-tables";
 
 
 const DatabasePage: React.FC<never> = () => {
@@ -152,7 +152,7 @@ const DatabasePage: React.FC<never> = () => {
     useTableToNode(tables);
     useRelationshipToEdge(relationships);
     useHighlightedEdges(nodes, relationships, edges);
-    const { isOverlapping, puls } = useOverlappingNodes(nodes);
+    const { isOverlapping, puls } = useOverlappingTables(tables);
 
     return (
 

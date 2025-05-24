@@ -69,10 +69,7 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
         })
     }, [table.fields, selected, highlightedEdges]);
 
-
-
     return (
-
         <Card className={cn(
             "w-full h-full bg-background rounded-lg  noselect overflow-visible dark:bg-default-900",
             selected
@@ -81,11 +78,11 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
             overlapping
                 ? 'ring-2  dark:ring-offset-default-900 ring-danger ring-offset-1 scale-105 shadow-danger '
                 : '',
-            !pulsing
-                ? 'scale-100'
-                : '',
-            pulsing
+            !pulsing && overlapping 
                 ? 'scale-105'
+                : '',
+            pulsing && overlapping
+                ? 'scale-110'
                 : '',
         )}
             shadow="sm"

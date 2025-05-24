@@ -13,15 +13,15 @@ import { createContext } from "react";
 
 interface DatabaseDataContextType {
 
-    data_types: DataType[],
     database: DatabaseType,
-    isLoading: boolean, 
+    isLoading: boolean,
     getField: (tableId: string, id: string) => FieldType | undefined,
 
 }
 
 
 interface DatabaseOperationsContextType {
+    data_types: DataType[],
 
     createTable: (table: TableInsertType) => Promise<void>,
     editTable: (table: TableInsertType) => Promise<QueryResult>,

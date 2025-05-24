@@ -21,9 +21,9 @@ const FieldItem: React.FC<Props> = ({ field }) => {
     const [fieldName, setFieldName] = useState<string>(field.name);
 
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
-    const {  data_types } = useDatabase();
-    const {deleteField, editField} = useDatabaseOperations() ; 
-    
+    const { data_types } = useDatabaseOperations();
+    const { deleteField, editField } = useDatabaseOperations();
+
     const [note, setNote] = useState<string | undefined>(field.note as string | undefined);
     const [selectedType, setSelectedType] = useState<string | undefined>(field.typeId as string | undefined);
     const { t } = useTranslation();
@@ -37,6 +37,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
     useEffect(() => {
         setFieldName(field.name);
     }, [field.name]);
+
     useEffect(() => {
         setSelectedType(field.typeId as string | undefined);
     }, [field.typeId])
@@ -86,6 +87,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
             isPrimary: primaryKey
         } as FieldType);
     }
+
 
     return (
         <div className="flex w-full gap-1 items-center " style={style} ref={setNodeRef} {...attributes}>

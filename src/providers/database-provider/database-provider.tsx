@@ -233,6 +233,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         deleteRelationship,
         deleteMultiRelationships,
         executeDbDiffOps,
+        data_types
     }), [
         createTable,
         editTable,
@@ -248,11 +249,12 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         deleteRelationship,
         deleteMultiRelationships,
         executeDbDiffOps,
+        data_types
     ]);
 
     return (
         <DatabaseDataContext.Provider value={{
-            data_types,
+            
             database: database as unknown as DatabaseType,
             isLoading,
             getField,

@@ -2,7 +2,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/tooltip/to
 
 import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@heroui/react";
 import { Check, ChevronRight, Copy, EllipsisVertical, FileKey, FileType, Focus, Pencil, Trash } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
@@ -10,6 +10,7 @@ import { useDatabaseOperations } from "@/providers/database-provider/database-pr
 import { v4 } from "uuid";
 import { getNextSequence } from "@/utils/field";
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
+import hash from "object-hash";
 
 export interface TableAccordionHeaderProps {
     table: TableType,
@@ -51,6 +52,10 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
             nullable: true,
         })
     }
+
+
+
+ 
 
     return (
         <div className="group w-full flex h-12 gap-1 border-l-4 flex p-2 items-center border-l-[6px] border-default"
@@ -193,4 +198,6 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
 }
 
 
-export default TableAccordionHeader; 
+export default React.memo(TableAccordionHeader, (prevState, newState) => {
+    return hash(prevState) == hash(newState);
+}); 

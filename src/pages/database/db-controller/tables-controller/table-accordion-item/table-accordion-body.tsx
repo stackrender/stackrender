@@ -2,7 +2,7 @@
 import { Accordion, AccordionItem, Button, cn, Textarea } from "@heroui/react";
 import { ChevronLeft, FileKey, FileType, Key, MessageSquareQuote, Plus } from "lucide-react";
 
-import { MouseEventHandler, useCallback, useEffect, useState } from "react";
+import React, { MouseEventHandler, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ColorPicker from "@/components/color-picker/color-picker";
 import FieldList from "./field/field-list";
@@ -25,7 +25,6 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
     const { editTable, createField } = useDatabaseOperations();
 
     const onColorChange = useCallback((color: string | undefined) => {
-
         editTable({ id: table.id, color: color ? color : null } as TableType);
     }, [table]);
 
@@ -51,7 +50,11 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
 
     useEffect(() => {
         setNote(table.note ? table.note : "");
-    }, [table.note])
+    }, [table.note]) ; 
+
+
+ 
+
     return (
         <div className="w-full dark:bg-background">
             <Accordion
@@ -84,7 +87,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                         </div>
                     }
                 >
-                    <FieldList table={table} />
+                    <FieldList tableFields={table.fields} tableId = { table.id } />
                 </AccordionItem>
                 <AccordionItem key="indexes" aria-label="Indexes"
                     indicator={({ isOpen }) => (
@@ -178,4 +181,4 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
 }
 
 
-export default TableAccordionBody; 
+export default React.memo(TableAccordionBody); 

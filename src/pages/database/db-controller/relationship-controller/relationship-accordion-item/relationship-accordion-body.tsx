@@ -15,14 +15,13 @@ interface RelationshipAccordionBodyProps {
 
 
 
-
-
 const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ relationship }) => {
     const [cardinality, setCardinality] = useState(new Set([relationship.cardinality]));
     const { editRelationship, deleteRelationship } = useDatabaseOperations();
 
     const { t } = useTranslation();
 
+    
 
     const changeCardinality = (keys: SharedSelection) => {
 
@@ -68,7 +67,7 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
                 <div className="w-full space-y-1">
                     <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm dark:text-default-600">
                         <FileMinus2 className="size-4" />
-                        {t("db_controller.target_table")}
+                        {t("    .target_table")}
 
                     </label>
 
