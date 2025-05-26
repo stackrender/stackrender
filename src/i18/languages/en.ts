@@ -20,6 +20,8 @@ export const en = {
             add_table: "Add Table",
             add_field: "Add Field",
             add_index: "Add Index",
+            delete_table : "Delete Table" ,
+            duplicate : "Duplicate" ,  
             add_relationship: "Add Relationship",
             show_code: "Show code",
             fields: "Fields",
@@ -55,7 +57,7 @@ export const en = {
             },
             delete: "Delete",
             field_setting: "Field Setting",
-            table_actions: "Field Actions",
+            table_actions: "Table Actions",
             actions: "Actions",
 
             field_note: "Field note",
@@ -71,7 +73,9 @@ export const en = {
         },
         table: {
             double_click: "Double click to edit" , 
-            overlapping_tables : "Overlapping Tables"
+            overlapping_tables : "Overlapping Tables" , 
+            show_more : "Show more" , 
+            show_less : "Show less"
         },
         control_buttons: {
             redo: "Redo",

@@ -43,14 +43,6 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
     }, [relationship.cardinality])
 
 
-
-
-    useEffect(() => {
-        console.log("re-render relationship controlelr", name);
-
-    }, [relationship])
-
-
     if (!relationship.sourceTable || !relationship.targetTable)
         return;
 
@@ -103,7 +95,7 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
                     className="w-full"
                     size="sm"
                     variant="bordered"
-                    label="cardinality"
+                    aria-label="cardinality"
                     selectedKeys={cardinality}
                     onSelectionChange={changeCardinality}
 

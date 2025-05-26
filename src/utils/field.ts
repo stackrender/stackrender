@@ -1,4 +1,5 @@
 import { FieldType } from "@/lib/schemas/field-schema";
+import { v4 } from "uuid";
  
 
 
@@ -12,6 +13,15 @@ export const getNextSequence = (fields: FieldType[]): number => {
         return field.sequence > max.sequence ? field : max
     });
     return maxSequenceItem.sequence + 1;
+}
+
+
+
+export const cloneField = ( field : FieldType) : FieldType  => {
+    return {
+        ...field , 
+        id : v4() ,  
+    } as FieldType ; 
 }
 
 

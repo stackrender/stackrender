@@ -1,7 +1,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip"
 import { Accordion, AccordionItem, Button, Input, useDisclosure } from "@heroui/react"
 import { Code, List, ListCollapse, Table, Workflow } from "lucide-react"
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RelationshipAccordionHeader from "./relationship-accordion-item/relationship-accordion-header";
 import RelationshipAccordionBody from "./relationship-accordion-item/relationship-accordion-body";
@@ -11,6 +11,7 @@ import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relation
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
+import { getDefaultRelationshipName } from "@/hooks/use-relationship-name";
 
 
 
@@ -25,12 +26,16 @@ const RelationshipController: React.FC<Props> = ({ }) => {
     const [isValid, setIsValid] = useState<boolean>(false);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { database } = useDatabase();
-    const { createRelationship  } = useDatabaseOperations();
-    const { relationships } = database;
+    const { createRelationship } = useDatabaseOperations();
+    const { relationships: allRelationships } = database;
+    const [relationships, setRelationships] = useState<RelationshipType[]>(allRelationships);
 
+    const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
     const { t } = useTranslation();
     const [selectedRelationship, setSelectedRelationship] = useState(new Set([]));
     const { focusedRelationshipId } = useDiagram();
+
+    useEffect(() => setRelationships(allRelationships), [allRelationships]);
 
     const addRelationship = useCallback(() => {
 
@@ -50,7 +55,28 @@ const RelationshipController: React.FC<Props> = ({ }) => {
             setSelectedRelationship(new Set([focusedRelationshipId]) as any);
         }
 
-    }, [focusedRelationshipId]) ; 
+    }, [focusedRelationshipId]);
+
+
+    const searchRelationships = useCallback(() => {
+        const keyword: string | undefined = nameRef.current?.value;
+        if (keyword !== undefined) {
+
+            setRelationships(() => {
+                return allRelationships.filter((relationship: RelationshipType) => {
+                    if (relationship.name)
+                        return relationship.name.toLowerCase().trim().includes(keyword.toLocaleLowerCase().trim());
+                    else
+                        return getDefaultRelationshipName(relationship).trim().toLocaleLowerCase().includes(
+                            keyword.trim().toLocaleLowerCase()
+                        )
+                })
+            })
+        }
+    }, [nameRef, allRelationships]);
+
+
+    const selectedRelationshipId = selectedRelationship.values().next().value;
 
     return (
         <div className="w-full h-full flex flex-col gap-2">
@@ -80,17 +106,16 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                 </div>
                 <div className="flex-1">
                     <Input
-                        //ref={filterInputRef}
+                        ref={nameRef}
                         type="text"
-                        
+
                         size="sm"
                         radius="sm"
                         variant="bordered"
                         placeholder={t("db_controller.filter")}
-                        //placeholder={t('side_panel.tables_section.filter')}
-                        className="h-8 w-full focus-visible:ring-0 "
-                    //value={filterText}
-                    //onChange={(e) => setFilterText(e.target.value)}
+                        className="h-8 w-full focus-visible:ring-0"
+                        onKeyUp={searchRelationships}
+
                     />
                 </div>
                 <Button
@@ -126,7 +151,9 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                                 base: "rounded-md p-0 overflow-hidden",
                             }}
                             subtitle={
-                                <RelationshipAccordionHeader relationship={relationship} />
+                                <RelationshipAccordionHeader
+                                    isOpen={selectedRelationshipId == relationship.id}
+                                    relationship={relationship} />
                             }
                         >
                             <RelationshipAccordionBody relationship={relationship} />

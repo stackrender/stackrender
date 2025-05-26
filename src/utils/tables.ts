@@ -1,8 +1,12 @@
+import { FieldType } from "@/lib/schemas/field-schema";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
 import { TableType } from "@/lib/schemas/table-schema";
 import { Node } from "@xyflow/react";
 
 import ELK from "elkjs/lib/elk.bundled.js";
+import { cloneField } from "./field";
+import { v4 } from "uuid";
+import { getTimestamp } from "./utils";
 
 const elk = new ELK();
 
@@ -87,9 +91,27 @@ const getDefaultTableOverlapping = (table: TableType, tables: TableType[]): bool
     return false;
 }
 
+
+
+const cloneTable = ( table: TableType) : TableType => {
+
+    return {
+        ...table , 
+        id : v4() , 
+        name : `${table.name}_copy` , 
+        fields : table.fields.map((field : FieldType) => cloneField(field)) , 
+        posX : table.posX - 360 ,
+        
+        createdAt : getTimestamp() 
+
+    }
+
+}
+
 export {
     adjustTablesPositions,
     getDefaultTableOverlapping , 
-    isTablesOverlapping
+    isTablesOverlapping , 
+    cloneTable
 
 }

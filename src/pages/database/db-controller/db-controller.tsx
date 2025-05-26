@@ -21,7 +21,7 @@ const DBController: React.FC<Props> = ({ }) => {
     return (
         <ResizableBox
             width={width}
-            onResize={onResize} className="min-h-full"
+            onResize={onResize} className="min-h-full "
             minConstraints={[512]}
             axis="x"
             handle={

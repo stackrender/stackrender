@@ -157,7 +157,7 @@ const DatabasePage: React.FC<never> = () => {
     return (
 
         <div className="w-full h-screen flex  relative overflow-hidden">
-            <div>
+            <div className="flex max-w-full">
                 <DBController />
             </div>
             <div className="relative w-full h-full">

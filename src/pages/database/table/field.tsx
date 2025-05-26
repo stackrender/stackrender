@@ -4,10 +4,11 @@ import { useDatabaseOperations } from "@/providers/database-provider/database-pr
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import { Button, cn } from "@heroui/react";
 import { Handle, Position } from "@xyflow/react";
-import { Check, KeyRound, Trash2 } from "lucide-react";
+import { Check, KeyRound, MessageSquareQuote, Trash2 } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
 import hash from 'object-hash';
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 
 interface Props {
     field: FieldType,
@@ -57,13 +58,27 @@ const Field: React.FC<Props> = (props) => {
                 <>
                     <label
                         className={cn(
-                            "truncate  text-xs text-slate-900 dark:text-default-200",
+                            "truncate flex gap-1 text-xs text-slate-900 dark:text-default-200",
                             field.isPrimary ? "font-semibold" : ""
                         )}
                         onDoubleClick={() => setEditMode(true)}
                     >
                         {fieldName}
+                        {
+                            field.note && !editMode && 
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <MessageSquareQuote className="size-3.5 text-icon" />
+                                </TooltipTrigger>
+                                <TooltipContent >
+
+                                    {field.note}
+
+                                </TooltipContent>
+                            </Tooltip>
+                        }
                     </label>
+
                     <span className={cn("content-center truncate flex items-center h-full gap-1 text-right text-xs text-default-600 group-hover:hidden font-semibold text-icon dark:text-default-200",
                         field.isPrimary ? "font-semibold text-slate-700" : ""
                     )}>

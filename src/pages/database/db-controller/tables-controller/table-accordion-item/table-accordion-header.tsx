@@ -11,6 +11,7 @@ import { v4 } from "uuid";
 import { getNextSequence } from "@/utils/field";
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import hash from "object-hash";
+import { cloneTable } from "@/utils/tables";
 
 export interface TableAccordionHeaderProps {
     table: TableType,
@@ -19,7 +20,8 @@ export interface TableAccordionHeaderProps {
 
 
 const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOpen }) => {
-    const { editTable, deleteTable, createField } = useDatabaseOperations();
+    const { editTable, deleteTable, createField, createTable } = useDatabaseOperations();
+
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
     const [tableName, setTableName] = useState<string>(table.name);
 
@@ -54,8 +56,15 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
     }
 
 
+    const duplicate = async () => {
+        setPopOverOpen(false)
+        const clonedTable: TableType = cloneTable(table);
+        await createTable(clonedTable)
+        focusOnTable(clonedTable.id);
+    }
 
- 
+
+
 
     return (
         <div className="group w-full flex h-12 gap-1 border-l-4 flex p-2 items-center border-l-[6px] border-default"
@@ -162,20 +171,23 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                         <FileType className="size-4 text-icon dark:text-white" />
 
                                     }>
-                                    Add Field
+                                    {t("db_controller.add_field")}
                                 </ListboxItem>
                                 <ListboxItem
                                     key="add_index"
                                     endContent={<FileKey className="size-4 text-icon dark:text-white" />}
                                     showDivider>
-                                    Add Index
+                                    
+                                    {t("db_controller.add_index")}
                                 </ListboxItem>
 
                                 <ListboxItem
                                     key="duplicate"
                                     showDivider
+                                    onPressEnd={duplicate}
                                     endContent={<Copy className="size-4 text-icon" />}>
-                                    Duplicate
+                                    
+                                    {t("db_controller.duplicate")}
                                 </ListboxItem>
                                 <ListboxItem
                                     key="delete"
@@ -183,8 +195,8 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                     color="danger"
                                     onPressEnd={onDeleteTable}
                                     endContent={<Trash className="size-4" />}
-                                >
-                                    Delete Table
+                                >                     
+                                    {t("db_controller.delete_table")}
                                 </ListboxItem>
                             </Listbox>
                         </PopoverContent>

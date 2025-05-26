@@ -2,7 +2,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/to
 import { Accordion, AccordionItem, Button, Input } from "@heroui/react"
 import { ChevronDown, Code, EllipsisVertical, Focus, Grid, Grip, List, Pencil, Table } from "lucide-react"
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useState } from "react";
+import { Ref, useCallback, useEffect, useRef, useState } from "react";
 import TableAccordionHeader from "./table-accordion-item/table-accordion-header";
 import TableAccordionBody from "./table-accordion-item/table-accordion-body";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
@@ -21,11 +21,16 @@ const TablesController: React.FC<Props> = ({ }) => {
     const { database } = useDatabase();
     const { createTable } = useDatabaseOperations();
     const { getViewport } = useReactFlow();
-    const { tables } = database;
-    //const viewport = useViewport();
+    const { tables: allTables } = database;
+    const [tables, setTables] = useState<TableType[]>(allTables);
+
     const { t } = useTranslation();
     const [selectedTable, setSelectedTable] = useState(new Set([]));
     const { focusedTableId } = useDiagram();
+    const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
+
+
+    useEffect(() => setTables(allTables), [allTables]);
 
     const addNewTable = useCallback(async () => {
         const newTableId: string = v4();
@@ -59,11 +64,12 @@ const TablesController: React.FC<Props> = ({ }) => {
     }, [focusedTableId]);
 
     const selectedTableId = selectedTable.values().next().value;
-    useEffect(() => {
 
-        console.log("tables controller re-rendered")
-    }, [getViewport]);
-
+    const searchTables = useCallback(() => {
+        const keyword = nameRef.current?.value;
+        if (keyword !== undefined)
+            setTables(() => allTables.filter((table: TableType) => table.name.toLowerCase().trim().includes(keyword?.toLowerCase().trim())))
+    }, [nameRef, allTables])
 
     return (
         <div className="w-full h-full flex flex-col gap-2">
@@ -96,15 +102,15 @@ const TablesController: React.FC<Props> = ({ }) => {
                 </div>
                 <div className="flex-1">
                     <Input
-                        //ref={filterInputRef}
+                        ref={nameRef}
                         type="text"
                         size="sm"
+                        autoFocus
                         radius="sm"
                         variant="bordered"
                         placeholder={t("db_controller.filter")}
                         className="h-8 w-full focus-visible:ring-0"
-                    //value={filterText}
-                    //onChange={(e) => setFilterText(e.target.value)}
+                        onKeyUp={searchTables}
                     />
                 </div>
                 <Button

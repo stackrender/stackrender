@@ -8,6 +8,8 @@ import {
     Table2,
     Check,
     Focus,
+    ChevronUp,
+    ChevronDown,
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 
@@ -29,12 +31,14 @@ export type TableProps = Node<{
 
 }>
 
+const MAX_FIELDS = 10;
 const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overlapping = false, pulsing = false, highlightedEdges = [] } }) => {
 
 
     const [editMode, setEditMode] = useState<boolean>(false);
     const [tableName, setTableName] = useState<string>(table.name);
     const { editTable } = useDatabaseOperations();
+    const [showMore, setShowMore] = useState<boolean>(false);
 
     const { focusOnTable } = useDiagramOps();
     const { t } = useTranslation();
@@ -69,6 +73,11 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
         })
     }, [table.fields, selected, highlightedEdges]);
 
+
+    const toggleShowMore = useCallback(() => {
+        setShowMore((previousShowMore) => !previousShowMore);
+    }, [])
+
     return (
         <Card className={cn(
             "w-full h-full bg-background rounded-lg  noselect overflow-visible dark:bg-default-900",
@@ -78,7 +87,7 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
             overlapping
                 ? 'ring-2  dark:ring-offset-default-900 ring-danger ring-offset-1 scale-105 shadow-danger '
                 : '',
-            !pulsing && overlapping 
+            !pulsing && overlapping
                 ? 'scale-105'
                 : '',
             pulsing && overlapping
@@ -150,9 +159,29 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
                     </>
                 }
             </div>
-            <div className="transition-[max-height] duration-200 ease-in-out">
-                {fields}
-            </div>
+
+            {
+                !showMore ? fields.slice(0, MAX_FIELDS) : fields
+            }
+
+            {fields.length > MAX_FIELDS && (
+                <div
+                    className="flex h-8 cursor-pointer items-center gap-1 justify-center  border-t border-default text-xs text-slate-500 transition-colors duration-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                    onClick={toggleShowMore}
+                >
+                    {showMore ? (
+                        <>
+                            <ChevronUp className=" size-4" />
+                            {t('table.show_less')}
+                        </>
+                    ) : (
+                        <>
+                            <ChevronDown className="size-4" />
+                            {t('table.show_more')}
+                        </>
+                    )}
+                </div>
+            )}
         </Card>
 
 
