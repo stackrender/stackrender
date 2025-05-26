@@ -21,6 +21,7 @@
     "@react-aria/visually-hidden": "3.8.21",
     "@react-types/shared": "3.28.0",
     "@xyflow/react": "^12.6.3",
+    "date-fns": "^4.1.0",
     "drizzle-orm": "^0.43.1",
     "elkjs": "^0.10.0",
     "fast-json-patch": "^3.1.1",

@@ -4,9 +4,9 @@ import { useDatabaseOperations } from "@/providers/database-provider/database-pr
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
 import { Check, ChevronRight, EllipsisVertical, Focus, Pencil, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
+import hash from "object-hash";
 
 
 interface RelationshipAccordionHeaderProps {
@@ -36,15 +36,15 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
     }
 
     const onDeleteRelationship = () => {
-
         deleteRelationship(relationship.id);
         setPopOverOpen(false);
     }
 
-
     useEffect(() => {
         setName(relationship.name ? relationship.name : defaultName);
-    }, [relationship.name])
+    }, [relationship.name]);
+
+
     return (
         <div className="group w-full flex h-12 gap-1  flex p-2 items-center" >
             <div className={cn(
@@ -146,4 +146,6 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
 }
 
 
-export default RelationshipAccordionHeader; 
+export default React.memo(RelationshipAccordionHeader, (previousState, newState) => {
+    return hash(previousState) == hash(newState);
+}); 

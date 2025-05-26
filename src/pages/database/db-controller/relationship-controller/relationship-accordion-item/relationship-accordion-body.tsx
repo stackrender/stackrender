@@ -21,7 +21,7 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
 
     const { t } = useTranslation();
 
-    
+
 
     const changeCardinality = (keys: SharedSelection) => {
 
@@ -32,18 +32,29 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
             } as RelationshipInsertType);
 
         setCardinality(keys as any);
-    } 
+    }
 
     const removeRelationship = () => {
         deleteRelationship(relationship.id);
     }
 
     useEffect(() => {
-        setCardinality(new Set([relationship.cardinality])) ; 
-    } , [relationship.cardinality])
+        setCardinality(new Set([relationship.cardinality]));
+    }, [relationship.cardinality])
 
-    if (!relationship.sourceTable || !relationship.targetTable) 
+
+
+
+    useEffect(() => {
+        console.log("re-render relationship controlelr", name);
+
+    }, [relationship])
+
+
+    if (!relationship.sourceTable || !relationship.targetTable)
         return;
+
+
     return (
         <div className="w-full p-2 space-y-4">
             <div className="flex">
@@ -92,6 +103,7 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
                     className="w-full"
                     size="sm"
                     variant="bordered"
+                    label="cardinality"
                     selectedKeys={cardinality}
                     onSelectionChange={changeCardinality}
 

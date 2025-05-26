@@ -25,7 +25,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
     const [isValid, setIsValid] = useState<boolean>(false);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const { database } = useDatabase();
-    const { createRelationship, } = useDatabaseOperations();
+    const { createRelationship  } = useDatabaseOperations();
     const { relationships } = database;
 
     const { t } = useTranslation();
@@ -50,7 +50,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
             setSelectedRelationship(new Set([focusedRelationshipId]) as any);
         }
 
-    }, [focusedRelationshipId])
+    }, [focusedRelationshipId]) ; 
 
     return (
         <div className="w-full h-full flex flex-col gap-2">

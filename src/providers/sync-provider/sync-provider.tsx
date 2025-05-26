@@ -35,8 +35,12 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
     useEffect(() => {
         powerSync.init();
         powerSync.connect(connector);
+        
+    
     }, [powerSync, connector])
 
+
+    
     return (
         <Suspense fallback={<CircularProgress />}>
             <PowerSyncContext.Provider value={powerSync}>

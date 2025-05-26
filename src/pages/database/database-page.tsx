@@ -33,13 +33,13 @@ import { AlertTriangle } from "lucide-react";
 import { adjustTablesPositions } from "@/utils/tables";
 import DatabaseControlButtons from "./database-control-buttons";
 import { FieldType } from "@/lib/schemas/field-schema";
-import useHighlightedEdges from "@/hooks/use-highlighted-edges"; 
+import useHighlightedEdges from "@/hooks/use-highlighted-edges";
 import { useTranslation } from "react-i18next";
 import useOverlappingTables from "@/hooks/use-overlapping-tables";
 
 
 const DatabasePage: React.FC<never> = () => {
-    const { t } = useTranslation() ;  
+    const { t } = useTranslation();
     // Extract database state and operations
     const { database, getField } = useDatabase();
     const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabaseOperations();
@@ -91,7 +91,7 @@ const DatabasePage: React.FC<never> = () => {
         }
 
         setIsConnectionInProgress(false);
-    }, [database , t ]);
+    }, [database, t]);
 
     // Called when nodes are updated (position changes or removed)
     const handleNodesChanges: OnNodesChange<never> = useCallback(async (changes: NodeChange<never>[]) => {
@@ -156,9 +156,10 @@ const DatabasePage: React.FC<never> = () => {
 
     return (
 
-        <div className="w-full h-screen flex  relative">
-
-            <DBController />
+        <div className="w-full h-screen flex  relative overflow-hidden">
+            <div>
+                <DBController />
+            </div>
             <div className="relative w-full h-full">
                 <ReactFlow
                     nodes={nodes}
@@ -194,7 +195,7 @@ const DatabasePage: React.FC<never> = () => {
                         />
                     </Controls >
 
-                    <Background className="bg-default/40 dark:bg-black" />
+                    <Background className="bg-background dark:bg-black" />
                 </ReactFlow>
                 <div
                     className="absolute left-[24px] bottom-[24px] "
