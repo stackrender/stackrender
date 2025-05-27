@@ -6,14 +6,14 @@ import { AppSchema, drizzleSchema } from '@/lib/schemas/app-schema';
 import { StackRenderConnector } from '@/utils/stackrender-connector';
 import { CircularProgress } from '@heroui/react';
 import { PowerSyncSQLiteDatabase, wrapPowerSyncWithDrizzle } from '@powersync/drizzle-driver';
- 
+
 
 export const powerSyncDb = new PowerSyncDatabase({
     database: {
         dbFilename: 'stackrender.sqlite'
     },
     schema: AppSchema,
-    
+
 });
 
 export const db: PowerSyncSQLiteDatabase<typeof drizzleSchema> = wrapPowerSyncWithDrizzle(powerSyncDb, {
@@ -35,12 +35,15 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
     useEffect(() => {
         powerSync.init();
         powerSync.connect(connector);
-        
-    
+        (async () => {
+            await powerSync.execute("PRAGMA foreign_keys = ON;");            
+        })()
+
+
     }, [powerSync, connector])
 
 
-    
+
     return (
         <Suspense fallback={<CircularProgress />}>
             <PowerSyncContext.Provider value={powerSync}>

@@ -4,6 +4,8 @@ import { FieldType } from "@/lib/schemas/field-schema";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
 import { TableType } from "@/lib/schemas/table-schema";
 import { excludeFields } from "./utils";
+import { IndexType } from "@/lib/schemas/index-schema";
+import { FieldIndexType } from "@/lib/schemas/field_index-schema";
 
 // Define the possible operations that can be performed when diffing databases
 export type DBDiffOperation =
@@ -15,7 +17,13 @@ export type DBDiffOperation =
     | { type: 'UPDATE_FIELD'; tableId: string; fieldId: string; changes: Partial<FieldType> }
     | { type: 'CREATE_RELATIONSHIP'; relationship: RelationshipType }
     | { type: 'DELETE_RELATIONSHIP'; relationshipId: string }
-    | { type: 'UPDATE_RELATIONSHIP'; relationshipId: string; changes: Partial<RelationshipType> };
+    | { type: 'UPDATE_RELATIONSHIP'; relationshipId: string; changes: Partial<RelationshipType> }
+    // New index-related operations:
+    | { type: 'CREATE_INDEX'; tableId: string; index: IndexType }
+    | { type: 'DELETE_INDEX'; tableId: string; indexId: string }
+    | { type: 'UPDATE_INDEX'; tableId: string; indexId: string; changes: Partial<IndexType> }
+    | { type: 'UPDATE_FIELD_INDICES'; tableId: string; indexId: string; create: FieldIndexType[]; delete: string[] }
+
 
 /**
  * Convert a list of low-level JSON patch operations into higher-level database diff operations
@@ -31,6 +39,15 @@ export function mapDiffToDBDiffOperation(patch: any[]): DBDiffOperation[] {
     const relationshipChanges: Record<string, Partial<RelationshipType>> = {};
     const relationshipCreates: RelationshipType[] = [];
     const relationshipDeletes: string[] = [];
+
+    // Keep track of index changes
+    const indexChanges: Record<string, Record<string, Partial<IndexType>>> = {};
+    const indexCreates: Record<string, IndexType[]> = {};
+    const indexDeletes: Record<string, string[]> = {};
+    const fieldIndexMutations: Record<string, Record<string, {
+        create: FieldIndexType[];
+        delete: string[];
+    }>> = {};
 
     // Loop through each patch operation
     for (const op of patch) {
@@ -64,6 +81,53 @@ export function mapDiffToDBDiffOperation(patch: any[]): DBDiffOperation[] {
                     fieldChanges[tableId] ??= {};
                     fieldChanges[tableId][fieldId] ??= {};
                     fieldChanges[tableId][fieldId][attr as keyof FieldType] = op.value;
+                }
+            }
+            // Handle indices inside tables
+            else if (parts[2] === 'indices') {
+
+                const indexId = parts[3];
+                if (parts.length === 3) {
+                    // Whole indices array replaced? Treat as table attribute update
+                    if (op.op === 'replace') {
+                        tableChanges[tableId] ??= {};
+                        tableChanges[tableId]['indices' as keyof TableType] = op.value;
+                    }
+                } else if (parts.length === 4) {
+                    // index-level add/remove/replace
+                    if (op.op === 'add') {
+                        indexCreates[tableId] ??= [];
+                        indexCreates[tableId].push(op.value);
+                    } else if (op.op === 'remove') {
+                        indexDeletes[tableId] ??= [];
+                        indexDeletes[tableId].push(indexId);
+                    } else if (op.op === 'replace') {
+                        // full index replaced? treat as update with full new index?
+                        indexChanges[tableId] ??= {};
+                        indexChanges[tableId][indexId] = op.value;
+                    }
+                }
+
+                // Inside the 'indices' handler
+                else if (parts.length === 6 && parts[4] === 'fieldIndices') {
+                    const fieldIndexId = parts[5];
+
+                    fieldIndexMutations[tableId] ??= {};
+                    fieldIndexMutations[tableId][indexId] ??= { create: [], delete: [] };
+
+                    if (op.op === 'add') {
+                        fieldIndexMutations[tableId][indexId].create.push(op.value);
+                    } else if (op.op === 'remove') {
+                        fieldIndexMutations[tableId][indexId].delete.push(fieldIndexId);
+                    }
+                }
+
+                else if (op.op === 'replace') {
+                    // partial index attribute change
+                    const attr = parts.slice(4).join('/');
+                    indexChanges[tableId] ??= {};
+                    indexChanges[tableId][indexId] ??= {};
+                    indexChanges[tableId][indexId][attr as keyof IndexType] = op.value;
                 }
             }
 
@@ -140,6 +204,44 @@ export function mapDiffToDBDiffOperation(patch: any[]): DBDiffOperation[] {
         }
     }
 
+
+
+    // Index creates
+    for (const [tableId, indices] of Object.entries(indexCreates)) {
+        for (const index of indices) {
+            operations.push({ type: 'CREATE_INDEX', tableId, index });
+        }
+    }
+
+    // Index deletes
+    for (const [tableId, indexIds] of Object.entries(indexDeletes)) {
+        for (const indexId of indexIds) {
+            operations.push({ type: 'DELETE_INDEX', tableId, indexId });
+        }
+    }
+
+    // Index updates
+    for (const [tableId, indices] of Object.entries(indexChanges)) {
+        for (const [indexId, changes] of Object.entries(indices)) {
+            operations.push({ type: 'UPDATE_INDEX', tableId, indexId, changes });
+        }
+    }
+
+    for (const tableId in fieldIndexMutations) {
+        for (const indexId in fieldIndexMutations[tableId]) {
+            const { create, delete: del } = fieldIndexMutations[tableId][indexId];
+            if (create.length || del.length) {
+                operations.push({
+                    type: 'UPDATE_FIELD_INDICES',
+                    tableId,
+                    indexId,
+                    create,
+                    delete: del,
+                });
+            }
+        }
+    }
+
     // Push relationship creation operations
     for (const relationship of relationshipCreates) {
         operations.push({ type: 'CREATE_RELATIONSHIP', relationship });
@@ -173,7 +275,16 @@ export function normalizeDatabase(db: DatabaseType): any {
                     ...table,
                     fields: Object.fromEntries(
                         table.fields.map(field => [field.id, field])
-                    )
+                    ),
+                    indices: Object.fromEntries(
+                        table.indices.map(index => [index.id, {
+                            ...index,
+
+                            fieldIndices: Object.fromEntries(
+                                index.fieldIndices.map(fieldIndex => [fieldIndex.id, fieldIndex])
+                            ),
+                        }])
+                    ),
                 }
             ])
         ),

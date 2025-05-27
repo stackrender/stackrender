@@ -1,34 +1,69 @@
+import ToggleButton from "@/components/toggle/toggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
-import { Button, Select, SelectItem } from "@heroui/react";
-import { EllipsisVertical } from "lucide-react";
+import { FieldType } from "@/lib/schemas/field-schema";
+import { FieldIndexType } from "@/lib/schemas/field_index-schema";
+import { IndexInsertType, IndexType } from "@/lib/schemas/index-schema";
+import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { areArraysEqual } from "@/utils/utils";
+import { Button, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem, SharedSelection } from "@heroui/react";
+import { EllipsisVertical, Trash2 } from "lucide-react";
+import { Key, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 
 
-export const animals = [
-    { key: "cat", label: "Cat" },
-    { key: "dog", label: "Dog" },
-    { key: "elephant", label: "Elephant" },
-    { key: "lion", label: "Lion" },
-    { key: "tiger", label: "Tiger" },
-    { key: "giraffe", label: "Giraffe" },
-    { key: "dolphin", label: "Dolphin" },
-    { key: "penguin", label: "Penguin" },
-    { key: "zebra", label: "Zebra" },
-    { key: "shark", label: "Shark" },
-    { key: "whale", label: "Whale" },
-    { key: "otter", label: "Otter" },
-    { key: "crocodile", label: "Crocodile" },
-];
 
 
 interface Props {
-
+    index: IndexType;
+    fields: FieldType[]
 }
 
 
-const IndexItem: React.FC<Props> = ({ }) => {
+const IndexItem: React.FC<Props> = ({ index, fields }) => {
     const { t } = useTranslation();
+    const { editIndex, deleteIndex, editFieldIndices } = useDatabaseOperations();
+    const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
+    const [fieldIndices, setFieldIndices] = useState<Set<string>>(new Set());
+
+    useEffect(() => { 
+      
+        setFieldIndices(
+            new Set( index.fieldIndices.map((fieldIndex : FieldIndexType) => fieldIndex.fieldId)) 
+        )
+    } , [index.fieldIndices])
+
+    const toggleUnique = (unique: boolean) => {
+ 
+        editIndex({
+            id: index.id,
+            unique
+        } as IndexInsertType);
+    }
+
+    const editIndexName = (event: any) => {
+        editIndex({
+            id: index.id,
+            name: event.target.value
+        } as IndexInsertType);
+
+    }
+    const removeIndex = () => {
+        deleteIndex(index.id)
+    }
+
+
+    const onInexFieldChange = (keys: SharedSelection | Set<string>) => {
+        setFieldIndices(keys as Set<string>)
+    }
+
+
+    const openChange = useCallback((isOpen: boolean) => {
+        if (isOpen == false) {
+            if (!areArraysEqual(Array.from(fieldIndices), index.fieldIndices.map((fieldIndex: FieldIndexType) => fieldIndex.fieldId)))
+                editFieldIndices(index.id, Array.from(fieldIndices));
+        }
+    }, [fieldIndices])
     return (
         <div className="flex gap-2 w-full">
             <Select
@@ -36,33 +71,72 @@ const IndexItem: React.FC<Props> = ({ }) => {
                 placeholder={t("db_controller.select_fields")}
                 selectionMode="multiple"
                 size="sm"
+                aria-label={t("db_controller.select_fields")}
                 variant="bordered"
+                onSelectionChange={onInexFieldChange}
+                onOpenChange={openChange}
+                selectedKeys={fieldIndices}
             >
-                {animals.map((animal) => (
-                    <SelectItem key={animal.key}>{animal.label}</SelectItem>
+                {fields.map((field: FieldType) => (
+                    <SelectItem aria-label={field.name} key={field.id}>{field.name}</SelectItem>
                 ))}
             </Select>
             <div className="flex gap-2 ml-2">
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <button className="p-1 px-3 transition-all hover:bg-default rounded duration-200"  >
-                            <span className="text-icon  text-sm">
-                                U
-                            </span>
-                        </button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        {t("db_controller.unique")}?
-                    </TooltipContent>
-                </Tooltip>
 
-                <Button
-                    size="sm"
-                    isIconOnly
-                    variant="light"
+                <ToggleButton
+                    className="px-3"
+                    onToggle={toggleUnique}
+                    active={index.unique as boolean}
+                    label={`${t("db_controller.unique")}?`}
                 >
-                    <EllipsisVertical className="size-4 text-icon" />
-                </Button>
+                    U
+                </ToggleButton>
+                <Popover placement="bottom" radius="sm" shadow="sm" showArrow isOpen={popOverOpen} onOpenChange={setPopOverOpen}>
+                    <PopoverTrigger>
+                        <Button
+                            size="sm"
+                            isIconOnly
+                            variant="light"
+                        >
+                            <EllipsisVertical className="size-4 text-slate-500 dark:text-default-600" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[210px]" >
+                        <div className="w-full flex flex-col gap-2 p-2">
+                            <h3 className="font-semibold text-sm text-gray">
+                                {t("db_controller.index_setting")}
+                            </h3>
+                            <hr className="text-default-200" />
+
+                            <label className="text-sm font-medium text-slate-500">
+                                {t("db_controller.name")}
+                            </label>
+                            <Input
+                                variant="bordered"
+                                aria-label={t("db_controller.index_name")}
+                                placeholder={t("db_controller.index_name")}
+                                onBlur={editIndexName}
+                                size="sm"
+                                defaultValue={index.name}
+                            />
+
+
+                            <hr className="text-default-200" />
+
+                            <Button
+                                className="bg-default"
+                                radius="sm" variant="faded"
+                                color="danger"
+                                size="sm"
+                                onPressEnd={removeIndex}>
+                                <span className="font-medium text-sm">
+                                    {t("db_controller.delete_index")}
+                                </span>
+                                <Trash2 className="mr-1 size-3.5 text-danger" />
+                            </Button>
+                        </div>
+                    </PopoverContent>
+                </Popover>
             </div>
 
         </div>

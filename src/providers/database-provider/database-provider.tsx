@@ -12,8 +12,9 @@ import DatabaseHistoryProvider from "../database-history/database-history-provid
 import { DBDiffOperation } from "@/utils/database";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { getTimestamp } from "@/utils/utils";
-import { indices } from "@/lib/schemas/index-schema";
+import { IndexInsertType, indices } from "@/lib/schemas/index-schema";
 import { field_indices } from "@/lib/schemas/field_index-schema";
+import { v4 } from "uuid";
 
 interface Props { children: React.ReactNode }
 
@@ -68,7 +69,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         )
     );
 
-    
+
 
     // Normalize result to single object
     if (database.length == 1)
@@ -150,6 +151,37 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         })
     }, [db]);
 
+
+    // CRUD operations for indices
+
+    const createIndex = useCallback(async (index: IndexInsertType): Promise<QueryResult> => {
+        return await db.insert(indices).values({
+            ...index,
+            createdAt: index.createdAt ? index.createdAt : getTimestamp()
+        });
+    }, [db]);
+
+
+    const deleteIndex = useCallback(async (id: string): Promise<QueryResult> => {
+        return await db.delete(indices).where(eq(indices.id, id))
+    }, [db])
+
+    const editIndex = useCallback(async (index: IndexInsertType): Promise<QueryResult> => {
+        return await db.update(indices).set(index).where(eq(indices.id, index.id));
+    }, [db]);
+
+    const editFieldIndices = useCallback((indexId: string, fieldIds: string[]): Promise<void> => {
+        return db.transaction(async (tx) => {
+            await tx.delete(field_indices).where(eq(field_indices.indexId, indexId));
+            if (fieldIds.length > 0)
+                await tx.insert(field_indices).values(fieldIds.map((fieldId: string) => ({
+                    id: v4(),
+                    fieldId,
+                    indexId,
+
+                })))
+        })
+    }, [db])
     // CRUD operations for Relationships
     const createRelationship = useCallback(async (relationship: RelationshipInsertType): Promise<QueryResult> => {
         if (currentDatabaseId) {
@@ -243,6 +275,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         deleteRelationship,
         deleteMultiRelationships,
         executeDbDiffOps,
+        createIndex,
+        editIndex,
+        deleteIndex,
+        editFieldIndices,
         data_types
     }), [
         createTable,
@@ -259,6 +295,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         deleteRelationship,
         deleteMultiRelationships,
         executeDbDiffOps,
+        createIndex,
+        editIndex,
+        deleteIndex,
+        editFieldIndices,
         data_types
     ]);
 

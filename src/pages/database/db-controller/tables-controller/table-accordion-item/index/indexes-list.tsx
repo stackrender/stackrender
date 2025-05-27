@@ -1,21 +1,43 @@
-import { Button,  } from "@heroui/react";
+import { Button, } from "@heroui/react";
 import IndexItem from "./index-item";
-import { Plus } from "lucide-react"; 
+import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { IndexInsertType, IndexType } from "@/lib/schemas/index-schema";
+import hash from "object-hash";
+import React from "react";
+import { FieldType } from "@/lib/schemas/field-schema";
+import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { v4 } from "uuid";
 
-interface Props {
+interface IndexesListProps {
+    indices: IndexType[],
+    fields: FieldType[],
+    tableId: string
 
 }
 
 
 
-const IndexesList: React.FC<Props> = ({ }) => {
-    const { t} = useTranslation() ; 
+const IndexesList: React.FC<IndexesListProps> = ({ indices, fields, tableId }) => {
+ 
+    const { t } = useTranslation();
+    const { createIndex } = useDatabaseOperations();
+
+    const addIndex = (event: any) => {
+        event.stopPropagation && event.stopPropagation();
+        createIndex({
+            id: v4(),
+            name: `index_${indices.length + 1}`,
+            unique: true,
+            tableId: tableId
+        } as IndexInsertType);
+    }
     return (
         <div className="w-full flex-col space-y-2">
-            <div>
-                <IndexItem />
-            </div>
+            {
+                indices.map((index: IndexType) => <IndexItem index={index} fields={fields} />)
+            }
+
             <Button
                 variant="flat"
                 radius="sm"
@@ -23,7 +45,7 @@ const IndexesList: React.FC<Props> = ({ }) => {
                     <Plus className="size-4 text-icon" />
                 }
                 className="h-8 p-2 text-xs bg-transparent hover:bg-default text-gray font-semibold"
-            //onClick={handleCreateTable}
+                onPressEnd={addIndex}
             >
                 {t("db_controller.add_index")}
             </Button>
@@ -33,4 +55,9 @@ const IndexesList: React.FC<Props> = ({ }) => {
 }
 
 
-export default IndexesList; 
+
+
+
+export default React.memo(IndexesList, (prevState, newState) => {
+    return hash(prevState) == hash(newState);
+}); 

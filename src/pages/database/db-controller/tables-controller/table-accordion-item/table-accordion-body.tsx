@@ -1,16 +1,17 @@
 
 import { Accordion, AccordionItem, Button, cn, Textarea } from "@heroui/react";
-import { ChevronLeft, FileKey, FileType,  MessageSquareQuote, Plus } from "lucide-react";
+import { ChevronLeft, FileKey, FileType, MessageSquareQuote, Plus } from "lucide-react";
 
-import React, {  useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ColorPicker from "@/components/color-picker/color-picker";
 import FieldList from "./field/field-list";
 import IndexesList from "./index/indexes-list";
 import { TableType } from "@/lib/schemas/table-schema";
-import {  useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { getNextSequence } from "@/utils/field";
 import { v4 } from "uuid";
+import { IndexInsertType } from "@/lib/schemas/index-schema";
 
 
 export interface TableAccordionBodyProps {
@@ -22,7 +23,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
     const [selectedKeys, setSelectedKeys] = useState(new Set(["fields"]));
     const [note, setNote] = useState<string>(table.note ? table.note : "");
     const { t } = useTranslation();
-    const { editTable, createField } = useDatabaseOperations();
+    const { editTable, createField, createIndex } = useDatabaseOperations();
 
     const onColorChange = useCallback((color: string | undefined) => {
         editTable({ id: table.id, color: color ? color : null } as TableType);
@@ -40,6 +41,15 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
         })
     }
 
+    const addIndex = (event: any) => {
+        event.stopPropagation && event.stopPropagation();
+        createIndex({
+            id: v4(),
+            name: `index_${table.indices.length + 1}`,
+            unique: true,
+            tableId: table.id
+        } as IndexInsertType);
+    }
     const saveNote = () => {
         editTable({
             id: table.id,
@@ -50,10 +60,10 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
 
     useEffect(() => {
         setNote(table.note ? table.note : "");
-    }, [table.note]) ; 
+    }, [table.note]);
 
 
- 
+
 
     return (
         <div className="w-full dark:bg-background">
@@ -87,7 +97,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                         </div>
                     }
                 >
-                    <FieldList tableFields={table.fields} tableId = { table.id } />
+                    <FieldList tableFields={table.fields} tableId={table.id} />
                 </AccordionItem>
                 <AccordionItem key="indexes" aria-label="Indexes"
                     indicator={({ isOpen }) => (
@@ -102,14 +112,20 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                         trigger: "hover:bg-default h-6 dark:hover:bg-background"
                     }}
                     subtitle={
-                        <div className="flex gap-2  dark:text-default-600 items-center font-medium p-1 w-full hover:underline text-slate-500 hover:text-slate-600 transition-all duration-200 dark:hover:text-white">
+                        <div className="group flex gap-2  dark:text-default-600 items-center font-medium p-1 w-full hover:underline text-slate-500 hover:text-slate-600 transition-all duration-200 dark:hover:text-white">
                             <FileKey className="size-4 " />
                             <label className="text-sm  w-full  cursor-pointer">
                                 {t("db_controller.indexes")}
                             </label>
+                            <button
+                                className="size-4 p-0 text-xs opacity-0 group-hover:opacity-100  transition-all duration-200 hover:text-slate-700 text-icon"
+                                onClick={addIndex}
+                            >
+                                <Plus className="size-4 dark:text-default-600" />
+                            </button>
                         </div>
                     }>
-                    <IndexesList />
+                    <IndexesList indices={table.indices} fields={table.fields} tableId={table.id} />
                 </AccordionItem>
                 <AccordionItem key="note" aria-label="Note"
                     indicator={({ isOpen }) => (
@@ -154,6 +170,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                     <Button
 
                         variant="ghost"
+                        onPressEnd={addIndex}
                         size="sm"
                         className="font-semibold p-4 border-default-50"
                         startContent={

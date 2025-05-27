@@ -20,8 +20,8 @@ export const en = {
             add_table: "Add Table",
             add_field: "Add Field",
             add_index: "Add Index",
-            delete_table : "Delete Table" ,
-            duplicate : "Duplicate" ,  
+            delete_table: "Delete Table",
+            duplicate: "Duplicate",
             add_relationship: "Add Relationship",
             show_code: "Show code",
             fields: "Fields",
@@ -57,25 +57,29 @@ export const en = {
             },
             delete: "Delete",
             field_setting: "Field Setting",
+            index_setting: "Index Setting",
             table_actions: "Table Actions",
             actions: "Actions",
 
             field_note: "Field note",
             delete_field: "Delete Field",
+            delete_index: "Delete Index",
+            index_name: "Index name",
+
 
             create_relationship: "Create Relationship",
             relationship_error: "To create a relationship, the primary key and foreign key must be of the same type.",
-            
+
             invalid_relationship: {
                 title: "Invalid Relationship",
                 description: "The source key type does not match the referenced key type. Please ensure both keys have the same data type."
             }
         },
         table: {
-            double_click: "Double click to edit" , 
-            overlapping_tables : "Overlapping Tables" , 
-            show_more : "Show more" , 
-            show_less : "Show less"
+            double_click: "Double click to edit",
+            overlapping_tables: "Overlapping Tables",
+            show_more: "Show more",
+            show_less: "Show less"
         },
         control_buttons: {
             redo: "Redo",

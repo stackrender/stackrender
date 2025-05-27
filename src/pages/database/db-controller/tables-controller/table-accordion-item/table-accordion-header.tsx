@@ -1,8 +1,8 @@
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/tooltip/tooltip";
 
-import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger  } from "@heroui/react";
+import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
 import { Check, ChevronRight, Copy, EllipsisVertical, FileKey, FileType, Focus, Pencil, Trash } from "lucide-react";
-import React, { useCallback, useEffect,  useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
@@ -12,6 +12,7 @@ import { getNextSequence } from "@/utils/field";
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import hash from "object-hash";
 import { cloneTable } from "@/utils/tables";
+import { IndexInsertType } from "@/lib/schemas/index-schema";
 
 export interface TableAccordionHeaderProps {
     table: TableType,
@@ -20,7 +21,7 @@ export interface TableAccordionHeaderProps {
 
 
 const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOpen }) => {
-    const { editTable, deleteTable, createField, createTable } = useDatabaseOperations();
+    const { editTable, deleteTable, createField, createTable , createIndex } = useDatabaseOperations();
 
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
     const [tableName, setTableName] = useState<string>(table.name);
@@ -55,6 +56,16 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
         })
     }
 
+    const addIndex = (event: any) => {
+        setPopOverOpen(false)
+        
+        createIndex({
+            id: v4(),
+            name: `index_${table.indices.length + 1}`,
+            unique: true,
+            tableId: table.id
+        } as IndexInsertType);
+    }
 
     const duplicate = async () => {
         setPopOverOpen(false)
@@ -176,8 +187,10 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                 <ListboxItem
                                     key="add_index"
                                     endContent={<FileKey className="size-4 text-icon dark:text-white" />}
-                                    showDivider>
-                                    
+                                    showDivider
+                                    onPressEnd={addIndex}
+                                    >
+
                                     {t("db_controller.add_index")}
                                 </ListboxItem>
 
@@ -186,7 +199,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                     showDivider
                                     onPressEnd={duplicate}
                                     endContent={<Copy className="size-4 text-icon" />}>
-                                    
+
                                     {t("db_controller.duplicate")}
                                 </ListboxItem>
                                 <ListboxItem
@@ -195,7 +208,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                     color="danger"
                                     onPressEnd={onDeleteTable}
                                     endContent={<Trash className="size-4" />}
-                                >                     
+                                >
                                     {t("db_controller.delete_table")}
                                 </ListboxItem>
                             </Listbox>

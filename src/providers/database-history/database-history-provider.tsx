@@ -47,14 +47,16 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
             return;
         }
         const normalizedDatabase = normalizeDatabase(database);
+        console.log (normalizedDatabase)
         const normalizedPresent = normalizeDatabase(datatbaseState.present);
         const differences = compare(normalizedDatabase, normalizedPresent);
-
+ 
         if (differences && differences.length > 0) {
             setIsProcessing(true);
 
             const operations: DBDiffOperation[] = mapDiffToDBDiffOperation(differences);
-
+            console.log ( operations ) ; 
+            /*
             (async () => {
                 try {
                     await executeDbDiffOps(operations)
@@ -65,7 +67,7 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
                     setIsProcessing(false);
                 }
             })()
-
+            */
         }
 
     }, [datatbaseState.present]);

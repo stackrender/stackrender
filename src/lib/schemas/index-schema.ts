@@ -1,11 +1,9 @@
 
 
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer  } from 'drizzle-orm/sqlite-core';
 import { tables } from './table-schema';
-import { data_types, DataType } from './data-type-schema';
 import { InferInsertModel, InferSelectModel, relations } from 'drizzle-orm';
-import { relationships } from './relationship-schema';
-import { field_indices, FieldIndexType } from './field_index-schema';
+import { field_indices, FieldIndexInsertType, FieldIndexType } from './field_index-schema';
 import { fields } from './field-schema';
 
 
@@ -19,22 +17,23 @@ export const indices = sqliteTable("indices", {
     name: text("name").notNull(),
     unique: integer("unique", { mode: "boolean" }),
     createdAt: text('createdAt'),
+    
 });
 
 
-export const indicesRlationships = relations(indices, ({ one , many}) => ({
-    table : one(tables , {
-        references : [tables.id] , 
-        fields : [indices.tableId]
-    }) , 
-    fieldIndices : many(field_indices) , 
-    fields : many(fields)
+export const indicesRlationships = relations(indices, ({ one, many }) => ({
+    table: one(tables, {
+        references: [tables.id],
+        fields: [indices.tableId]
+    }),
+    fieldIndices: many(field_indices),
+    fields: many(fields)
 }))
 
 
-export interface IndexType extends InferSelectModel<typeof indices> { 
-    fieldIndices : FieldIndexType[]
+export interface IndexType extends InferSelectModel<typeof indices> {
+    fieldIndices: FieldIndexType[]
 };
-export interface IndexInsertType extends InferInsertModel<typeof indices> { 
-    
+export interface IndexInsertType extends InferInsertModel<typeof indices> {
+    fieldIndices? : FieldIndexInsertType[]
 }; 
