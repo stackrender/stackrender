@@ -3,7 +3,7 @@ import { Wifi, WifiOff } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip/tooltip";
 import { cn, Divider, Progress } from "@heroui/react";
-import { differenceInHours, differenceInMinutes, lastDayOfYear } from "date-fns";
+import { differenceInHours, differenceInMinutes } from "date-fns";
 
 const ConnectionStatus: React.FC = () => {
 
@@ -19,7 +19,7 @@ const ConnectionStatus: React.FC = () => {
     })
 
     useEffect(() => {
-        const getLastUploadAtValue = (event: any) => {
+        const getLastUploadAtValue = () => {
             const last_upload_at = localStorage.getItem("last_upload_at");
             if (last_upload_at)
                 setLastUploadAt(new Date(last_upload_at));

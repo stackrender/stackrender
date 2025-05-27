@@ -1,8 +1,8 @@
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/tooltip/tooltip";
 
-import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@heroui/react";
+import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger  } from "@heroui/react";
 import { Check, ChevronRight, Copy, EllipsisVertical, FileKey, FileType, Focus, Pencil, Trash } from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect,  useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";

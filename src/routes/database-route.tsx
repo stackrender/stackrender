@@ -1,9 +1,8 @@
 
-import DashboardPage from '@/pages/dashboard/dashboard-page';
 import DatabasePage from '@/pages/database/database-page';
 import RelationshipController from '@/pages/database/db-controller/relationship-controller/relationship-controller';
 import TablesController from '@/pages/database/db-controller/tables-controller/tables-controller';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 
 const useDatabaseRoutes = () => {

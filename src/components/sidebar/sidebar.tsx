@@ -1,4 +1,4 @@
-import { BookOpen, EarthLock, GitCommitHorizontal, Github, Settings, Sparkles, Table, TableProperties, Waypoints, Workflow, X, Zap } from "lucide-react";
+import { BookOpen, EarthLock, GitCommitHorizontal, Github, Settings, Sparkles,  TableProperties, Waypoints, Workflow, Zap } from "lucide-react";
 import SidebarItem, { SidebarItemProps } from "./sidebar-item";
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";

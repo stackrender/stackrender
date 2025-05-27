@@ -1,6 +1,6 @@
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/tooltip/tooltip";
 import { useDatabaseHistory } from "@/providers/database-history/database-history-provider";
-import { Button, cn, Divider, Navbar, NavbarContent } from "@heroui/react";
+import { Button, cn, Divider, Navbar } from "@heroui/react";
 import { useOnViewportChange, useReactFlow } from "@xyflow/react";
 
 import { LayoutGrid, Redo, Scan, Undo, ZoomIn, ZoomOut } from "lucide-react";

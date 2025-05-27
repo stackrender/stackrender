@@ -1,5 +1,5 @@
-import { Dropdown, DropdownMenu as HeroDropdownMenu, DropdownItem, DropdownTrigger, Button, useDisclosure, Popover, PopoverTrigger, PopoverContent, Divider, DropdownSection } from "@heroui/react";
-import { useCallback, useMemo, useState } from "react";
+import { Dropdown, DropdownMenu as HeroDropdownMenu, DropdownItem, DropdownTrigger, Button } from "@heroui/react";
+import { useMemo  } from "react";
 import SubmenuDropdown from "./submenu-dropdown";
 
 
@@ -22,7 +22,7 @@ export interface MenuDropdownProps {
     isOpen?: boolean , 
     clickHandler? : () => void 
 }
-const DropdownMenu: React.FC<MenuDropdownProps> = ({ title, children, isOpen , clickHandler }) => {
+const DropdownMenu: React.FC<MenuDropdownProps> = ({ title, children,  clickHandler }) => {
     const disabledChilds: string[] = useMemo(() => {
         return children ? children?.filter((child: MenuDropdownProps) => child.isDisabled && child.title).map((child: MenuDropdownProps) => child.title as string) : []
     }, [children]);

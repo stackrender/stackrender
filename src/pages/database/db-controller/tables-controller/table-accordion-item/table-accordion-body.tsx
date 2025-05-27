@@ -1,14 +1,14 @@
 
 import { Accordion, AccordionItem, Button, cn, Textarea } from "@heroui/react";
-import { ChevronLeft, FileKey, FileType, Key, MessageSquareQuote, Plus } from "lucide-react";
+import { ChevronLeft, FileKey, FileType,  MessageSquareQuote, Plus } from "lucide-react";
 
-import React, { MouseEventHandler, useCallback, useEffect, useState } from "react";
+import React, {  useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ColorPicker from "@/components/color-picker/color-picker";
 import FieldList from "./field/field-list";
 import IndexesList from "./index/indexes-list";
 import { TableType } from "@/lib/schemas/table-schema";
-import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import {  useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { getNextSequence } from "@/utils/field";
 import { v4 } from "uuid";
 

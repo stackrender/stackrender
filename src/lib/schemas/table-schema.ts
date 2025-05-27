@@ -3,6 +3,7 @@ import { sqliteTable, text, real, integer } from 'drizzle-orm/sqlite-core';
 import { fields, FieldType } from './field-schema';
 import { relationships } from './relationship-schema';
 import { databases } from './database-schema';
+import { IndexType, indices } from './index-schema';
 
 export const tables = sqliteTable('tables', {
     id: text('id')
@@ -31,14 +32,17 @@ export const tablesRelations = relations(tables, ({ many, one }) => ({
     database: one(databases, {
         fields: [tables.databaseId],
         references: [databases.id],
-    })
+    }) , 
+    indices : many(indices) , 
+    
+    
 }));
 
 
 
 export interface TableType extends InferSelectModel<typeof tables> {
     fields: FieldType[];
-
+    indices : IndexType[] ; 
 };
 
 

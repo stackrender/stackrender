@@ -6,7 +6,7 @@ import { AppSchema, drizzleSchema } from '@/lib/schemas/app-schema';
 import { StackRenderConnector } from '@/utils/stackrender-connector';
 import { CircularProgress } from '@heroui/react';
 import { PowerSyncSQLiteDatabase, wrapPowerSyncWithDrizzle } from '@powersync/drizzle-driver';
-import { ExtractTablesWithRelations } from 'drizzle-orm';
+ 
 
 export const powerSyncDb = new PowerSyncDatabase({
     database: {

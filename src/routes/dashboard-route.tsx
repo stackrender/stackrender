@@ -1,6 +1,5 @@
 
 import DashboardPage from '@/pages/dashboard/dashboard-page';
-import DatabasePage from '@/pages/database/database-page';
 import { Route } from 'react-router-dom';
 import useDatabaseRoutes from './database-route';
 

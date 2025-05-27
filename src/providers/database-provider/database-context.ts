@@ -2,8 +2,8 @@
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema";
-import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
-import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
+import { RelationshipInsertType } from "@/lib/schemas/relationship-schema";
+import { TableInsertType  } from "@/lib/schemas/table-schema";
 import { DBDiffOperation } from "@/utils/database";
 import { QueryResult } from "@powersync/web";
 import { createContext } from "react";

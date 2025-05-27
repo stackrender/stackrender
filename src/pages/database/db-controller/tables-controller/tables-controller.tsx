@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip"
 import { Accordion, AccordionItem, Button, Input } from "@heroui/react"
-import { ChevronDown, Code, EllipsisVertical, Focus, Grid, Grip, List, Pencil, Table } from "lucide-react"
+import {  Code, List, Table } from "lucide-react"
 import { useTranslation } from "react-i18next";
 import { Ref, useCallback, useEffect, useRef, useState } from "react";
 import TableAccordionHeader from "./table-accordion-item/table-accordion-header";
@@ -9,7 +9,7 @@ import { useDatabase, useDatabaseOperations } from "@/providers/database-provide
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
 import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
-import { useReactFlow, useViewport } from "@xyflow/react";
+import { useReactFlow  } from "@xyflow/react";
 
 
 interface Props { }

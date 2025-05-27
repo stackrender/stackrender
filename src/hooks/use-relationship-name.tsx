@@ -1,4 +1,4 @@
-import { Cardinality, RelationshipType } from "@/lib/schemas/relationship-schema";
+import {  RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 

@@ -1,7 +1,5 @@
-import { DatabaseType } from "@/lib/schemas/database-schema";
-import { RelationshipType } from "@/lib/schemas/relationship-schema";
-import { TableType } from "@/lib/schemas/table-schema";
-import { createContext, Dispatch, SetStateAction } from "react";
+import { DatabaseType } from "@/lib/schemas/database-schema"; 
+import { createContext } from "react";
 
  
 

@@ -1,6 +1,6 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext,  useMemo, useState } from "react";
 
-import { FitViewOptions, useReactFlow } from "@xyflow/react";
+import {  useReactFlow } from "@xyflow/react";
 import { useNavigate } from "react-router-dom";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
 import { DiagramDataContext, DiagramOpsContext } from "./diagram-context";

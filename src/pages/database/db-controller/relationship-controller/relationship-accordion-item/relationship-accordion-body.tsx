@@ -1,10 +1,10 @@
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 import { Cardinality, RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
-import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import {  useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { Button, Select, SelectItem, SharedSelection } from "@heroui/react";
-import { ChevronsLeftRightEllipsis, FileMinus2, FileOutput, SquareArrowLeft, SquareArrowRight, Trash2 } from "lucide-react";
-import { Key, useEffect, useState } from "react";
+import { ChevronsLeftRightEllipsis, FileMinus2, FileOutput,  Trash2 } from "lucide-react";
+import {  useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 

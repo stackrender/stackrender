@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction } from "react";
+import { createContext, Dispatch  } from "react";
 
 
 interface DiagramDataContextType {

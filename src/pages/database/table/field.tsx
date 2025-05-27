@@ -65,15 +65,13 @@ const Field: React.FC<Props> = (props) => {
                     >
                         {fieldName}
                         {
-                            field.note && !editMode && 
+                            field.note && !editMode &&
                             <Tooltip>
                                 <TooltipTrigger>
                                     <MessageSquareQuote className="size-3.5 text-icon" />
                                 </TooltipTrigger>
-                                <TooltipContent >
-
+                                <TooltipContent> 
                                     {field.note}
-
                                 </TooltipContent>
                             </Tooltip>
                         }

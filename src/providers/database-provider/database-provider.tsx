@@ -12,6 +12,8 @@ import DatabaseHistoryProvider from "../database-history/database-history-provid
 import { DBDiffOperation } from "@/utils/database";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { getTimestamp } from "@/utils/utils";
+import { indices } from "@/lib/schemas/index-schema";
+import { field_indices } from "@/lib/schemas/field_index-schema";
 
 interface Props { children: React.ReactNode }
 
@@ -43,6 +45,12 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                                 with: {
                                     type: true
                                 }
+                            },
+                            indices: {
+                                orderBy: asc(indices.createdAt),
+                                with: {
+                                    fieldIndices: true
+                                }
                             }
                         }
                     },
@@ -59,6 +67,8 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             })
         )
     );
+
+    
 
     // Normalize result to single object
     if (database.length == 1)
@@ -254,7 +264,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
     return (
         <DatabaseDataContext.Provider value={{
-            
+
             database: database as unknown as DatabaseType,
             isLoading,
             getField,

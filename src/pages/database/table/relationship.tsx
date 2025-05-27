@@ -1,12 +1,12 @@
 
 
 import { Cardinality, RelationshipType } from "@/lib/schemas/relationship-schema";
-import { useDiagram, useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
-import { card, cn } from "@heroui/react";
-import { Edge, EdgeProps, getBezierPath, getSmoothStepPath, InternalNode, Node, Position, useReactFlow } from "@xyflow/react";
-import React, { useEffect, useMemo } from "react";
+import {  useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
+import {  cn } from "@heroui/react";
+import { Edge, EdgeProps,  getSmoothStepPath, Position, useReactFlow } from "@xyflow/react";
+import React, {  useMemo } from "react";
 
-import hash from 'object-hash';
+ 
 
 
 export type RelationshipProps = Edge<{

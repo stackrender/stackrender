@@ -3,7 +3,7 @@ import { FieldType } from "@/lib/schemas/field-schema";
 import { RelationshipInsertType } from "@/lib/schemas/relationship-schema";
 import { TableType } from "@/lib/schemas/table-schema";
 import { useDatabase } from "@/providers/database-provider/database-provider";
-import { FileKey, FileMinus2, FileOutput, Key, KeyRound } from "lucide-react";
+import { FileKey, FileMinus2, FileOutput,  KeyRound } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 

@@ -1,7 +1,7 @@
 import { TableType } from "@/lib/schemas/table-schema";
 import { isTablesOverlapping } from "@/utils/tables";
 import { areArraysEqual } from "@/utils/utils";
-import { Node, useReactFlow } from "@xyflow/react";
+import {  useReactFlow } from "@xyflow/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 // Return type of the hook

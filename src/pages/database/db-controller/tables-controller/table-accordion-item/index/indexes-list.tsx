@@ -1,4 +1,4 @@
-import { Button, Select, SelectItem } from "@heroui/react";
+import { Button,  } from "@heroui/react";
 import IndexItem from "./index-item";
 import { Plus } from "lucide-react"; 
 import { useTranslation } from "react-i18next";

@@ -1,7 +1,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip"
 import { Accordion, AccordionItem, Button, Input, useDisclosure } from "@heroui/react"
-import { Code, List, ListCollapse, Table, Workflow } from "lucide-react"
-import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {  ListCollapse,  Workflow } from "lucide-react"
+import { Ref, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RelationshipAccordionHeader from "./relationship-accordion-item/relationship-accordion-header";
 import RelationshipAccordionBody from "./relationship-accordion-item/relationship-accordion-body";

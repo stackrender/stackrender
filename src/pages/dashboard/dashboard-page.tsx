@@ -1,6 +1,5 @@
 
-import Sidebar from "@/components/sidebar/sidebar";
-import DatabasePage from "../database/database-page";
+import Sidebar from "@/components/sidebar/sidebar"; 
 import Navbar from "@/components/navbar/navbar";
 import { Outlet } from "react-router-dom";
 

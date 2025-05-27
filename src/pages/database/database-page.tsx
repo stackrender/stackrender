@@ -38,7 +38,7 @@ import { useTranslation } from "react-i18next";
 import useOverlappingTables from "@/hooks/use-overlapping-tables";
 
 
-const DatabasePage: React.FC<never> = () => {
+const DatabasePage: React.FC = () => {
     const { t } = useTranslation();
     // Extract database state and operations
     const { database, getField } = useDatabase();

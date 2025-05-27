@@ -1,8 +1,7 @@
 
 import { useTheme } from "next-themes";
 import DropdownMenu, { MenuDropdownProps } from "./menu-dropdown";
-import React, { useMemo } from "react";
-import { menuItem } from "@heroui/react";
+import React, { useMemo } from "react"; 
 import { useTranslation } from "react-i18next";
 
 
