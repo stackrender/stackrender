@@ -66,7 +66,7 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
         try {
             let batch: any[] = [];
             for (let operation of transaction.crud) {
-
+    
                 if (operation.op != UpdateType.DELETE && Object.keys(operation.opData as any).length == 0)
                     continue
 
@@ -78,6 +78,7 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
                 };
                 batch.push(payload);
             }
+        
             if (batch.length > 0) {
 
                 const response = await fetch(`${this.config.backendUrl}/api/data`, {

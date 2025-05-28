@@ -151,9 +151,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         })
     }, [db]);
 
-
     // CRUD operations for indices
-
     const createIndex = useCallback(async (index: IndexInsertType): Promise<QueryResult> => {
         return await db.insert(indices).values({
             ...index,
@@ -252,6 +250,26 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
                     } else if (operation.type === "UPDATE_RELATIONSHIP") {
                         await tx.update(relationships).set(operation.changes).where(eq(relationships.id, operation.relationshipId));
+                    }
+                    else if (operation.type == "CREATE_INDEX") {
+                        await tx.insert(indices).values(operation.index);
+                        if (operation.index.fieldIndices && Object.values(operation.index.fieldIndices).length > 0) 
+                             await tx.insert(field_indices).values(Object.values(operation.index.fieldIndices));
+                            
+                    }
+                    else if (operation.type == "DELETE_INDEX") {
+                        await tx.delete(indices).where(eq(indices.id, operation.indexId));
+                    }
+                    else if (operation.type == "UPDATE_INDEX") {
+                        await tx.update(indices).set(operation.changes).where(eq(indices.id, operation.indexId));
+
+                    } else if (operation.type == "UPDATE_FIELD_INDICES") {
+                        if (operation.delete.length > 0) {
+                            await tx.delete(field_indices).where(inArray(field_indices.id, operation.delete))
+                        }
+                        if (operation.create.length > 0) {
+                            await tx.insert(field_indices).values(operation.create);
+                        }
                     }
                 }
             })
