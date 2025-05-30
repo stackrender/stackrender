@@ -32,8 +32,8 @@ export type TableProps = Node<{
 }>
 
 const MAX_FIELDS = 10;
-const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overlapping = false, pulsing = false, highlightedEdges = [] } }) => {
-
+const Table: React.FC<NodeProps<TableProps>> = (props) => {
+    const { selected, data: { table, overlapping = false, pulsing = false, highlightedEdges = [] } } = props
 
     const [editMode, setEditMode] = useState<boolean>(false);
     const [tableName, setTableName] = useState<string>(table.name);
@@ -76,16 +76,17 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
 
     const toggleShowMore = useCallback(() => {
         setShowMore((previousShowMore) => !previousShowMore);
-    }, [])
+    }, []);
+ 
 
     return (
         <Card className={cn(
-            "w-full h-full bg-background rounded-lg  noselect overflow-visible dark:bg-default-900",
+            "w-full h-full bg-background rounded-md ring-1 ring-default-600  overflow-visible dark:bg-background-50 dark:ring-divider",
             selected
-                ? 'ring-2 ring-offset-1 ring-primary  dark:ring-offset-default-900'
+                ? 'ring-2 ring-primary dark:ring-primary'
                 : '',
             overlapping
-                ? 'ring-2  dark:ring-offset-default-900 ring-danger ring-offset-1 scale-105 shadow-danger '
+                ? 'ring-2 dark:ring-danger ring-danger  scale-105 shadow-danger '
                 : '',
             !pulsing && overlapping
                 ? 'scale-105'
@@ -94,17 +95,16 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
                 ? 'scale-110'
                 : '',
         )}
-            shadow="sm"
-
+            shadow="none"
         >
-            <div className="px-[2px] ">
+            <div className="px-[1px] ">
                 <div
                     className=" border-t-[4px] rounded-t-[6px] border-primary"
                     style={{ borderColor: table.color as string }}
                 ></div>
             </div>
             <div className="group gap-2 flex h-9 items-center justify-between bg-default/50 px-2 dark:bg-black/20">
-                <Table2 className="size-4 shrink-0 text-icon dark:text-white" />
+                <Table2 className="size-4 shrink-0 text-icon  " />
                 {
                     editMode && <>
                         <input
@@ -114,11 +114,11 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
                             value={tableName}
                             onBlur={saveTableName}
                             type="text"
-                            className="rounded-md outline-none px-2 py-0.5 w-full border-[0.5px] border-primary-700 font-bold  bg-slate-100 focus-visible:ring-0  text-sm dark:bg-transparent dark:text-white"
+                            className="rounded-md outline-none px-2 py-0.5 w-full border-[0.5px] border-primary-700 font-bold bg-slate-100 focus-visible:ring-0  text-sm dark:bg-transparent dark:text-white"
                         />
                         <Button
                             variant="light"
-                            className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-white"
+                            className="size-6 p-0 text-icon hover:bg-primary-foreground hover:text-font/90"
                             size="sm"
                             onPressEnd={saveTableName}
                             isIconOnly
@@ -133,13 +133,13 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <label
-                                    className=" w-full text-editable truncate px-2 py-0.5 text-sm font-bold dark:text-white dark:group-hover:bg-default-900"
+                                    className=" w-full text-editable truncate px-2 py-0.5 text-sm font-bold dark:text-white "
                                     onDoubleClick={() => setEditMode(true)}
                                 >
                                     {tableName}
                                 </label>
                             </TooltipTrigger>
-                            <TooltipContent className="dark:bg-default-900">
+                            <TooltipContent >
                                 {t("table.double_click")}
                             </TooltipContent>
                         </Tooltip>
@@ -149,11 +149,11 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
                             <Button
                                 variant="light"
                                 size="sm"
-                                className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700  dark:hover:bg-default-800 "
+                                className="size-6 p-0 text-icon hover:bg-primary-foreground   "
                                 isIconOnly
                                 onPressEnd={focus}
                             >
-                                <Focus className="size-4 text-icon dark:text-white" />
+                                <Focus className="size-4 " />
                             </Button>
                         </div>
                     </>
@@ -188,8 +188,16 @@ const Table: React.FC<NodeProps<TableProps>> = ({ selected, data: { table, overl
     )
 };
 
-export default React.memo(Table, (previousState: any, newState: any) => {
+export default React.memo(Table , (previousState: any, newState: any) => {
+ 
+    
     const previousStateHash: string = hash(previousState.data);
     const newStateHash: string = hash(newState.data);
     return previousStateHash == newStateHash && previousState.selected == newState.selected;
-})
+});
+
+/*
+, 
+
+
+*/

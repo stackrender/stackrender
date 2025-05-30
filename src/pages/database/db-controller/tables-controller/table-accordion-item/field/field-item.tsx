@@ -93,7 +93,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
         <div className="flex w-full gap-1 items-center " style={style} ref={setNodeRef} {...attributes}>
 
             <div {...listeners}>
-                <GripVertical className="size-4 text-icon cursor-move dark:text-default-400 dark:hover:text-white" />
+                <GripVertical className="size-4 text-icon cursor-move dark:hover:text-font/90" />
             </div>
             <Input
                 variant="bordered"
@@ -102,7 +102,11 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                 placeholder={t("db_controller.name")}
                 value={fieldName}
                 onValueChange={setFieldName}
+
                 onBlur={saveFieldName}
+                classNames={{
+                    inputWrapper: "border-divider group-hover:border-primary",
+                }}
             />
             <Autocomplete
                 items={data_types}
@@ -138,25 +142,26 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                             size="sm"
                             isIconOnly
                             variant="light"
+                            className="text-icon hover:text-font/90"
                         >
-                            <EllipsisVertical className="size-4 text-slate-500 dark:text-default-600" />
+                            <EllipsisVertical className="size-4 " />
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[210px]" >
-                        <div className="w-full flex flex-col gap-2 p-2">
-                            <h3 className="font-semibold text-sm text-gray">
+                    <PopoverContent className="w-[210px] bg-background" >
+                        <div className="w-full flex flex-col gap-2 p-2 ">
+                            <h3 className="font-semibold text-sm text-font/90">
                                 {t("db_controller.field_setting")}
                             </h3>
-                            <hr className="text-default-200" />
-                            <div className="flex w-full 500 justify-between">
-                                <span className="text-sm text-slate-500 font-medium">
+                            <hr className="border-divider dark:border-font/10" />
+                            <div className="flex w-full  justify-between">
+                                <span className="text-sm text-icon font-medium dark:text-font/90">
                                     {t("db_controller.unique")}
                                 </span>
                                 <Switch size="sm" defaultSelected={field.unique as boolean} onValueChange={toggleUnqiue}>
                                 </Switch>
 
-                            </div>
-                            <label className="text-sm font-medium text-slate-500">
+                            </div> 
+                            <label className="text-sm font-medium text-icon dark:text-font/90">
                                 {t("db_controller.note")}
                             </label>
                             <Textarea
@@ -169,22 +174,23 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                                 onValueChange={setNote}
                                 onBlur={updateFieldNote}
                                 classNames={{
-                                    inputWrapper: "bg-default/80",
+                                    inputWrapper: "bg-default border-divider dark:bg-background-100",
                                     base: "max-w-xs",
                                     input: "resize-y min-h-[60px] max-h-[180px]",
                                 }} />
-                            <hr className="text-default-200" />
+                            <hr className="border-divider  dark:border-font/10" />
 
                             <Button
-                                className="bg-default"
-                                radius="sm" variant="faded"
+                                className="bg-default dark:bg-danger dark:border-none dark:text-white"
+                                radius="sm" 
+                                variant="faded"
                                 color="danger"
                                 size="sm"
                                 onPressEnd={removeField}>
-                                <span className="font-medium text-sm">
+                                <span className="font-medium text-sm ">
                                     {t("db_controller.delete_field")}
                                 </span>
-                                <Trash2 className="mr-1 size-3.5 text-danger" />
+                                <Trash2 className="mr-1 size-3.5 text-danger dark:text-white" />
                             </Button>
                         </div>
                     </PopoverContent>

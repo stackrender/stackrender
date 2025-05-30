@@ -19,7 +19,6 @@ const Menu: React.FC<MenuProps> = ({ }) => {
 
     const { setTheme } = useTheme()
 
-
     const { t } = useTranslation();
     const menu: MenuDropdownProps[] = useMemo(() => [
         {

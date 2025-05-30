@@ -42,9 +42,9 @@ const IndexesList: React.FC<IndexesListProps> = ({ indices, fields, tableId }) =
                 variant="flat"
                 radius="sm"
                 startContent={
-                    <Plus className="size-4 text-icon" />
+                    <Plus className="size-4 text-font/90" />
                 }
-                className="h-8 p-2 text-xs bg-transparent hover:bg-default text-gray font-semibold"
+                className="h-8 p-2 text-xs bg-transparent hover:bg-default text-font/90 font-semibold"
                 onPressEnd={addIndex}
             >
                 {t("db_controller.add_index")}

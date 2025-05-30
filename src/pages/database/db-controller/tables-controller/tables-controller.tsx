@@ -80,7 +80,7 @@ const TablesController: React.FC<Props> = ({ }) => {
                             <span>
                                 <Button
                                     variant="light"
-                                    className="size-8 p-0"
+                                    className="size-8 p-0 text-icon hover:text-font/90"
                                     isIconOnly
                                     onPress={() =>
                                         //setShowDBML((value) => !value)
@@ -106,11 +106,15 @@ const TablesController: React.FC<Props> = ({ }) => {
                         type="text"
                         size="sm"
                         autoFocus
-                        radius="sm"
-                        variant="bordered"
+                        radius="sm" 
+                        variant="faded"
                         placeholder={t("db_controller.filter")}
-                        className="h-8 w-full focus-visible:ring-0"
+                        className="h-8 w-full focus-visible:ring-0 shadow-none "
+                        classNames={{
+                            inputWrapper : "dark:bg-default border-divider group-hover:border-primary " , 
+                        }}
                         onKeyUp={searchTables}
+                   
                     />
                 </div>
                 <Button
@@ -130,7 +134,7 @@ const TablesController: React.FC<Props> = ({ }) => {
 
                 <Accordion
                     hideIndicator
-                    variant={"splitted"}
+                    
                     selectedKeys={selectedTable}
                     onSelectionChange={setSelectedTable as any}
                     isCompact
@@ -141,8 +145,9 @@ const TablesController: React.FC<Props> = ({ }) => {
                             key={table.id}
                             aria-label={table.name}
                             classNames={{
-                                trigger: "w-full h-12 hover:bg-default transition-all duration-200 dark:bg-background dark:hover:bg-default-50",
-                                base: "rounded-md shadow p-0 overflow-hidden dark:border-1 dark:border-default-100",
+                                trigger: "w-full h-12 hover:bg-default transition-all duration-200 dark:hover:bg-background",
+                                base: "rounded-md mb-1  mt-1 p-0 overflow-hidden  dark:border-background-100",
+                                content : "bg-transparent"
                             }}
                             subtitle={
                                 <TableAccordionHeader
@@ -159,6 +164,8 @@ const TablesController: React.FC<Props> = ({ }) => {
         </div>
     )
 }
+
+
 
 
 

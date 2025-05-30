@@ -66,7 +66,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
 
 
     return (
-        <div className="w-full dark:bg-background">
+        <div className="w-full dark:bg-background-50">
             <Accordion
                 isCompact
                 variant={"light"} selectionMode="multiple" selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys as any}>
@@ -74,25 +74,25 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                     indicator={({ isOpen }) => (
                         <div className={cn(
                             'tarnsition-all duration-200  ',
-                            isOpen ? "rotate-[-90deg]" : ""
+                            isOpen ? "rotate-[0deg]" : ""
                         )}>
-                            <ChevronLeft className="size-4 text-icon dark:text-default-600" />
+                            <ChevronLeft className="size-4 text-icon " />
                         </div>
                     )}
                     classNames={{
                         trigger: "hover:bg-default h-6 dark:hover:bg-background"
                     }}
                     subtitle={
-                        <div className="group dark:text-default-600 flex gap-2 items-center font-medium p-1 w-full hover:underline text-slate-500 hover:text-slate-600 transition-all duration-200 dark:hover:text-white">
+                        <div className="group text-font/90  hover:text-font flex gap-2 items-center font-medium p-1 w-full hover:underline   transition-all duration-200 dark:hover:text-white">
                             <FileType className="size-4 " />
                             <label className="text-sm w-full  cursor-pointer">
                                 {t("db_controller.fields")}
                             </label>
                             <button
-                                className="size-4 p-0 text-xs opacity-0 group-hover:opacity-100  transition-all duration-200 hover:text-slate-700 text-icon"
+                                className="size-4 p-0 text-xs opacity-0 group-hover:opacity-100  transition-all duration-200 hover:text-font text-icon"
                                 onClick={addField}
                             >
-                                <Plus className="size-4 dark:text-default-600" />
+                                <Plus className="size-4 dark:text-font/90" />
                             </button>
                         </div>
                     }
@@ -103,25 +103,25 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                     indicator={({ isOpen }) => (
                         <div className={cn(
                             'tarnsition-all duration-200',
-                            isOpen ? "rotate-[-90deg]" : ""
+                            isOpen ? "rotate-[0deg]" : ""
                         )}>
-                            <ChevronLeft className="size-4 text-icon dark:text-default-600" />
+                            <ChevronLeft className="size-4 text-icon " />
                         </div>
                     )}
                     classNames={{
                         trigger: "hover:bg-default h-6 dark:hover:bg-background"
                     }}
                     subtitle={
-                        <div className="group flex gap-2  dark:text-default-600 items-center font-medium p-1 w-full hover:underline text-slate-500 hover:text-slate-600 transition-all duration-200 dark:hover:text-white">
+                        <div className="group flex gap-2  text-font/90 items-center font-medium p-1 w-full hover:underline  hover:text-font transition-all duration-200 dark:hover:text-white">
                             <FileKey className="size-4 " />
                             <label className="text-sm  w-full  cursor-pointer">
                                 {t("db_controller.indexes")}
                             </label>
                             <button
-                                className="size-4 p-0 text-xs opacity-0 group-hover:opacity-100  transition-all duration-200 hover:text-slate-700 text-icon"
+                                className="size-4 p-0 text-xs opacity-0 group-hover:opacity-100  transition-all duration-200 hover:text-font text-icon"
                                 onClick={addIndex}
                             >
-                                <Plus className="size-4 dark:text-default-600" />
+                                <Plus className="size-4 dark:text-font/90" />
                             </button>
                         </div>
                     }>
@@ -131,16 +131,16 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                     indicator={({ isOpen }) => (
                         <div className={cn(
                             'tarnsition-all duration-200',
-                            isOpen ? "rotate-[-90deg]" : ""
+                            isOpen ? "rotate-[0deg]" : ""
                         )}>
-                            <ChevronLeft className="size-4 text-icon dark:text-default-600" />
+                            <ChevronLeft className="size-4 text-icon " />
                         </div>
                     )}
                     classNames={{
                         trigger: "hover:bg-default h-6 dark:hover:bg-background"
                     }}
                     subtitle={
-                        <div className="flex gap-2 dark:text-default-600 items-center font-medium p-1 w-full hover:underline text-slate-500 hover:text-slate-600 transition-all duration-200 dark:hover:text-white">
+                        <div className="flex gap-2 text-font/90 items-center font-medium p-1 w-full hover:underline  hover:text-font transition-all duration-200 dark:hover:text-white">
                             <MessageSquareQuote className="size-4" />
                             <label className="text-sm w-full  cursor-pointer">
                                 {t("db_controller.note")}
@@ -149,7 +149,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                     }>
                     <Textarea variant="bordered" className="w-full " label={t("db_controller.table_note")}
                         classNames={{
-                            inputWrapper: "bg-default/80 ",
+                            inputWrapper: "bg-default border-divider dark:bg-background-100    ",
                         }}
                         value={note}
                         onValueChange={setNote}
@@ -172,7 +172,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                         variant="ghost"
                         onPressEnd={addIndex}
                         size="sm"
-                        className="font-semibold p-4 border-default-50"
+                        className="font-semibold p-4 border-divider text-font/90"
                         startContent={
                             <FileKey className="size-4 " />
                         }
@@ -183,7 +183,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                         onPressEnd={addField}
                         variant="ghost"
                         size="sm"
-                        className="font-semibold p-4 border-default-50"
+                        className="font-semibold p-4 border-divider text-font/90"
                         startContent={
                             <FileType className="size-4 " />
                         }

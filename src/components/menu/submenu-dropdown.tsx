@@ -11,9 +11,9 @@ const SubmenuDropdown: React.FC<MenuDropdownProps> = ({ title, children }) => {
 
     return (
         <div onMouseEnter={onOpen} onMouseLeave={onClose}  >
-            <Popover placement="right" isOpen={isOpen} radius="sm" offset={90} >
+            <Popover placement="right" isOpen={isOpen} radius="sm" offset={90} shadow="sm">
                 <PopoverTrigger>
-                    <Button className="w-full h-6 bg-transparent p-0" size="sm" value={"light"}>
+                    <Button className="w-full h-6 bg-transparent p-0 text-font/90" size="sm" value={"light"}>
                         <span className="w-full text-left flex justify-between text-small font-normal">
                             {title}
                             <ChevronRight className="size-4 text-icon" />

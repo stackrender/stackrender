@@ -12,7 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 
-interface ModalProps {
+export interface ModalProps {
     isOpen?: boolean,
     onOpenChange: (open: boolean) => void,
     className?: string,
@@ -22,7 +22,6 @@ interface ModalProps {
     actionName?: string,
     actionHandler?: () => void , 
     isDisabled? : boolean  
-
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop = "opaque", title, children, actionName = "Action" , actionHandler , isDisabled}) => {

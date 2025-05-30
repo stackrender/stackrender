@@ -52,7 +52,7 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
     }, []);
  
     return (
-        <Navbar className="flex  rounded-md border-1 border-default-200 bg-background dark:bg-transparent dark:border-default-800 " isBlurred
+        <Navbar className="flex  rounded-md border-1 border-default-200 bg-background dark:bg-transparent bg-default dark:border-divider " isBlurred
             classNames={{
                 wrapper: "h-14 p-2 gap-1",
             }}
@@ -71,14 +71,14 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
                         >
                             <Undo className={cn(
                                 "size-4 dark:text-white",
-                                !canUndo ? "text-default-400 dark:text-default-600" : ""
+                                !canUndo ? "text-font/30" : ""
                             )} />
                         </Button>
                     </span>
                 </TooltipTrigger>
-                <TooltipContent className="dark:bg-default-900">
+                <TooltipContent>
                     {t("control_buttons.undo")}
-                    <span className="ml-2 text-slate-400">
+                    <span className="ml-2 text-default-400">
                         Cntl + Z
                     </span>
                 </TooltipContent>
@@ -97,12 +97,12 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
                         </Button>
                     </span>
                 </TooltipTrigger>
-                <TooltipContent className="dark:bg-default-900">
+                <TooltipContent>
                     {t("control_buttons.adjust_positions")}
                 </TooltipContent>
             </Tooltip>
 
-            <Divider orientation="vertical" className="bg-default-200 dark:bg-default-800" />
+            <Divider orientation="vertical" className="bg-font/10" />
 
             <Tooltip>
                 <TooltipTrigger asChild>
@@ -117,7 +117,7 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
                         </Button>
                     </span>
                 </TooltipTrigger>
-                <TooltipContent className="dark:bg-default-900">
+                <TooltipContent>
                     {t("control_buttons.zoom_out")}
                 </TooltipContent>
             </Tooltip>
@@ -145,11 +145,11 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
                     </span>
                 </TooltipTrigger>
 
-                <TooltipContent className="dark:bg-default-900">
+                <TooltipContent>
                     {t("control_buttons.zoom_in")}
                 </TooltipContent>
             </Tooltip>
-            <Divider orientation="vertical" className="bg-default-200 dark:bg-default-800" />
+            <Divider orientation="vertical" className="bg-font/10" />
             <Tooltip>
                 <TooltipTrigger asChild>
                     <span>
@@ -164,10 +164,10 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
                         </Button>
                     </span>
                 </TooltipTrigger>
-                <TooltipContent className="dark:bg-default-900">
+                <TooltipContent>
                     {t("control_buttons.show_all")}
 
-                    <span className="ml-2 text-slate-400">
+                    <span className="ml-2 text-default-400">
                         Cntl + A
                     </span>
                 </TooltipContent>
@@ -185,15 +185,15 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
                         >
                             <Redo className={cn(
                                 "size-4 dark:text-white",
-                                !canRedo ? "text-default-400 dark:text-default-600" : ""
+                                !canRedo ? "text-font/30" : ""
                             )} />
                         </Button>
                     </span>
                 </TooltipTrigger>
-                <TooltipContent className="dark:bg-default-900">
+                <TooltipContent>
                     {t("control_buttons.redo")}
 
-                    <span className="ml-2 text-slate-400">
+                    <span className="ml-2 text-default-400">
                         Ctnl + Shift + Z
                     </span>
                 </TooltipContent>

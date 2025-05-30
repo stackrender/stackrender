@@ -64,11 +64,11 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                         onValueChange={setName}
                         onBlur={editRelationshipName}
                         type="text"
-                        className="rounded-md px-2 py-0.5 w-full  border-blue-400 focus-visible:ring-0  text-sm "
+                        className="rounded-md px-2 py-0.5 w-full border-primary-700 focus-visible:ring-0 text-sm"
                     />
                     <Button
                         variant="light"
-                        className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 "
+                        className="size-6 p-0 text-icon hover:bg-primary-foreground hover:text-font "
                         size="sm"
                         onPress={editRelationshipName}
                         isIconOnly
@@ -82,7 +82,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                 !editMode && <>
 
                     <label
-                        className="w-full  truncate px-2 py-1 text-sm font-semibold text-black dark:text-white"
+                        className="w-full  truncate px-2 py-1 text-sm font-semibold text-black dark:text-font"
                     >
                         {relationship.name ? relationship.name : defaultName}
                     </label>
@@ -94,7 +94,7 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                             variant="light"
                             onPressEnd={() => focusOnRelationship(relationship.id, true)}
                         >
-                            <Focus className="size-4 text-icon dark:text-white" />
+                            <Focus className="size-4 text-icon" />
                         </Button>
                         <Button
                             size="sm"
@@ -102,29 +102,29 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                             variant="light"
                             onPress={() => setEditMode(true)}
                         >
-                            <Pencil className="size-4 text-icon dark:text-white" />
+                            <Pencil className="size-4 text-icon" />
                         </Button>
                     </div>
 
 
 
-                    <Popover placement="bottom" radius="sm" shadow="sm" showArrow isOpen={popOverOpen} onOpenChange={setPopOverOpen}>
+                    <Popover placement="bottom" radius="sm" shadow="sm" showArrow isOpen={popOverOpen} onOpenChange={setPopOverOpen} >
                         <PopoverTrigger>
                             <Button
                                 size="sm"
                                 isIconOnly
                                 variant="light"
                             >
-                                <EllipsisVertical className="size-4 text-slate-500 dark:text-white" />
+                                <EllipsisVertical className="size-4 text-icon" />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-[160px]" >
                             <div className="w-full flex flex-col gap-2 ">
-                                <h3 className="font-semibold text-sm text-gray p-2">
+                                <h3 className="font-semibold text-sm text-font/90 p-2">
                                     {t("db_controller.actions")}
                                 </h3>
                             </div>
-                            <hr className="text-default-200" />
+                            <hr className="border-divider" />
                             <Listbox aria-label="Actions" className="p-0 pb-1" >
 
                                 <ListboxItem

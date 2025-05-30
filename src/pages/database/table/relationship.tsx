@@ -125,7 +125,7 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
                 fill="none"
                 className={cn([
 
-                    `!stroke-2  ${selected ? '!stroke-primary' : 'stroke-slate-300 dark:stroke-default-500'}`,
+                    `!stroke-1  ${selected ? '!stroke-primary' : 'stroke-default-600 dark:stroke-default-300'}`,
 
 
                 ])}

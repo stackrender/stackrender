@@ -26,15 +26,15 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
     const [fieldIndices, setFieldIndices] = useState<Set<string>>(new Set());
 
-    useEffect(() => { 
-      
+    useEffect(() => {
+
         setFieldIndices(
-            new Set( index.fieldIndices.map((fieldIndex : FieldIndexType) => fieldIndex.fieldId)) 
+            new Set(index.fieldIndices.map((fieldIndex: FieldIndexType) => fieldIndex.fieldId))
         )
-    } , [index.fieldIndices])
+    }, [index.fieldIndices])
 
     const toggleUnique = (unique: boolean) => {
- 
+
         editIndex({
             id: index.id,
             unique
@@ -73,6 +73,10 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                 size="sm"
                 aria-label={t("db_controller.select_fields")}
                 variant="bordered"
+                classNames={{
+                    trigger: "border-divider group-hover:border-primary",
+                }}
+                
                 onSelectionChange={onInexFieldChange}
                 onOpenChange={openChange}
                 selectedKeys={fieldIndices}
@@ -97,8 +101,9 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                             size="sm"
                             isIconOnly
                             variant="light"
+                            className="text-icon hover:text-font/90"
                         >
-                            <EllipsisVertical className="size-4 text-slate-500 dark:text-default-600" />
+                            <EllipsisVertical className="size-4" />
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[210px]" >

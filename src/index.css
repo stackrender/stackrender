@@ -1,6 +1,126 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+@layer base {
+    :root {
+        --color-primary-opacity: rgba(131, 93, 255, 0.05);
+        --color-bg-gray: #f5f7f9;
+        --color-font-light-hover: rgba(131, 93, 255, 0.7);
+        --color-bg-light-hover: rgba(131, 93, 255, 0.1);
+        --color-dashed: #e9ebf1;
+        --color-bg-page: #F6F8FA;
+        --color-bg-right: #ffffff;
+        --color-bg-sidebar: #F1F3F6;
+        --header-bg-color: #FFFFFF;
+        --search-bg-color: #f2f4f7;
+        --table-header-bg-color: #f9fafb;
+        --search-big-bg-color: #f2f4f7;
+        --search-big-select-color: #ffffff;
+        --color-bg-folder-hover: #EEF1F4;
+        --color-deep-gray: #e4e6ea;
+        --select-hover-color: rgba(131, 93, 255, 0.05);
+        --form-hover-color: #f9fafb;
+        --highlight-change-color: #ffffff;
+        --divider-color: #eef0f3;
+        --color-border: #f2f4f6;
+        --color-header-border: #f2f4f6;
+        --color-border-light: rgba(238, 240, 243, 0.5);
+        --icon-color: #a2a4a8;
+        --font-title-color: #47494b;
+        --font-content-color: rgba(51, 54, 57, 0.9);
+        --font-light-color: rgba(51, 54, 57, 0.4);
+        --font-pale-color: rgba(51, 54, 57, 0.6);
+        --box-shadow-modal-color: rgba(16, 24, 40, 0.06);
+        --line-height: 1.4;
+        --border-radius: 4px;
+        --color-primary: #835DFF;
+        --icon-primary-color: #835DFF;
+        --selected-border-color: rgba(131, 93, 255, 0.5);
+        --white-color: #fff;
+        --popover-select-bg-color: #ffffff;
+        --popover-select-bg-hover-color: rgba(131, 93, 255, 0.05);
+        --color-bg-tree-page: #f9fafb;
+        --color-white: #fff;
+        --check-box-border-color: #e6e7e8;
+        --color-error: #F92814;
+        --color-purple: #835CFF;
+        --color-purple-opacity: rgba(131, 92, 255, 0.1);
+        --color-purple-opacity-half: rgba(121, 88, 240, 0.7);
+        --color-success: #26cea4;
+        --color-warning: #ffb400;
+        --color-info: #097bed;
+        --color-error-bg: rgba(249, 40, 20, 0.1);
+        --color-success-bg: rgba(12, 187, 82, 0.1);
+        --color-warning-bg: rgba(255, 180, 0, 0.1);
+        --color-info-bg: rgba(9, 123, 237, 0.1);
+        
+        --scrollbar-thumb-bg-color: #eceff2;
+        --scrollbar-thumb-hover-bg-color: #dcdfe2;
+        --modal-content-bg: #ffffff;
+        --modal-mask-bg: rgba(145, 152, 166, 0.7);
+        --color-bg-tooltip: #ffffff;
+    }
+
+    .dark {
+        --color-primary-opacity: rgba(131, 93, 255, 0.1);
+        --color-bg-gray: #2b3138;
+        --color-font-light-hover: rgba(131, 93, 255, 0.7);
+        --color-bg-light-hover: rgba(131, 93, 255, 0.1);
+        --color-dashed: #33373f;
+        --color-bg-page: #20252c;
+        --color-bg-right: #1c2026;
+        --color-bg-folder: #282d34;
+        --header-bg-color: #282d34;
+        --search-bg-color: #191c21;
+        --table-header-bg-color: #21262d;
+        --search-big-bg-color: #171b1f;
+        --search-big-select-color: #252a32;
+        --color-bg-folder-hover: #282e37;
+        --color-deep-gray: #373b45;
+        --select-hover-color: rgba(131, 93, 255, 0.1);
+        --form-hover-color: #21252d;
+        --highlight-change-color: #373c44;
+        --divider-color: #171b1f;
+        --color-border: #272c35;
+        --color-header-border: #272c35;
+        --color-border-light: #2c2c2c;
+        --icon-color: #4b515a;
+        --font-title-color: #ededed;
+        --font-content-color: #cecfd2;
+        --font-light-color: rgba(198, 201, 210, 0.45);
+        --font-pale-color: rgba(198, 201, 210, 0.7);
+        --box-shadow-modal-color: rgba(0, 0, 0, 0.1);
+        --line-height: 1.4;
+        --border-radius: 4px;
+        --color-primary: #835DFF;
+        --icon-primary-color: #835DFF;
+        --selected-border-color: rgba(131, 93, 255, 0.5);
+        --white-color: #fff;
+        --popover-select-bg-color: #2d3138;
+        --popover-select-bg-hover-color: #353940;
+        --color-bg-tree-page: transparent;
+        --color-white: #fff;
+        --check-box-border-color: #373d46;
+        --color-error: #F92814;
+        --color-purple: #7958F0;
+        --color-purple-opacity: rgba(121, 88, 240, 0.1);
+        --color-purple-opacity-half: rgba(121, 88, 240, 0.7);
+        --color-success: #26cea4;
+        --color-warning: #ffb400;
+        --color-info: #097bed;
+        --color-error-bg: rgba(249, 40, 20, 0.1);
+        --color-success-bg: rgba(12, 187, 82, 0.1);
+        --color-warning-bg: rgba(255, 180, 0, 0.1);
+        --color-info-bg: rgba(9, 123, 237, 0.1);
+        --scrollbar-thumb-bg-color: #242a31;
+        --scrollbar-thumb-hover-bg-color: #2f3740;
+        --modal-content-bg: #1c2026;
+        --modal-mask-bg: rgba(10, 10, 10, 0.7);
+        --color-bg-tooltip: #363a44;
+    }
+}
  
  

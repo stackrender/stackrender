@@ -87,9 +87,9 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                 'tarnsition-all duration-200',
                 isOpen ? "rotate-[90deg]" : ""
             )}>
-                <ChevronRight className="size-4 text-icon dark:text-white" />
+                <ChevronRight className="size-4 text-icon " />
             </div>
-            <div className=" w-[1px] h-full bg-default-200 dark:bg-default-100">
+            <div className=" w-[1px] h-full bg-divider ">
             </div>
             {
                 !editMode &&
@@ -97,7 +97,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <label
-                                className="w-full text-editable truncate px-2 py-1 text-sm font-semibold text-black dark:text-white"
+                                className="w-full text-editable truncate px-2 py-1 text-sm font-semibold text-black dark:text-font"
                                 onDoubleClick={() => setEditMode(true)}
                             >
                                 {tableName}
@@ -120,16 +120,16 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                         variant="bordered"
                         onBlur={saveTableName}
                         type="text"
-                        className="rounded-md px-2 py-0.5 w-full  border-primary-700  focus-visible:ring-0   text-sm  "
+                        className="rounded-md px-2 py-0.5 w-full border-primary-700 focus-visible:ring-0 text-sm"
                     />
                     <Button
                         variant="light"
-                        className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-white"
+                        className="size-6 p-0 text-icon hover:bg-primary-foreground hover:text-font "
                         size="sm"
                         onPressEnd={saveTableName}
                         isIconOnly
                     >
-                        <Check className="size-4 text-icon dark:text-white" />
+                        <Check className="size-4 text-icon " />
                     </Button>
                 </>
             }
@@ -145,7 +145,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                             variant="light"
                             onPress={() => setEditMode(true)}
                         >
-                            <Pencil className="size-4 text-icon dark:text-white" />
+                            <Pencil className="size-4 text-icon " />
                         </Button>
                         <Button
                             size="sm"
@@ -153,7 +153,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                             variant="light"
                             onPressEnd={() => focusOnTable(table.id, true)}
                         >
-                            <Focus className="size-4 text-icon dark:text-white" />
+                            <Focus className="size-4 text-icon " />
                         </Button>
                     </div>
 
@@ -164,29 +164,32 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                 isIconOnly
                                 variant="light"
                             >
-                                <EllipsisVertical className="size-4 text-slate-500 dark:text-white" />
+                                <EllipsisVertical className="size-4 text-icon " />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-[160px]" >
                             <div className="w-full flex flex-col gap-2 ">
-                                <h3 className="font-semibold text-sm text-gray p-2">
+                                <h3 className="font-semibold text-sm text-font/90 p-2">
                                     {t("db_controller.table_actions")}
                                 </h3>
                             </div>
-                            <hr className="text-default-200" />
+                            <hr className="border-divider" />
                             <Listbox aria-label="Actions" className="p-0 pb-1" >
                                 <ListboxItem
                                     key="add_field"
                                     onPressEnd={addField}
+                                    className="text-font/90"
                                     endContent={
-                                        <FileType className="size-4 text-icon dark:text-white" />
+                                        <FileType className="size-4  " />
 
                                     }>
                                     {t("db_controller.add_field")}
                                 </ListboxItem>
                                 <ListboxItem
                                     key="add_index"
-                                    endContent={<FileKey className="size-4 text-icon dark:text-white" />}
+                                    
+                                    className="text-font/90"
+                                    endContent={<FileKey className="size-4" />}
                                     showDivider
                                     onPressEnd={addIndex}
                                     >
@@ -197,8 +200,10 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                 <ListboxItem
                                     key="duplicate"
                                     showDivider
+                                    
+                                    className="text-font/90"
                                     onPressEnd={duplicate}
-                                    endContent={<Copy className="size-4 text-icon" />}>
+                                    endContent={<Copy className="size-4" />}>
 
                                     {t("db_controller.duplicate")}
                                 </ListboxItem>
@@ -207,6 +212,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                     className="text-danger"
                                     color="danger"
                                     onPressEnd={onDeleteTable}
+                                    
                                     endContent={<Trash className="size-4" />}
                                 >
                                     {t("db_controller.delete_table")}

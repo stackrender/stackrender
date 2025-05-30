@@ -1,6 +1,6 @@
 // Importing necessary types and hooks from React Flow (XYFlow)
 import {
-    addEdge, Background, Connection, Controls, EdgeChange,
+    addEdge, Background, ColorMode, Connection, Controls, EdgeChange,
     EdgeRemoveChange, NodeChange, NodePositionChange,
     NodeRemoveChange, OnEdgesChange, OnNodesChange,
     ReactFlow, useEdgesState, useNodesState, useReactFlow
@@ -30,16 +30,18 @@ import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 import { addToast, Button } from "@heroui/react";
 import { AlertTriangle } from "lucide-react";
-import { adjustTablesPositions } from "@/utils/tables";
+import { adjustTablesPositions, isTablesOverlapping } from "@/utils/tables";
 import DatabaseControlButtons from "./database-control-buttons";
 import { FieldType } from "@/lib/schemas/field-schema";
 import useHighlightedEdges from "@/hooks/use-highlighted-edges";
 import { useTranslation } from "react-i18next";
 import useOverlappingTables from "@/hooks/use-overlapping-tables";
+import { useTheme } from "next-themes";
 
 
 const DatabasePage: React.FC = () => {
     const { t } = useTranslation();
+    const { resolvedTheme } = useTheme();
     // Extract database state and operations
     const { database, getField } = useDatabase();
     const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabaseOperations();
@@ -100,7 +102,7 @@ const DatabasePage: React.FC = () => {
         ) as NodePositionChange[];
 
         const nodeRemoveChanges: NodeRemoveChange[] = changes.filter((change: NodeChange) => change.type == "remove");
-
+    
         // Save new positions to the database
         if (nodePositionChanges.length > 0)
             await updateTablePositions(nodePositionChanges.map((change: NodePositionChange) => ({
@@ -140,7 +142,9 @@ const DatabasePage: React.FC = () => {
 
     // Automatically reposition tables to avoid overlap and fit the view
     const adjustPositions = useCallback(async () => {
-        updateTablePositions(await adjustTablesPositions(nodes, relationships));
+        const adjustedTables  = await adjustTablesPositions(nodes, relationships);
+        console.log (adjustedTables )
+        updateTablePositions(adjustedTables) 
         setTimeout(() => {
             fitView({
                 duration: 500
@@ -153,7 +157,9 @@ const DatabasePage: React.FC = () => {
     useRelationshipToEdge(relationships);
     useHighlightedEdges(nodes, relationships, edges);
     const { isOverlapping, puls } = useOverlappingTables(tables);
-
+   
+   
+   
     return (
 
         <div className="w-full h-screen flex  relative overflow-hidden">
@@ -162,6 +168,7 @@ const DatabasePage: React.FC = () => {
             </div>
             <div className="relative w-full h-full">
                 <ReactFlow
+                    colorMode={resolvedTheme as ColorMode}
                     nodes={nodes}
                     edges={edges}
                     fitView
@@ -172,7 +179,7 @@ const DatabasePage: React.FC = () => {
                     defaultEdgeOptions={{
                         type: 'relationship-edge',
                     }}
-                    onlyRenderVisibleElements
+                    //  onlyRenderVisibleElements
                     panOnDrag={true}
                     zoomOnScroll={true}
                     nodeTypes={nodeTypes}
@@ -195,7 +202,7 @@ const DatabasePage: React.FC = () => {
                         />
                     </Controls >
 
-                    <Background className="bg-background dark:bg-black" />
+                    <Background className="dark:bg-background-100" />
                 </ReactFlow>
                 <div
                     className="absolute left-[24px] bottom-[24px] "

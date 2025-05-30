@@ -22,7 +22,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ title, icon, href , type = "i
         return (
             <Tooltip delayDuration={0} >
                 <TooltipTrigger asChild>
-                    <Link to={href as string} className="p-2 rounded-md hover:bg-default-200 sidebar-item " data-active={isActive}>
+                    <Link to={href as string} className="p-2 rounded-md hover:bg-default-100 dark:hover:bg-background-50 sidebar-item " data-active={isActive}>
                         {icon}
                     </Link>
                 </TooltipTrigger>
@@ -36,7 +36,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ title, icon, href , type = "i
 
         )
     else {
-        return <Divider className="bg-default-200 dark:bg-default-100" />
+        return <Divider className="bg-default-200 dark:bg-divider" />
     }
 }
 

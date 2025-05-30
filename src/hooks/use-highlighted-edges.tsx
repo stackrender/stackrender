@@ -70,7 +70,11 @@ const useHighlightedEdges = (nodes: Node[], relationships: RelationshipType[], e
                     (edge.animated || edge.selected) &&
                     (edge.source === node.id || edge.target === node.id)
                 );
+                const newHighlightedEdgeIds = newHighlightedEdges.map((edge : Edge) => edge.id) ; 
+                const previousHighlightedEdgeIds = node.data.highlightedEdges.map((edge : Edge) => edge.id) ; 
 
+                if (areArraysEqual(previousHighlightedEdgeIds , newHighlightedEdgeIds))
+                    return node ; 
                 // Add the highlighted edges to the node's data
                 return {
                     ...node,

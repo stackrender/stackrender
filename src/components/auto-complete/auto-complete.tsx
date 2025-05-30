@@ -10,7 +10,7 @@ interface AutocompleteProps {
     onSelectionChange?: (item: any) => void,
     placeholder?: string
     isDisabled?: boolean
-    selectedItem?: Key 
+    selectedItem?: Key
 }
 
 
@@ -33,7 +33,15 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ items, label = "name", onSe
             variant="bordered"
             aria-label={placeholder}
             placeholder={placeholder}
-            selectedKey={selectedItem as any }
+            selectedKey={selectedItem as any}
+            inputProps={{
+                classNames: {
+
+                    inputWrapper: "border-divider group-hover:border-primary",
+
+                },
+            }}
+
         >
             {(item: any) => <AutocompleteItem key={item.id}>{item[label]}</AutocompleteItem>}
         </HeroUiAutocomplete>

@@ -41,8 +41,8 @@ const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false,
             >
                 <svg
                     fill="transparent"
-                    className={selected ? "stroke-primary" : "stroke-slate-300 dark:stroke-default-400"}
-                    strokeWidth="8"
+                    className={selected ? "stroke-primary" : "stroke-default-600 dark:stroke-default-400"}
+                    strokeWidth="4"
                     width="24"
                     height="24"
                     viewBox="0 0 100 100">

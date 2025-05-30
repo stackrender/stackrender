@@ -13,7 +13,7 @@ const Navbar: React.FC<Props> = ({ }) => {
     
     return (
 
-        <nav className="h-12 fixed z-50 bg-background w-full flex  items-center p-4 border-b border-default-200">
+        <nav className="h-12 fixed z-50 bg-background w-full flex  items-center p-4 border-b  border-divider ">
             <img
                 src={`/stackrender.png`}
                 width={22}

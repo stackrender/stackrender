@@ -27,12 +27,12 @@ const DropdownMenu: React.FC<MenuDropdownProps> = ({ title, children,  clickHand
         return children ? children?.filter((child: MenuDropdownProps) => child.isDisabled && child.title).map((child: MenuDropdownProps) => child.title as string) : []
     }, [children]);
 
-    return <Dropdown radius="sm" showArrow >
+    return <Dropdown radius="sm" shadow="sm" showArrow >
         {
             title &&
-            <DropdownTrigger  onPressEnd={clickHandler}>
+            <DropdownTrigger   onPressEnd={clickHandler}>
                 <Button size="sm" variant="light" className="min-w-[42px]"  >
-                    <span className=" text-left flex justify-between text-small font-semibold">
+                    <span className=" text-left flex justify-between text-small font-semibold text-font/90">
                         {title}
                     </span>
                 </Button>
@@ -48,16 +48,19 @@ const DropdownMenu: React.FC<MenuDropdownProps> = ({ title, children,  clickHand
                         className={child.theme == "danger" ? "text-danger" : ""}
                         color={child.theme}
                         shortcut={child.shortcut}
+                        classNames={{
+                            shortcut : "dark:border-font/10"
+                        }}
                         onPressEnd={ child.clickHandler }
                     > 
                         {
                         
                             !child.children ?
-                                <div>
+                                <div className="text-font/90">
                                     {child.title}
                                     {
                                         child.divide &&
-                                        <div className="w-full  h-[0.5px] absolute bottom-[-0.5px] left-0 bg-default-200"></div>
+                                        <div className="w-full  h-[0.5px] absolute bottom-[-0.5px] left-0 bg-divider  dark:bg-font/10"></div>
                                     }
                                 </div>
                                 :
@@ -65,7 +68,7 @@ const DropdownMenu: React.FC<MenuDropdownProps> = ({ title, children,  clickHand
                                     <SubmenuDropdown {...child}  />
                                     {
                                         child.divide &&
-                                        <div className="w-full  h-[0.5px] absolute bottom-[-0.5px] left-0 bg-default-200"></div>
+                                        <div className="w-full  h-[0.5px] absolute bottom-[-0.5px] left-0 bg-divider  dark:bg-font/10"></div>
                                     }
                                 </div>
 

@@ -83,8 +83,8 @@ const ConnectionStatus: React.FC = () => {
         <div className="flex items-center ">
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <div className="border-1  flex gap-2 p-2 px-3 rounded-lg text-xs relative overflow-hidden  dark:border-default   ">
-                        <span className={cn("flex gap-2 font-semibold", syncStatus.connected ? "text-success-400" : "text-danger-400")}>
+                    <div className="border-1  flex gap-2 p-2 px-3 rounded-lg text-xs relative overflow-hidden  border-divider dark:border-font/10">
+                        <span className={cn("flex gap-2 font-semibold", syncStatus.connected ? "text-success" : "text-danger")}>
                             {
                                 syncStatus.connected ?
                                     <Wifi className="size-4 " /> :
@@ -102,7 +102,7 @@ const ConnectionStatus: React.FC = () => {
                         {
                             downloadProgress !== undefined ?
                                 <>
-                                    <span className="text-slate-500 dark:text-white w-[96px]  truncate">
+                                    <span className="text-font/90  w-[96px]  truncate">
                                         Saving ...
                                     </span>
 
@@ -121,7 +121,7 @@ const ConnectionStatus: React.FC = () => {
 
                                 </>
                                 :
-                                <span className="text-slate-500 dark:text-white w-[96px] truncate font-semibold" >
+                                <span className="text-font/70  truncate font-semibold" >
                                     Saved {deltaUploadTime}
                                 </span>
 

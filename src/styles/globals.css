@@ -1,3 +1,5 @@
+
+
 .react-flow__attribution {
   display: none;
 }
@@ -5,7 +7,7 @@
 
 
 .text-editable {
-  @apply dark:group-hover:bg-default-50 group-hover:bg-slate-100 group-hover:ring-[0.5px] group-hover:ring-primary-700 dark:group-hover:ring-white rounded-md cursor-pointer;
+  @apply dark:group-hover:bg-background group-hover:bg-slate-100 group-hover:ring-[0.5px] group-hover:ring-primary dark:group-hover:ring-divider rounded-sm cursor-pointer;
 }
 
 
@@ -45,7 +47,7 @@ body {
 }
 
 .sidebar-item[data-active="true"] svg {
-  color: hsl(var(--heroui-primary-900));
+  color: hsl(var(--heroui-primary));
 
 }
 
@@ -78,7 +80,7 @@ div[data-slot="content"] hr[role="separator"] {
 
 /* Target the scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
   /* Width of the scrollbar */
 
 }
@@ -88,7 +90,7 @@ div[data-slot="content"] hr[role="separator"] {
 
 /* Handle (the scroll thumb) */
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--heroui-default-100));
+  background: hsl(var(--heroui-scrollbar));
   /* Darker gray */
   border-radius: 6px;
   /* Rounded corners */
@@ -100,7 +102,7 @@ div[data-slot="content"] hr[role="separator"] {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
 
-  background: hsl(var(--heroui-default-300));
+  background: hsl(var(--heroui-scrollbar-hover));
   /* Darker on hover */
 }
 
@@ -116,4 +118,9 @@ div[data-slot="content"] hr[role="separator"] {
 
 .react-flow__pane {
   cursor: default !important;
+}
+
+svg.text-icon:hover {
+ 
+  color : #333639
 }

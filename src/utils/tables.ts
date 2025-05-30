@@ -16,7 +16,10 @@ const adjustTablesPositions = async (
 ): Promise<TableType[]> => {
 
     // Extract tables (same as before)
-    const tables: TableType[] = nodes.map((node: Node) => node.data.table) as TableType[];
+       const tables: TableType[] = nodes.map((node: Node) => (
+        { ...node.data.table as TableType }
+    )) as TableType[];
+
 
     // Build the ELK graph structure
     const graph = {
@@ -37,7 +40,7 @@ const adjustTablesPositions = async (
             targets: [rel.targetTableId],
         })),
     };
-
+    console.log (graph.children ) ; 
     // Run ELK layout (async)
     const layoutedGraph = await elk.layout(graph);
 
@@ -54,6 +57,9 @@ const adjustTablesPositions = async (
     return tables;
 };
 
+
+
+ 
 
 
 const isTablesOverlapping = (tableA: TableType, tableB: TableType) => {

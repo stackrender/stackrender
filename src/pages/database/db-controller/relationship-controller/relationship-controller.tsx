@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip"
 import { Accordion, AccordionItem, Button, Input, useDisclosure } from "@heroui/react"
-import {  ListCollapse,  Workflow } from "lucide-react"
+import { ListCollapse, Workflow } from "lucide-react"
 import { Ref, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RelationshipAccordionHeader from "./relationship-accordion-item/relationship-accordion-header";
@@ -87,7 +87,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                             <span>
                                 <Button
                                     variant="light"
-                                    className="size-8 p-0"
+                                    className="size-8 p-0 text-icon hover:text-font/90"
                                     isIconOnly
                                     onPress={() =>
                                         //setShowDBML((value) => !value)
@@ -111,10 +111,13 @@ const RelationshipController: React.FC<Props> = ({ }) => {
 
                         size="sm"
                         radius="sm"
-                        variant="bordered"
+                        variant="faded"
                         placeholder={t("db_controller.filter")}
-                        className="h-8 w-full focus-visible:ring-0"
+                        className="h-8 w-full focus-visible:ring-0 shadow-none "
                         onKeyUp={searchRelationships}
+                        classNames={{
+                            inputWrapper: "dark:bg-default border-divider group-hover:border-primary ",
+                        }}
 
                     />
                 </div>
@@ -135,9 +138,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
 
                 <Accordion
                     hideIndicator
-                    dividerProps={{
-                        className: "bg-default-200"
-                    }}
+
                     isCompact
                     selectedKeys={selectedRelationship}
                     onSelectionChange={setSelectedRelationship as any}
@@ -147,7 +148,9 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                             key={relationship.id}
                             aria-label={relationship.id}
                             classNames={{
-                                trigger: "w-full hover:bg-default transition-all duration-200 h-12 dark:bg-background dark:hover:bg-default-50",
+                                trigger: "w-full hover:bg-default transition-all duration-200 h-12  dark:hover:bg-background",
+
+
                                 base: "rounded-md p-0 overflow-hidden",
                             }}
                             subtitle={

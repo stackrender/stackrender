@@ -10,53 +10,130 @@ export default {
 
   ],
   darkMode: "class",
+
   plugins: [heroui({
+    layout: {
+      disabledOpacity: "0.3", // opacity-[0.3]
+      radius: {
+        small: "4px", // rounded-small
+        medium: "8px", // rounded-medium
+        large: "12px", // rounded-large
+      },
+
+    },
     themes: {
+
       dark: {
+
         colors: {
+          background: {
+            DEFAULT: "#282a37",
+            50: "#222430",
+            100: "#1e1f28"
+          },
+
+          danger: {
+            DEFAULT: "#F92814"
+          },
+          font: {
+            DEFAULT: "#cccdd7"
+          },
+          content1 : {
+            DEFAULT : "#282a37"
+          } , 
+          default: {
+            50: '#f2f3f5',
+            100: '#d6d7db',
+            200: '#b9bbc1',
+            300: '#9d9fa7',
+            400: '#80838d',
+            500: '#191c21', // base
+            600: '#15171b',
+            700: '#111316',
+            800: '#0d0f11',
+            900: '#090b0c',
+            DEFAULT: '#191c21',
+          },
           primary: {
-            DEFAULT: "#9822ff",
-            50: '#9822ff0D', // 5% opacity
-            100: '#9822ff1A', // 10% opacity
-            200: '#9822ff33', // 20% opacity
-            300: '#9822ff4D', // 30% opacity
-            400: '#9822ff66', // 40% opacity
-            500: '#9822ff80', // 50% opacity
-            600: '#9822ff99', // 60% opacity
-            700: '#9822ffB3', // 70% opacity
-            800: '#961FFFCC', // 80% opacity
-            900: '#9822ffE6', // 90% opacity
+            DEFAULT: "#835dff",
+            50: '#F3F0FF',
+            100: '#E3DCFF',
+            200: '#C6B8FF',
+            300: '#A994FF',
+            400: '#8D70FF',
+            500: '#835DFF', // Default
+            600: '#6C4BD9',
+            700: '#563BB3',
+            800: '#402C8D',
+            900: '#2A1D66'
+          },
+          divider: {
+            DEFAULT: "#272c35"
+          },
+          icon: {
+            DEFAULT: "#4b515a"
+          },
+
+          success: {
+            DEFAULT: "#26cea4"
+          },
+          scrollbar: {
+            DEFAULT: "#242a31" , 
+            hover : "#2f3740"
           },
         }
       },
       light: {
+
         colors: {
+          danger: {
+            DEFAULT: "#F92814"
+          },
+          font: {
+            DEFAULT: "#333639"
+          },
           sidebar: {
-            DEFAULT: 'hsl(0 0% 98%)',
-            foreground: 'hsl(240 5.3% 26.1%)',
+            DEFAULT: "#F1F3F6"
           },
-
+          divider: {
+            DEFAULT: "#f2f4f6"
+          },
+          success: {
+            DEFAULT: "#26cea4"
+          },
+          scrollbar: {
+            DEFAULT: "#eceff2" , 
+            hover : "#dcdfe2"
+          },
           default: {
-            DEFAULT: 'hsl(210 40% 96.1%)',
-            foreground: 'hsl(222.2 47.4% 11.2%)'
+            50: '#f9fafb',
+            100: '#f4f6f8',
+            200: '#e9edf1',
+            300: '#dbe2e8',
+            400: '#c6d0da',
+            500: '#f2f4f7',
+            600: '#a4b2c0',
+            700: '#8493a4',
+            800: '#69798a',
+            900: '#55616f',
+            DEFAULT: '#f2f4f7',
           },
-
           icon: {
-            DEFAULT: "hsl(215.4 16.3% 46.9%)"
+            DEFAULT: "#a2a4a8"
           },
 
           primary: {
-            DEFAULT: "#9822ff",
-            50: '#9822ff0D', // 5% opacity
-            100: '#9822ff1A', // 10% opacity
-            200: '#9822ff33', // 20% opacity
-            300: '#9822ff4D', // 30% opacity
-            400: '#9822ff66', // 40% opacity
-            500: '#9822ff80', // 50% opacity
-            600: '#9822ff99', // 60% opacity
-            700: '#9822ffB3', // 70% opacity
-            800: '#961FFFCC', // 80% opacity
-            900: '#9822ffE6', // 90% opacity
+            DEFAULT: "#835dff",
+            50: '#F3F0FF',
+            100: '#E3DCFF',
+            200: '#C6B8FF',
+            300: '#A994FF',
+            400: '#8D70FF',
+            500: '#835DFF', // Default
+            600: '#6C4BD9',
+            700: '#563BB3',
+            800: '#402C8D',
+            900: '#2A1D66'
           },
         },
       },
