@@ -166,13 +166,13 @@ const DatabasePage: React.FC = () => {
             <div className="flex max-w-full">
                 <DBController />
             </div>
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-full ">
                 <ReactFlow
                     colorMode={resolvedTheme as ColorMode}
                     nodes={nodes}
                     edges={edges}
                     fitView
-                    className="w-full h-full cursor-default"
+                    className="w-full h-full cursor-default "
                     onNodesChange={handleNodesChanges}
                     onEdgesChange={handleEdgeChanges}
                     onConnect={onConnect}
@@ -202,7 +202,7 @@ const DatabasePage: React.FC = () => {
                         />
                     </Controls >
 
-                    <Background className="dark:bg-background-100" />
+                    <Background className=" dark:bg-background-100" />
                 </ReactFlow>
                 <div
                     className="absolute left-[24px] bottom-[24px] "

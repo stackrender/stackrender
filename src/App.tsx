@@ -7,8 +7,8 @@ import useAppRoutes from "./routes/app-route";
 import { SyncProvider } from "./providers/sync-provider/sync-provider";
 import DatabaseProvider from "./providers/database-provider/database-provider";
 import DiagramProvider from "./providers/diagram-provider/diagram-provider";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { HeroUIProvider, ToastProvider } from "@heroui/react";
+
+import {  ToastProvider } from "@heroui/react";
 
 
 
@@ -16,12 +16,9 @@ function App() {
 
   const appRoutes = useAppRoutes();
   return (
-    <HeroUIProvider>
+    <>
       <ToastProvider placement="bottom-right"/>
-      <NextThemesProvider
-        defaultTheme='system'
-        attribute='class'
-      >
+  
         <SyncProvider>
           <ReactFlowProvider>
             <DatabaseProvider>
@@ -35,8 +32,8 @@ function App() {
             </DatabaseProvider>
           </ReactFlowProvider>
         </SyncProvider>
-      </NextThemesProvider>
-    </HeroUIProvider>
+ 
+    </>
   );
 }
 

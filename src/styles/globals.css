@@ -124,3 +124,9 @@ svg.text-icon:hover {
  
   color : #333639
 }
+
+
+
+.dark .bg-background-50 { 
+    background-color:  red !important;
+}

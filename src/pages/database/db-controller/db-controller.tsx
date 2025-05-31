@@ -21,11 +21,12 @@ const DBController: React.FC<Props> = ({ }) => {
     return (
         <ResizableBox
             width={width}
-            onResize={onResize} className="min-h-full "
+            onResize={onResize} className="min-h-full overflow-hidden "
             minConstraints={[512]}
+            
             axis="x"
             handle={
-                <div className="w-[6px] border-r-2 border-transparent   h-full absolute right-0 top-0 cursor-ew-resize hover:border-primary-300 active:border-primary transition-colors duration-200">
+                <div className="w-[6px] border-r-2 border-transparent  h-full absolute right-0 top-0 cursor-ew-resize hover:border-primary active:border-primary transition-colors duration-200">
                 </div>
             }
         >

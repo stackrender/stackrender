@@ -22,25 +22,25 @@ export default {
 
     },
     themes: {
-
+ 
       dark: {
 
         colors: {
           background: {
-            DEFAULT: "#282a37",
-            50: "#222430",
-            100: "#1e1f28"
+            DEFAULT: "#282d34",
+            50: "#20252c",
+            100: "#1c2026"
           },
 
           danger: {
             DEFAULT: "#F92814"
           },
           font: {
-            DEFAULT: "#cccdd7"
+            DEFAULT: "#cecfd2"
           },
-          content1 : {
-            DEFAULT : "#282a37"
-          } , 
+          content1: {
+            DEFAULT: "#282d34"
+          },
           default: {
             50: '#f2f3f5',
             100: '#d6d7db',
@@ -78,8 +78,8 @@ export default {
             DEFAULT: "#26cea4"
           },
           scrollbar: {
-            DEFAULT: "#242a31" , 
-            hover : "#2f3740"
+            DEFAULT: "#242a31",
+            hover: "#2f3740"
           },
         }
       },
@@ -102,8 +102,8 @@ export default {
             DEFAULT: "#26cea4"
           },
           scrollbar: {
-            DEFAULT: "#eceff2" , 
-            hover : "#dcdfe2"
+            DEFAULT: "#eceff2",
+            hover: "#dcdfe2"
           },
           default: {
             50: '#f9fafb',

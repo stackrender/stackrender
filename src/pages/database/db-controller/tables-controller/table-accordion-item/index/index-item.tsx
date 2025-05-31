@@ -76,7 +76,7 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                 classNames={{
                     trigger: "border-divider group-hover:border-primary",
                 }}
-                
+
                 onSelectionChange={onInexFieldChange}
                 onOpenChange={openChange}
                 selectedKeys={fieldIndices}
@@ -108,12 +108,12 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                     </PopoverTrigger>
                     <PopoverContent className="w-[210px]" >
                         <div className="w-full flex flex-col gap-2 p-2">
-                            <h3 className="font-semibold text-sm text-gray">
+                            <h3 className="font-semibold text-sm text-font/90">
                                 {t("db_controller.index_setting")}
                             </h3>
-                            <hr className="text-default-200" />
+                            <hr className="border-divider dark:border-font/10" />
 
-                            <label className="text-sm font-medium text-slate-500">
+                            <label className="text-sm font-medium text-icon dark:text-font/90">
                                 {t("db_controller.name")}
                             </label>
                             <Input
@@ -122,14 +122,17 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                                 placeholder={t("db_controller.index_name")}
                                 onBlur={editIndexName}
                                 size="sm"
+                                classNames={{
+                                    inputWrapper: "border-divider group-hover:border-primary dark:border-font/10",
+                                }}
                                 defaultValue={index.name}
                             />
 
 
-                            <hr className="text-default-200" />
+                            <hr className="border-divider dark:border-font/10" />
 
                             <Button
-                                className="bg-default"
+                                className="bg-default dark:bg-danger dark:border-none dark:text-white"
                                 radius="sm" variant="faded"
                                 color="danger"
                                 size="sm"
@@ -137,7 +140,7 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                                 <span className="font-medium text-sm">
                                     {t("db_controller.delete_index")}
                                 </span>
-                                <Trash2 className="mr-1 size-3.5 text-danger" />
+                                 <Trash2 className="mr-1 size-3.5 text-danger dark:text-white" />
                             </Button>
                         </div>
                     </PopoverContent>
