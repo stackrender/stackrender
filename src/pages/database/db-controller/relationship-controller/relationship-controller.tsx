@@ -5,28 +5,27 @@ import { Ref, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import RelationshipAccordionHeader from "./relationship-accordion-item/relationship-accordion-header";
 import RelationshipAccordionBody from "./relationship-accordion-item/relationship-accordion-body";
-import Modal from "@/components/modal/modal";
-import CreateRelationshipForm from "./create-relationship-form/create-relationship-form";
+
+import CreateRelationshipForm from "../../modals/create-relationship-modal";
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
-import { v4 } from "uuid";
+
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { getDefaultRelationshipName } from "@/hooks/use-relationship-name";
+import { useModal } from "@/providers/modal-provider/modal-provider";
+import { Modals } from "@/providers/modal-provider/modal-contxet";
 
 
 
 
-interface Props {
-
-}
+ 
 
 
-const RelationshipController: React.FC<Props> = ({ }) => {
-    const [relationship, setRelationship] = useState<RelationshipInsertType | undefined>(undefined);
-    const [isValid, setIsValid] = useState<boolean>(false);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+const RelationshipController: React.FC = ({ }) => {
+
+    
+    const { open } = useModal();
     const { database } = useDatabase();
-    const { createRelationship } = useDatabaseOperations();
     const { relationships: allRelationships } = database;
     const [relationships, setRelationships] = useState<RelationshipType[]>(allRelationships);
 
@@ -37,18 +36,6 @@ const RelationshipController: React.FC<Props> = ({ }) => {
 
     useEffect(() => setRelationships(allRelationships), [allRelationships]);
 
-    const addRelationship = useCallback(() => {
-
-        const newRelationshipId: string = v4();
-
-        createRelationship({
-            id: newRelationshipId,
-            ...relationship,
-        } as RelationshipInsertType);
-
-        setSelectedRelationship(new Set([newRelationshipId]) as any);
-    }, [relationship]);
-
 
     useEffect(() => {
         if (focusedRelationshipId) {
@@ -57,6 +44,11 @@ const RelationshipController: React.FC<Props> = ({ }) => {
 
     }, [focusedRelationshipId]);
 
+    const onOpen = useCallback(() => {
+        open(Modals.CREATE_RELATIONSHIP, {
+            onRlationshipCreated: (id: string) => setSelectedRelationship(new Set([id]) as any)
+        })
+    }, [])
 
     const searchRelationships = useCallback(() => {
         const keyword: string | undefined = nameRef.current?.value;
@@ -164,21 +156,7 @@ const RelationshipController: React.FC<Props> = ({ }) => {
                     ))}
                 </Accordion>
             </div>
-            <Modal
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-                title={t("db_controller.create_relationship")}
-                actionName={t("modal.create")}
-                className="min-w-[520px]"
-                isDisabled={!isValid}
-                actionHandler={addRelationship}
 
-            >
-                <CreateRelationshipForm
-                    onRelationshipChanges={setRelationship}
-                    onValidationChanges={setIsValid}
-                />
-            </Modal>
         </div>
     )
 }

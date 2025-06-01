@@ -8,10 +8,7 @@ export const en = {
             tables: "Tables",
             relationships: "Relationships"
         },
-        modal: {
-            close: "Close",
-            create: "Create"
-        },
+
         color_picker: {
             default_color: "Default color"
         },
@@ -117,8 +114,23 @@ export const en = {
             dark: "Dark",
             help: "Help",
             show_docs: "Show Docs",
-            join_discord: "Join Discord"
+            join_discord: "Join Discord",
+
+        },
+
+        modals: {
+            close: "Close",
+            create: "Create" , 
+            pick_database: "Pick your Database.",
+            create_database_header: "Every database offers distinct features and functionalities." , 
+            db_name : "Database name" , 
+            db_name_error : "Please provide a Database name" , 
+            continue : "Continue" , 
+            open : "Open" , 
+            open_database : "Open Database" , 
+            open_database_header : "Open a database by selecting one from the list."
         }
+
     }
 
 }

@@ -111,7 +111,7 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                             <h3 className="font-semibold text-sm text-font/90">
                                 {t("db_controller.index_setting")}
                             </h3>
-                            <hr className="border-divider dark:border-font/10" />
+                            <hr className="border-divider " />
 
                             <label className="text-sm font-medium text-icon dark:text-font/90">
                                 {t("db_controller.name")}
@@ -123,13 +123,13 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                                 onBlur={editIndexName}
                                 size="sm"
                                 classNames={{
-                                    inputWrapper: "border-divider group-hover:border-primary dark:border-font/10",
+                                    inputWrapper: "border-divider group-hover:border-primary ",
                                 }}
                                 defaultValue={index.name}
                             />
 
 
-                            <hr className="border-divider dark:border-font/10" />
+                            <hr className="border-divider" />
 
                             <Button
                                 className="bg-default dark:bg-danger dark:border-none dark:text-white"

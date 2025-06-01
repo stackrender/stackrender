@@ -1,23 +1,27 @@
 import Autocomplete from "@/components/auto-complete/auto-complete";
+import Modal, { ModalProps } from "@/components/modal/modal";
 import { FieldType } from "@/lib/schemas/field-schema";
 import { RelationshipInsertType } from "@/lib/schemas/relationship-schema";
 import { TableType } from "@/lib/schemas/table-schema";
-import { useDatabase } from "@/providers/database-provider/database-provider";
-import { FileKey, FileMinus2, FileOutput,  KeyRound } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { FileKey, FileMinus2, FileOutput, KeyRound } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { v4 } from "uuid";
 
 
 
 
-interface CreateRelationshipFormProps {
-    onRelationshipChanges: (relationship: RelationshipInsertType) => void,
-    onValidationChanges?: (isValid: boolean) => void
+interface CreateRelationshipModalProps extends ModalProps {
+    onRelationshipChanges?: (relationship: RelationshipInsertType) => void,
+    onRlationshipCreated?: (id: string) => void
 
 }
 
 
-const CreateRelationshipForm: React.FC<CreateRelationshipFormProps> = ({ onRelationshipChanges, onValidationChanges }) => {
+const CreateRelationshipModal: React.FC<CreateRelationshipModalProps> = ({ onRelationshipChanges, isOpen, onOpenChange, onRlationshipCreated }) => {
+    const [isValid, setIsValid] = useState<boolean>(false);
+    const { createRelationship } = useDatabaseOperations();
 
     const [relationship, setRelationship] = useState<RelationshipInsertType>({
         sourceTableId: "",
@@ -62,15 +66,39 @@ const CreateRelationshipForm: React.FC<CreateRelationshipFormProps> = ({ onRelat
     }, [relationship, sourceFields, targetFields]);
 
     useEffect(() => {
-        onValidationChanges && onValidationChanges((relationship.sourceFieldId && relationship.targetFieldId && fieldTypesMatches) as boolean)
-    }, [relationship, fieldTypesMatches])
+        setIsValid((relationship.sourceFieldId && relationship.targetFieldId && fieldTypesMatches) as boolean)
+    }, [relationship, fieldTypesMatches]);
+
+
+    const addRelationship = useCallback(() => {
+
+        const id: string = v4();
+
+        createRelationship({
+            ...relationship,
+            id,
+        } as RelationshipInsertType);
+        onRlationshipCreated && onRlationshipCreated(id);
+
+    }, [relationship]);
+
 
     return (
-        <>
+        <Modal
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            title={t("db_controller.create_relationship")}
+            actionName={t("modals.create")}
+            className="min-w-[520px]"
+            isDisabled={!isValid}
+            actionHandler={addRelationship}
+
+        >
+
             <div className="grid grid-cols-2 grid-rows-2 gap-4">
                 <div className="space-y-2">
-                    <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm">
-                        <FileOutput className="size-4 text-icon" />
+                    <label className="font-medium flex text-font/90 flex items-center gap-1 text-sm">
+                        <FileOutput className="size-4" />
                         {t("db_controller.source_table")}
                     </label>
                     <Autocomplete
@@ -80,8 +108,8 @@ const CreateRelationshipForm: React.FC<CreateRelationshipFormProps> = ({ onRelat
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm">
-                        <FileMinus2 className="size-4 text-icon" />
+                    <label className="font-medium flex text-font/90 flex items-center gap-1 text-sm">
+                        <FileMinus2 className="size-4" />
                         {t("db_controller.target_table")}
                     </label>
 
@@ -92,8 +120,8 @@ const CreateRelationshipForm: React.FC<CreateRelationshipFormProps> = ({ onRelat
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm">
-                        <KeyRound className="size-4 text-icon" />
+                    <label className="font-medium flex text-font/90 flex items-center gap-1 text-sm">
+                        <KeyRound className="size-4 " />
                         {t("db_controller.primary_key")}
 
                     </label>
@@ -106,8 +134,8 @@ const CreateRelationshipForm: React.FC<CreateRelationshipFormProps> = ({ onRelat
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="font-medium flex text-slate-700 flex items-center gap-1 text-sm">
-                        <FileKey className="size-4 text-icon" />
+                    <label className="font-medium flex text-font/90  flex items-center gap-1 text-sm">
+                        <FileKey className="size-4 " />
                         {t("db_controller.foreign_key")}
                     </label>
                     <Autocomplete
@@ -127,9 +155,10 @@ const CreateRelationshipForm: React.FC<CreateRelationshipFormProps> = ({ onRelat
 
                 </div>
             }
-        </>
+
+        </Modal>
     )
 }
 
 
-export default CreateRelationshipForm; 
+export default CreateRelationshipModal; 

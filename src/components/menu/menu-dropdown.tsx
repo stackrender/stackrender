@@ -60,7 +60,7 @@ const DropdownMenu: React.FC<MenuDropdownProps> = ({ title, children,  clickHand
                                     {child.title}
                                     {
                                         child.divide &&
-                                        <div className="w-full  h-[0.5px] absolute bottom-[-0.5px] left-0 bg-divider  dark:bg-font/10"></div>
+                                        <div className="w-full  h-[0.5px] absolute bottom-[-0.5px] left-0 bg-divider  "></div>
                                     }
                                 </div>
                                 :
@@ -68,7 +68,7 @@ const DropdownMenu: React.FC<MenuDropdownProps> = ({ title, children,  clickHand
                                     <SubmenuDropdown {...child}  />
                                     {
                                         child.divide &&
-                                        <div className="w-full  h-[0.5px] absolute bottom-[-0.5px] left-0 bg-divider  dark:bg-font/10"></div>
+                                        <div className="w-full  h-[0.5px] absolute bottom-[-0.5px] left-0 bg-divider  "></div>
                                     }
                                 </div>
 

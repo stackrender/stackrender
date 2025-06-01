@@ -1,6 +1,6 @@
 
 import { DataType } from "@/lib/schemas/data-type-schema";
-import { DatabaseType } from "@/lib/schemas/database-schema";
+import { DatabaseInsertType, DatabaseType } from "@/lib/schemas/database-schema";
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema";
 import { IndexInsertType } from "@/lib/schemas/index-schema";
 import { RelationshipInsertType } from "@/lib/schemas/relationship-schema";
@@ -15,6 +15,7 @@ import { createContext } from "react";
 interface DatabaseDataContextType {
 
     database: DatabaseType,
+    databases  : DatabaseType[] , 
     isLoading: boolean,
     getField: (tableId: string, id: string) => FieldType | undefined,
 
@@ -23,6 +24,11 @@ interface DatabaseDataContextType {
 
 interface DatabaseOperationsContextType {
     data_types: DataType[],
+    // database operations 
+    createDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,
+    editDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,
+    deleteDatabase : ( id : string) => Promise<void> ,
+    setCurrentDatabaseId : ( id : string) => void ,  
 
     createTable: (table: TableInsertType) => Promise<void>,
     editTable: (table: TableInsertType) => Promise<QueryResult>,
@@ -36,10 +42,10 @@ interface DatabaseOperationsContextType {
     orderTableFields: (fields: FieldType[]) => Promise<void>,
 
     // index operations
-    createIndex : ( index : IndexInsertType) => Promise<QueryResult> , 
-    editIndex : ( index : IndexInsertType) => Promise<QueryResult> , 
-    deleteIndex : ( id : string) => Promise<QueryResult> , 
-    editFieldIndices:( indexId : string , fieldIds : string[])=> Promise<void> , 
+    createIndex: (index: IndexInsertType) => Promise<QueryResult>,
+    editIndex: (index: IndexInsertType) => Promise<QueryResult>,
+    deleteIndex: (id: string) => Promise<QueryResult>,
+    editFieldIndices: (indexId: string, fieldIds: string[]) => Promise<void>,
     // relationship operations
     createRelationship: (relationship: RelationshipInsertType) => Promise<QueryResult>,
     editRelationship: (relationship: RelationshipInsertType) => Promise<QueryResult>,

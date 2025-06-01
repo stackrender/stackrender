@@ -3,10 +3,11 @@ import { TableType } from "@/lib/schemas/table-schema";
 import { Node, useReactFlow } from "@xyflow/react";
 import { useEffect } from "react";
 import { getDefaultTableOverlapping } from "@/utils/tables";
-import hash from "object-hash";
-import { compare } from "fast-json-patch";
+import hash from "object-hash"; 
+
+
 export const useTableToNode = (tables: TableType[]): void => {
-    const { setNodes } = useReactFlow();
+    const { setNodes } = useReactFlow(); 
 
 
     useEffect(() => {
@@ -38,19 +39,10 @@ export const useTableToNode = (tables: TableType[]): void => {
                 if (!node)
                     return tableNode;
                 else {
-                    //                    const diff = compare(node.data.table as TableType, tableNode.data.table as TableType);
-
-
-                    //console.log (diff)
-
+       
                     const hashNode: string = hash(node.data.table as TableType);
                     const hashTableNode: string = hash(tableNode.data.table as TableType);
-
-
-
                     return hashNode == hashTableNode ? node : tableNode;
-
-
                 }
 
             })

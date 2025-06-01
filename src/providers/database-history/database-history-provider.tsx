@@ -42,10 +42,13 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
     }, [redoChanges, udpateDbFlag, isProcessing]);
 
     useEffect(() => {
+
         if (!udpateDbFlag.current) {
             udpateDbFlag.current = true;
             return;
         }
+
+       
         const normalizedDatabase = normalizeDatabase(database);
 
         const normalizedPresent = normalizeDatabase(datatbaseState.present);

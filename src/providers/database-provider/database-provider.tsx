@@ -10,7 +10,7 @@ import { FieldInsertType, fields, FieldType } from "@/lib/schemas/field-schema";
 import { RelationshipInsertType, relationships } from "@/lib/schemas/relationship-schema";
 import DatabaseHistoryProvider from "../database-history/database-history-provider";
 import { DBDiffOperation } from "@/utils/database";
-import { DatabaseType } from "@/lib/schemas/database-schema";
+import { DatabaseInsertType, DatabaseType, databases as databaseModel } from "@/lib/schemas/database-schema";
 import { getTimestamp } from "@/utils/utils";
 import { IndexInsertType, indices } from "@/lib/schemas/index-schema";
 import { field_indices } from "@/lib/schemas/field_index-schema";
@@ -23,19 +23,19 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     const [currentDatabaseId, setCurrentDatabaseId] = useState<string | undefined>(undefined);
 
     // Fetch all databases
-    const { data: databases, isLoading: loadingDatabases } = useQuery(toCompilableQuery(
+    const { data: databases, isLoading: loadingDatabases , isFetching : fetchingDatabases} = useQuery(toCompilableQuery(
         db.query.databases.findMany()
     ));
 
     // Fetch all data types
-    const { data: data_types, isLoading: loadingDataTypes } = useQuery(toCompilableQuery(
+    const { data: data_types, isLoading: loadingDataTypes , isFetching : fetchingDataTypes} = useQuery(toCompilableQuery(
         db.query.data_types.findMany()
     ));
 
     // Fetch the current database with nested tables, fields, and relationships
-    let { data: database, isLoading: loadingCurrentDatabase } = useQuery(
+    let { data: database, isLoading: loadingCurrentDatabase , isFetching : fetchingCurrentDatabase} = useQuery(
         toCompilableQuery(
-            db.query.databases.findFirst({
+            db.query.databases.findMany({
                 where: (databases, { eq }) => eq(databases.id, currentDatabaseId as string),
                 with: {
                     tables: {
@@ -68,9 +68,9 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             })
         )
     );
-
-
-
+    
+    
+    
     // Normalize result to single object
     if (database.length == 1)
         database = database[0] as any;
@@ -82,7 +82,22 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         }
     }, [currentDatabaseId, databases])
 
-    const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;
+    const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase ;
+    // CRUD for database 
+    const createDatabase = useCallback(async (database: DatabaseInsertType): Promise<QueryResult> => {
+        return await db.insert(databaseModel).values({
+            ...database,
+            createdAt: getTimestamp()
+        });
+    }, [db]);
+
+    const editDatabase = useCallback(async (database: DatabaseInsertType): Promise<QueryResult> => {
+        return await db.update(databaseModel).set(database).where(eq(databaseModel.id, database.id))
+    }, [db]);
+
+    const deleteDatabase = useCallback(async (id: string): Promise<void> => {
+        await db.delete(databaseModel).where(eq(databaseModel.id, id));
+    }, [db]);
 
     // CRUD operations for Tables
     const createTable = useCallback(async (table: TableInsertType): Promise<void> => {
@@ -219,6 +234,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     // Apply a list of diff operations to sync database
     const executeDbDiffOps = useCallback(async (operations: DBDiffOperation[]) => {
         try {
+            console.log ("excuted diff operations")
             await db.transaction(async (tx) => {
                 for (const operation of operations) {
                     if (operation.type == "CREATE_TABLE") {
@@ -253,9 +269,9 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                     }
                     else if (operation.type == "CREATE_INDEX") {
                         await tx.insert(indices).values(operation.index);
-                        if (operation.index.fieldIndices && Object.values(operation.index.fieldIndices).length > 0) 
-                             await tx.insert(field_indices).values(Object.values(operation.index.fieldIndices));
-                            
+                        if (operation.index.fieldIndices && Object.values(operation.index.fieldIndices).length > 0)
+                            await tx.insert(field_indices).values(Object.values(operation.index.fieldIndices));
+
                     }
                     else if (operation.type == "DELETE_INDEX") {
                         await tx.delete(indices).where(eq(indices.id, operation.indexId));
@@ -279,6 +295,11 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [db]);
 
     const databaseOpsValue = useMemo(() => ({
+
+        createDatabase,
+        editDatabase,
+        deleteDatabase,
+        setCurrentDatabaseId,
         createTable,
         editTable,
         deleteTable,
@@ -299,6 +320,9 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editFieldIndices,
         data_types
     }), [
+        createDatabase,
+        editDatabase,
+        deleteDatabase,
         createTable,
         editTable,
         deleteTable,
@@ -324,6 +348,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         <DatabaseDataContext.Provider value={{
 
             database: database as unknown as DatabaseType,
+            databases: databases as DatabaseType[],
             isLoading,
             getField,
         }}>

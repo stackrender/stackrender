@@ -1,35 +1,56 @@
 
-/*
+
 import { useCallback, useContext, useState } from "react"
 import { ModalContext, Modals } from "./modal-contxet"
-import Modal, { ModalProps } from "@/components/modal/modal";
 import { useDisclosure } from "@heroui/react";
+import CreateRelationshipModal from "@/pages/database/modals/create-relationship-modal";
+import { CreateDatabaseModal } from "@/pages/database/modals/create-database-modal";
+import OpenDatabaseModal from "@/pages/database/modals/open-database-modal";
+
 
 interface Props { children: React.ReactNode }
 interface CurrentModalProps {
     modal: Modals,
-    modalProps: ModalProps,
-    content?: any
+    props?: any,
+
 }
 
-const ModalProvider: React.FC<Props> = ({ children }) => {
-    const { isOpen, onOpen } = useDisclosure();
+export const ModalProvider: React.FC<Props> = ({ children }) => {
+
     const [currentModal, setCurrentModal] = useState<CurrentModalProps | undefined>(undefined);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const open = useCallback((modal: Modals, props?: any) => {
 
-    const onOpenChange = useCallback(() => {
+        setCurrentModal({
+            modal,
+            props
+        });
         onOpen();
-        setCurrentModal(undefined);
-    }, [onOpen]);
+    }, []);
 
- 
+    const onOpenChange = (isOpen: boolean) => {
+        if (!isOpen) {
+            onClose();
+            setCurrentModal(undefined);
+        }
+    }
 
     return (
-        <ModalContext.Provider>
+        <ModalContext.Provider value={{
+            open
+        }}
+        >
             {
-                currentModal &&
-                <Modal isOpen={isOpen} {...currentModal.modalProps}  onOpenChange={onOpenChange} >
-
-                </Modal>
+                currentModal ? (
+                    currentModal.modal == Modals.CREATE_RELATIONSHIP &&
+                    <CreateRelationshipModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
+                    ||
+                    currentModal.modal == Modals.CREATE_DATABASE &&
+                    <CreateDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />  
+                    ||
+                    currentModal.modal == Modals.OPEN_DATABASE &&
+                    <OpenDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
+                ) : undefined
             }
             {children}
         </ModalContext.Provider>
@@ -37,6 +58,5 @@ const ModalProvider: React.FC<Props> = ({ children }) => {
 }
 
 
-export const useModal = () => useContext(ModalContext); 
+export const useModal = () => useContext(ModalContext);
 
-*/

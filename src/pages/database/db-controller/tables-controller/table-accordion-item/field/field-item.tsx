@@ -147,12 +147,12 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                             <EllipsisVertical className="size-4 " />
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[210px] bg-background" >
+                    <PopoverContent className="w-[210px] " >
                         <div className="w-full flex flex-col gap-2 p-2 ">
                             <h3 className="font-semibold text-sm text-font/90">
                                 {t("db_controller.field_setting")}
                             </h3>
-                            <hr className="border-divider dark:border-font/10" />
+                            <hr className="border-divider" />
                             <div className="flex w-full  justify-between">
                                 <span className="text-sm text-icon font-medium dark:text-font/90">
                                     {t("db_controller.unique")}
@@ -174,11 +174,11 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                                 onValueChange={setNote}
                                 onBlur={updateFieldNote}
                                 classNames={{
-                                    inputWrapper: "bg-default border-divider dark:bg-background-100",
+                                    inputWrapper: "bg-default border-divider ",
                                     base: "max-w-xs",
                                     input: "resize-y min-h-[60px] max-h-[180px]",
                                 }} />
-                            <hr className="border-divider  dark:border-font/10" />
+                            <hr className="border-divider" />
 
                             <Button
                                 className="bg-default dark:bg-danger dark:border-none dark:text-white"

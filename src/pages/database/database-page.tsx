@@ -40,6 +40,7 @@ import { useTheme } from "next-themes";
 
 
 const DatabasePage: React.FC = () => {
+
     const { t } = useTranslation();
     const { resolvedTheme } = useTheme();
     // Extract database state and operations
@@ -102,7 +103,7 @@ const DatabasePage: React.FC = () => {
         ) as NodePositionChange[];
 
         const nodeRemoveChanges: NodeRemoveChange[] = changes.filter((change: NodeChange) => change.type == "remove");
-    
+
         // Save new positions to the database
         if (nodePositionChanges.length > 0)
             await updateTablePositions(nodePositionChanges.map((change: NodePositionChange) => ({
@@ -112,9 +113,10 @@ const DatabasePage: React.FC = () => {
             } as TableInsertType)));
 
         // Delete tables if removed
-        if (nodeRemoveChanges.length > 0)
+        if (nodeRemoveChanges.length > 0) {
+      
             deleteMultiTables(nodeRemoveChanges.map((change: NodeRemoveChange) => change.id));
-
+        }
         return onNodesChange(changes);
     }, [onNodesChange]);
 
@@ -142,9 +144,9 @@ const DatabasePage: React.FC = () => {
 
     // Automatically reposition tables to avoid overlap and fit the view
     const adjustPositions = useCallback(async () => {
-        const adjustedTables  = await adjustTablesPositions(nodes, relationships);
-        console.log (adjustedTables )
-        updateTablePositions(adjustedTables) 
+        const adjustedTables = await adjustTablesPositions(nodes, relationships);
+
+        updateTablePositions(adjustedTables)
         setTimeout(() => {
             fitView({
                 duration: 500
@@ -152,86 +154,89 @@ const DatabasePage: React.FC = () => {
         }, 300);
     }, [relationships, nodes]);
 
+
     // Convert tables and relationships into flow elements
     useTableToNode(tables);
     useRelationshipToEdge(relationships);
     useHighlightedEdges(nodes, relationships, edges);
     const { isOverlapping, puls } = useOverlappingTables(tables);
-   
-   
-   
+
+
     return (
 
         <div className="w-full h-screen flex  relative overflow-hidden">
             <div className="flex max-w-full">
                 <DBController />
             </div>
-            <div className="relative w-full h-full ">
-                <ReactFlow
-                    colorMode={resolvedTheme as ColorMode}
-                    nodes={nodes}
-                    edges={edges}
-                    fitView
-                    className="w-full h-full cursor-default "
-                    onNodesChange={handleNodesChanges}
-                    onEdgesChange={handleEdgeChanges}
-                    onConnect={onConnect}
-                    defaultEdgeOptions={{
-                        type: 'relationship-edge',
-                    }}
-                    //  onlyRenderVisibleElements
-                    panOnDrag={true}
-                    zoomOnScroll={true}
-                    nodeTypes={nodeTypes}
-                    edgeTypes={edgeTypes}
-                    snapGrid={[20, 20]}
-                    onConnectStart={onConnectStart}
-                    onConnectEnd={onConnectEnd}
-                >
+            {
 
-                    <Controls
-                        position="bottom-center"
-                        showFitView={false}
-                        showZoom={false}
-                        showInteractive={false}
-                        className="shadow-none "
+                <div className="relative w-full h-full ">
+                    <ReactFlow
+                        colorMode={resolvedTheme as ColorMode}
+                        nodes={nodes}
+                        edges={edges}
+                        fitView
+                        className="w-full h-full cursor-default "
+                        onNodesChange={handleNodesChanges}
+                        onEdgesChange={handleEdgeChanges}
+                        onConnect={onConnect}
+                        defaultEdgeOptions={{
+                            type: 'relationship-edge',
+                        }}
+                        //  onlyRenderVisibleElements
+                        panOnDrag={true}
+                        zoomOnScroll={true}
+                        nodeTypes={nodeTypes}
+                        edgeTypes={edgeTypes}
+                        snapGrid={[20, 20]}
+                        onConnectStart={onConnectStart}
+                        onConnectEnd={onConnectEnd}
                     >
 
-                        <DatabaseControlButtons
-                            adjustPositions={adjustPositions}
-                        />
-                    </Controls >
+                        <Controls
+                            position="bottom-center"
+                            showFitView={false}
+                            showZoom={false}
+                            showInteractive={false}
+                            className="shadow-none "
+                        >
 
-                    <Background className=" dark:bg-background-100" />
-                </ReactFlow>
-                <div
-                    className="absolute left-[24px] bottom-[24px] "
-                >
-                    {
-                        isOverlapping &&
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <span>
-                                    <Button
-                                        variant="shadow"
-                                        size="sm"
-                                        isIconOnly
-                                        color="danger"
-                                        className="size-8 p-1 "
-                                        onPressEnd={puls}
-                                    >
-                                        <AlertTriangle className="size-4 text-white" />
-                                    </Button>
-                                </span>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                {t("table.overlapping_tables")}
-                            </TooltipContent>
-                        </Tooltip>
-                    }
+                            <DatabaseControlButtons
+                                adjustPositions={adjustPositions}
+                            />
+                        </Controls >
+
+                        <Background className=" dark:bg-background-100" />
+                    </ReactFlow>
+                    <div
+                        className="absolute left-[24px] bottom-[24px] "
+                    >
+                        {
+                            isOverlapping &&
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <span>
+                                        <Button
+                                            variant="shadow"
+                                            size="sm"
+                                            isIconOnly
+                                            color="danger"
+                                            className="size-8 p-1 "
+                                            onPressEnd={puls}
+                                        >
+                                            <AlertTriangle className="size-4 text-white" />
+                                        </Button>
+                                    </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    {t("table.overlapping_tables")}
+                                </TooltipContent>
+                            </Tooltip>
+                        }
+                    </div>
                 </div>
-            </div>
 
+            }
             <svg style={{ position: 'absolute', width: 0, height: 0 }}>
                 <defs>
                     <CardinalityMarker type="one" direction="start" />

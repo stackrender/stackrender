@@ -130,3 +130,8 @@ svg.text-icon:hover {
 .dark .bg-background-50 { 
     background-color:  red !important;
 }
+
+
+.database-checkbox[data-selected="true"]{ 
+  border  : 1.5px solid hsl(var(--heroui-primary-300));
+}

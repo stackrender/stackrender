@@ -1,8 +1,10 @@
 
 import { useTheme } from "next-themes";
 import DropdownMenu, { MenuDropdownProps } from "./menu-dropdown";
-import React, { useMemo } from "react"; 
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useModal } from "@/providers/modal-provider/modal-provider";
+import { Modals } from "@/providers/modal-provider/modal-contxet";
 
 
 
@@ -20,12 +22,23 @@ const Menu: React.FC<MenuProps> = ({ }) => {
     const { setTheme } = useTheme()
 
     const { t } = useTranslation();
+    const { open } = useModal();
     const menu: MenuDropdownProps[] = useMemo(() => [
         {
             title: t("menu.file"),
             children: [
-                { title: t("menu.new") },
-                { title: t("menu.open"), shortcut: "Ctnl + O" },
+                {
+                    title: t("menu.new"),
+                    clickHandler: () => {
+                        open(Modals.CREATE_DATABASE)
+                    }
+
+                },
+                {
+                    title: t("menu.open"), shortcut: "Ctnl + O", clickHandler: () => {
+                        open(Modals.OPEN_DATABASE)
+                    }
+                },
                 { title: t("menu.save"), shortcut: "Ctnl + S", divide: true },
                 {
                     title: t("menu.import"),

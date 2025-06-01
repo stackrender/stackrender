@@ -22,7 +22,7 @@ export default {
 
     },
     themes: {
- 
+
       dark: {
 
         colors: {
@@ -39,8 +39,9 @@ export default {
             DEFAULT: "#cecfd2"
           },
           content1: {
-            DEFAULT: "#282d34"
+            DEFAULT: "#1c2026"
           },
+ 
           default: {
             50: '#f2f3f5',
             100: '#d6d7db',

@@ -1,5 +1,5 @@
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import {
     Modal as HeroUiModal,
     ModalContent,
@@ -20,20 +20,24 @@ export interface ModalProps {
     title: string,
     children: ReactNode,
     actionName?: string,
-    actionHandler?: () => void , 
-    isDisabled? : boolean  
+    actionHandler?: () => void,
+    isDisabled?: boolean,
+    header?: string
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop = "opaque", title, children, actionName = "Action" , actionHandler , isDisabled}) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop = "opaque", title, children, actionName = "Action", header, actionHandler, isDisabled }) => {
 
 
     const targetRef = React.useRef(null);
     const { moveProps } = useDraggable({ targetRef, canOverflow: true, isDisabled: !isOpen });
+    const [isLoading , setIsLoading] = useState<boolean>( false ) ; 
 
-    const {t} = useTranslation() ; 
+    const { t } = useTranslation();
 
-    const handleAction = (onClose: () => void) => {
-        actionHandler && actionHandler() ; 
+    const handleAction = async (onClose: () => void) => {
+        setIsLoading( true)
+        actionHandler && await  actionHandler();
+        setIsLoading( false) ; 
         onClose()
     }
     return (
@@ -44,13 +48,20 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
             className={className}
             backdrop={backdrop}
             radius="sm"
-            
+
         >
             <ModalContent>
                 {(onClose) => (
                     <>
-                        <ModalHeader {...moveProps} className="flex flex-row gap-1" >
+                        <ModalHeader {...moveProps} className=" flex flex-col gap-1" >
+
                             {title}
+                            {
+                                header &&
+                                <p className="text-sm text-font/70 block">
+                                    {header}
+                                </p>
+                            }
                         </ModalHeader>
                         <ModalBody>
                             {children}
@@ -58,9 +69,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
                         <ModalFooter>
                             <div className="flex  w-full justify-between">
                                 <Button color="danger" variant="light" onPress={onClose} size="sm">
-                                    {t("modal.close")}
+                                    {t("modals.close")}
                                 </Button>
-                                <Button color="primary" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled}>
+                                <Button color="primary" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
                                     {actionName}
                                 </Button>
                             </div>
