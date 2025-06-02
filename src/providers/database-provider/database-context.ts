@@ -15,8 +15,10 @@ import { createContext } from "react";
 interface DatabaseDataContextType {
 
     database: DatabaseType,
-    databases  : DatabaseType[] , 
+    currentDatabaseId: string | undefined,
+    databases: DatabaseType[],
     isLoading: boolean,
+    isSwitchingDatabase: boolean,
     getField: (tableId: string, id: string) => FieldType | undefined,
 
 }
@@ -27,14 +29,14 @@ interface DatabaseOperationsContextType {
     // database operations 
     createDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,
     editDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,
-    deleteDatabase : ( id : string) => Promise<void> ,
-    setCurrentDatabaseId : ( id : string) => void ,  
+    deleteDatabase: (id: string) => Promise<void>,
+    switchDatabase: (databaseId: string) => void,
 
     createTable: (table: TableInsertType) => Promise<void>,
     editTable: (table: TableInsertType) => Promise<QueryResult>,
     deleteTable: (id: string) => Promise<void>,
     updateTablePositions: (tables: TableInsertType[]) => Promise<void>,
-    deleteMultiTables: (ids: string[]) => Promise<QueryResult>
+    deleteMultiTables: (ids: string[]) => Promise<void>
     // field operations
     createField: (field: FieldInsertType) => Promise<QueryResult>,
     editField: (field: FieldInsertType) => Promise<QueryResult>,

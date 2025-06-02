@@ -10,6 +10,7 @@ import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
 import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { useReactFlow  } from "@xyflow/react";
+import { randomColor } from "@/lib/colors";
 
 
 interface Props { }
@@ -45,6 +46,7 @@ const TablesController: React.FC<Props> = ({ }) => {
             name: `table_${tables.length + 1}`,
             posX,
             posY,
+      
             fields: [{
                 id: v4(),
                 name: "id",

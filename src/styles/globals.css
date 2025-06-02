@@ -1,5 +1,3 @@
-
-
 .react-flow__attribution {
   display: none;
 }
@@ -121,17 +119,58 @@ div[data-slot="content"] hr[role="separator"] {
 }
 
 svg.text-icon:hover {
- 
-  color : #333639
+
+  color: #333639
 }
 
 
 
-.dark .bg-background-50 { 
-    background-color:  red !important;
+.dark .bg-background-50 {
+  background-color: red !important;
 }
 
 
-.database-checkbox[data-selected="true"]{ 
-  border  : 1.5px solid hsl(var(--heroui-primary-300));
+.database-checkbox[data-selected="true"] {
+  border: 1.5px solid hsl(var(--heroui-primary-300));
+}
+
+
+
+thead[role="rowgroup"] th {
+  border-radius: 0px !important;
+
+}
+
+thead[role="rowgroup"] th:last-child {
+  border-radius: 0px 4px 4px 0px !important;
+
+}
+
+thead[role="rowgroup"] th:first-child {
+  border-radius: 4px 0px 0px 4px !important;
+
+}
+
+
+
+
+tbody[role="rowgroup"] tr td::before {
+
+  display: none;
+}
+
+
+tbody[role="rowgroup"] tr td {
+  border-radius: 0px;
+}
+
+
+tbody[role="rowgroup"] tr td:last-child {
+  border-radius: 0px 4px 4px 0px !important;
+
+}
+
+tbody[role="rowgroup"] tr td:first-child {
+  border-radius: 4px 0px 0px 4px !important;
+
 }

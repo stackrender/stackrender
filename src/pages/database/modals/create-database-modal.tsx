@@ -14,7 +14,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange
     const { t } = useTranslation();
     const [selectedDbType, setSelectedDbType] = useState<string[]>([DBTypes[0].dialect]);
     const [dbName, setDbName] = useState<string>("db_example");
-    const { createDatabase, setCurrentDatabaseId } = useDatabaseOperations();
+    const { createDatabase, switchDatabase } = useDatabaseOperations();
 
     const onDatabaseTypeChange = (types: string[]) => {
         const selectedType: string | undefined = types.pop();
@@ -31,7 +31,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange
                 name: dbName,
                 dialect: selectedDbType[0] as any
             });
-            setCurrentDatabaseId(databaseId);
+            switchDatabase(databaseId);
             res(databaseId)
         })
 

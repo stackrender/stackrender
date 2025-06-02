@@ -15,14 +15,15 @@ import { useTranslation } from "react-i18next";
 const OpenDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
 
     const { t } = useTranslation();
-    const { databases } = useDatabase();
-    const { setCurrentDatabaseId } = useDatabaseOperations();
-    const [selectedDatabase, setSelectedDatabase] = useState<any | undefined>(undefined);
+    const { databases , currentDatabaseId} = useDatabase();
+    const { switchDatabase  } = useDatabaseOperations();
+    const [selectedDatabase, setSelectedDatabase] = useState<any | undefined>(
+        (() => currentDatabaseId ? new Set([currentDatabaseId]) : undefined)
+    );
+ 
     const openDatabase = () => {
-        setCurrentDatabaseId( selectedDatabase.currentKey)
+        switchDatabase( selectedDatabase.currentKey)
     }
-
-
 
     return (
         <Modal
@@ -44,11 +45,13 @@ const OpenDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
                 selectedKeys={selectedDatabase}
                 onSelectionChange={setSelectedDatabase}
                 classNames={{
-                    wrapper: "min-h-[360px]  shadow-none border-1 border-divider border-sm"
+                    wrapper: "min-h-[360px]  shadow-none border-1  border-divider  rounded-sm"  , 
+                    th : "dark:bg-background" , 
+                    tr : "hover:bg-default-100 dark:hover:bg-background rounded-lg cursor-pointer text-font/90 transition-colors duration-200 "
                 }}
             >
-                <TableHeader>
-                    <TableColumn>Dialect</TableColumn>
+                <TableHeader className="rounded-sm">
+                    <TableColumn >Dialect</TableColumn>
                     <TableColumn>Name</TableColumn>
                     <TableColumn>Created at</TableColumn>
                     <TableColumn>Tables</TableColumn>
@@ -63,7 +66,7 @@ const OpenDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
                                         width={24}
                                     />
                                 </TableCell>
-                                <TableCell>{database.name}</TableCell>
+                                <TableCell className="font-semibold">{database.name}</TableCell>
                                 <TableCell>{
                                     new Date(database.createdAt as string).toLocaleString("en-US")
                                 }</TableCell>

@@ -4,12 +4,12 @@ import { Node, useReactFlow } from "@xyflow/react";
 import { useEffect } from "react";
 import { getDefaultTableOverlapping } from "@/utils/tables";
 import hash from "object-hash"; 
+import { useDatabase } from "@/providers/database-provider/database-provider";
 
 
 export const useTableToNode = (tables: TableType[]): void => {
     const { setNodes } = useReactFlow(); 
-
-
+ 
     useEffect(() => {
 
         const tableNodes = tables.map((table: TableType) => {
@@ -33,7 +33,7 @@ export const useTableToNode = (tables: TableType[]): void => {
         })
 
         setNodes((nodes) => {
-
+  
             return tableNodes.map((tableNode) => {
                 const node: Node | undefined = nodes.find((node: Node) => node.id == tableNode.id);
                 if (!node)
