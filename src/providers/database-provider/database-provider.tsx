@@ -15,13 +15,13 @@ import { getTimestamp } from "@/utils/utils";
 import { IndexInsertType, indices } from "@/lib/schemas/index-schema";
 import { field_indices } from "@/lib/schemas/field_index-schema";
 import { v4 } from "uuid";
-import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
+
 
 interface Props { children: React.ReactNode }
 
 const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
-    const [currentDatabaseId, setCurrentDatabaseId] = useState<string | undefined>(undefined);
+    const [currentDatabaseId, setCurrentDatabaseId] = useState<string | undefined>(localStorage.getItem("database_id") as string | undefined);
 
     // Fetch all databases
     const { data: databases, isLoading: loadingDatabases } = useQuery(toCompilableQuery(
@@ -71,9 +71,12 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     );
 
 
-    const switchDatabase = useCallback((databaseId: string) => {
+    const switchDatabase = useCallback((databaseId: string | undefined) => {
         setCurrentDatabaseId(databaseId);
-        localStorage.setItem("database_id", databaseId);
+        if (databaseId)
+            localStorage.setItem("database_id", databaseId);
+        else
+            localStorage.removeItem("database_id")
     }, [])
 
     // Normalize result to single object
@@ -111,12 +114,12 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
     const updateDbNumTables = useCallback(async (databaseId: string, tx: any) => {
 
-        const [{ count : numOfTables  }] = await tx
+        const [{ count: numOfTables }] = await tx
             .select({ count: count() })
             .from(tables)
             .where(eq(tables.databaseId, databaseId))
 
-        console.log (numOfTables)
+        console.log(numOfTables)
         await tx.update(databaseModel).set({
             numOfTables
         }).where(eq(databaseModel.id, databaseId))
@@ -132,9 +135,6 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                     databaseId: currentDatabaseId,
                     createdAt: table.createdAt || getTimestamp()
                 });
-
-
-
                 await updateDbNumTables(currentDatabaseId, tx);
                 if (table.fields) {
                     await tx.insert(fields).values(
@@ -279,7 +279,14 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         try {
             await db.transaction(async (tx) => {
                 for (const operation of operations) {
-                    if (operation.type == "CREATE_TABLE") {
+
+                    if ( operation.type == "RENAME_DATABASE") {  
+                        currentDatabaseId && await tx.update(databaseModel).set({
+                            name : operation.chnages.name  
+                        }).where(eq(databaseModel.id , currentDatabaseId)) ; 
+                    }
+
+                    else if (operation.type == "CREATE_TABLE") {
                         await tx.insert(tables).values(operation.table);
                         currentDatabaseId && await updateDbNumTables(currentDatabaseId, tx);
                         if (operation.table.fields && Object.values(operation.table.fields).length > 0)
@@ -393,7 +400,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         <DatabaseDataContext.Provider value={{
 
             database: database as unknown as DatabaseType,
-            currentDatabaseId , 
+            currentDatabaseId,
             databases: databases as DatabaseType[],
             isLoading,
             isSwitchingDatabase,

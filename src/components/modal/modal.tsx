@@ -22,22 +22,23 @@ export interface ModalProps {
     actionName?: string,
     actionHandler?: () => void,
     isDisabled?: boolean,
-    header?: string
+    header?: string,
+    variant?: "default" | "danger"
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop = "opaque", title, children, actionName = "Action", header, actionHandler, isDisabled }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop = "opaque", title, children, actionName = "Action", header, actionHandler, isDisabled, variant = "default" }) => {
 
 
     const targetRef = React.useRef(null);
     const { moveProps } = useDraggable({ targetRef, canOverflow: true, isDisabled: !isOpen });
-    const [isLoading , setIsLoading] = useState<boolean>( false ) ; 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { t } = useTranslation();
 
     const handleAction = async (onClose: () => void) => {
-        setIsLoading( true)
-        actionHandler && await  actionHandler();
-        setIsLoading( false) ; 
+        setIsLoading(true)
+        actionHandler && await actionHandler();
+        setIsLoading(false);
         onClose()
     }
     return (
@@ -68,12 +69,29 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
                         </ModalBody>
                         <ModalFooter>
                             <div className="flex  w-full justify-between">
-                                <Button color="danger" variant="light" onPress={onClose} size="sm">
-                                    {t("modals.close")}
-                                </Button>
-                                <Button color="primary" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
-                                    {actionName}
-                                </Button>
+                                {
+                                    variant == "default" &&
+                                    <>
+                                        <Button color="danger" variant="light" onPress={onClose} size="sm">
+                                            {t("modals.close")}
+                                        </Button>
+                                        <Button color="primary" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
+                                            {actionName}
+                                        </Button>
+                                    </>
+                                }
+                                {
+                                    variant == "danger" &&
+                                    <>
+                                        <Button color="default" variant="light" onPress={onClose} size="sm">
+                                            {t("modals.close")}
+                                        </Button>
+                                        <Button color="danger" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
+                                            {actionName}
+                                        </Button>
+                                    </>
+
+                                }
                             </div>
                         </ModalFooter>
                     </>

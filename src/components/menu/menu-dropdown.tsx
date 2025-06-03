@@ -45,18 +45,19 @@ const DropdownMenu: React.FC<MenuDropdownProps> = ({ title, children,  clickHand
 
                     <DropdownItem
                         key={child.title as string}
-                        className={child.theme == "danger" ? "text-danger" : ""}
+
                         color={child.theme}
                         shortcut={child.shortcut}
                         classNames={{
                             shortcut : "dark:border-font/10"
                         }}
+                        className="text-font/90"
                         onPressEnd={ child.clickHandler }
                     > 
                         {
                         
                             !child.children ?
-                                <div className="text-font/90">
+                                <div >
                                     {child.title}
                                     {
                                         child.divide &&

@@ -12,6 +12,9 @@ export const en = {
         color_picker: {
             default_color: "Default color"
         },
+        navbar :  {
+            rename_db : "Rename database" , 
+        } , 
         db_controller: {
             filter: "Filter",
             add_table: "Add Table",
@@ -116,6 +119,7 @@ export const en = {
             show_docs: "Show Docs",
             join_discord: "Join Discord",
 
+
         },
 
         modals: {
@@ -128,7 +132,10 @@ export const en = {
             continue : "Continue" , 
             open : "Open" , 
             open_database : "Open Database" , 
-            open_database_header : "Open a database by selecting one from the list."
+            open_database_header : "Open a database by selecting one from the list." , 
+            delete_database : "Delete Database" , 
+            delete_database_content : "This action is irreversible and will permanently remove the diagram." , 
+            delete : "Delete"
         }
 
     }

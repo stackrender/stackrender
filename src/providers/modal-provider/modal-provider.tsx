@@ -6,6 +6,7 @@ import { useDisclosure } from "@heroui/react";
 import CreateRelationshipModal from "@/pages/database/modals/create-relationship-modal";
 import { CreateDatabaseModal } from "@/pages/database/modals/create-database-modal";
 import OpenDatabaseModal from "@/pages/database/modals/open-database-modal";
+import DeleteDatabaseModal from "@/pages/database/modals/delete-database-modal";
 
 
 interface Props { children: React.ReactNode }
@@ -46,10 +47,13 @@ export const ModalProvider: React.FC<Props> = ({ children }) => {
                     <CreateRelationshipModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
                     ||
                     currentModal.modal == Modals.CREATE_DATABASE &&
-                    <CreateDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />  
+                    <CreateDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
                     ||
                     currentModal.modal == Modals.OPEN_DATABASE &&
                     <OpenDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
+                    ||
+                    currentModal.modal == Modals.DELETE_DATABASE &&
+                    <DeleteDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
                 ) : undefined
             }
             {children}

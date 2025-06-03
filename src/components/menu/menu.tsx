@@ -59,7 +59,11 @@ const Menu: React.FC<MenuProps> = ({ }) => {
                     ],
                 },
                 { title: t("menu.export_orm_models"), divide: true },
-                { title: t("menu.delete_project"), theme: "danger" },
+                {
+                    title: t("menu.delete_project"), theme: "danger", clickHandler: () => {
+                        open(Modals.DELETE_DATABASE)
+                    }
+                },
             ],
         },
         {

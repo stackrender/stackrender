@@ -2,6 +2,7 @@
 
 import Menu from "../menu/menu"; 
 import ConnectionStatus from "./connection-status";
+import RenameDatabase from "./rename-database";
 
 interface Props {
 
@@ -23,9 +24,12 @@ const Navbar: React.FC<Props> = ({ }) => {
             />
             <h3 className="font-semibold ml-2 text-slate-900 text-sm dark:text-white">StackRender</h3>
             <div className="ml-4  w-full">
-                <div className="flex w-full justify-between">
+                <div className="flex w-full justify-between items-center">
 
                     <Menu />
+                    <div className=" w-full h-full flex items-center justify-center">
+                        <RenameDatabase/>
+                    </div>
                     <ConnectionStatus />
 
                 </div>

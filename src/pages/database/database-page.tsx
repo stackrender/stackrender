@@ -205,7 +205,7 @@ const DatabasePage: React.FC = () => {
                             />
                         </Controls >
 
-                        <Background className=" dark:bg-background-100" />
+                        <Background className="bg-default/10 dark:bg-background-100" />
                     </ReactFlow>
                     <div
                         className="absolute left-[24px] bottom-[24px] "

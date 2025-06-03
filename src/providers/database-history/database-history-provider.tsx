@@ -54,6 +54,7 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
         const normalizedPresent = normalizeDatabase(datatbaseState.present);
         const differences = compare(normalizedDatabase, normalizedPresent);
 
+        
         if (differences && differences.length > 0) {
             setIsProcessing(true);
 

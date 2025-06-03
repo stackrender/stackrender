@@ -1,5 +1,5 @@
 // Importing types from schema definitions
-import { DatabaseType } from "@/lib/schemas/database-schema";
+import { DatabaseInsertType, DatabaseType } from "@/lib/schemas/database-schema";
 import { FieldType } from "@/lib/schemas/field-schema";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
 import { TableType } from "@/lib/schemas/table-schema";
@@ -9,6 +9,7 @@ import { FieldIndexType } from "@/lib/schemas/field_index-schema";
 
 // Define the possible operations that can be performed when diffing databases
 export type DBDiffOperation =
+    | { type: "RENAME_DATABASE", chnages: DatabaseInsertType }
     | { type: 'CREATE_TABLE'; table: TableType }
     | { type: 'DELETE_TABLE'; tableId: string }
     | { type: 'UPDATE_TABLE'; tableId: string; changes: Partial<TableType> }
@@ -53,8 +54,12 @@ export function mapDiffToDBDiffOperation(patch: any[]): DBDiffOperation[] {
     for (const op of patch) {
         const parts = op.path.split('/').filter(Boolean); // Split JSON path into parts
 
+        if (op.op == "replace" && parts[0] == "name") {
+            operations.push({ type: "RENAME_DATABASE", chnages: { name: op.value } as DatabaseInsertType })
+        }
+
         // Handle table-related changes
-        if (parts[0] == "tables") {
+        else if (parts[0] == "tables") {
             const tableId = parts[1];
 
             // Whole table operations (add/delete table)

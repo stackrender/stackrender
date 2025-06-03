@@ -30,7 +30,7 @@ interface DatabaseOperationsContextType {
     createDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,
     editDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,
     deleteDatabase: (id: string) => Promise<void>,
-    switchDatabase: (databaseId: string) => void,
+    switchDatabase: (databaseId: string | undefined ) => void,
 
     createTable: (table: TableInsertType) => Promise<void>,
     editTable: (table: TableInsertType) => Promise<QueryResult>,
