@@ -37,8 +37,8 @@ import useHighlightedEdges from "@/hooks/use-highlighted-edges";
 import { useTranslation } from "react-i18next";
 import useOverlappingTables from "@/hooks/use-overlapping-tables";
 import { useTheme } from "next-themes";
-
-
+import { Parser } from "node-sql-parser";
+const parser = new Parser();
 const DatabasePage: React.FC = () => {
 
     const { t } = useTranslation();
@@ -55,7 +55,7 @@ const DatabasePage: React.FC = () => {
     const { setIsConnectionInProgress } = useDiagramOps();
 
     // Destructure tables and relationships from database
-    const { tables, relationships  } = database;
+    const { tables, relationships } = database;
 
     // Hook to allow zooming and centering the diagram
     const { fitView } = useReactFlow();
@@ -63,7 +63,7 @@ const DatabasePage: React.FC = () => {
     // Define custom node and edge types
     const nodeTypes = useMemo(() => ({ table: Table }), []);
     const edgeTypes = useMemo(() => ({ 'relationship-edge': Relationship }), []);
- 
+
     // Called when a connection is made between fields
     const onConnect = useCallback((connection: Connection) => {
         const sourceFieldId: string | undefined = (connection.sourceHandle as string).split("_").pop();
@@ -113,11 +113,11 @@ const DatabasePage: React.FC = () => {
             } as TableInsertType)));
 
         // Delete tables if removed
-        if (nodeRemoveChanges.length > 0 ) {
+        if (nodeRemoveChanges.length > 0) {
             deleteMultiTables(nodeRemoveChanges.map((change: NodeRemoveChange) => change.id));
         }
         return onNodesChange(changes);
-    }, [onNodesChange ]);
+    }, [onNodesChange]);
 
     // Called when edges (relationships) change
     const handleEdgeChanges: OnEdgesChange<any> = useCallback((changes: EdgeChange<any>[]) => {
@@ -159,7 +159,6 @@ const DatabasePage: React.FC = () => {
     useRelationshipToEdge(relationships);
     useHighlightedEdges(nodes, relationships, edges);
     const { isOverlapping, puls } = useOverlappingTables(tables);
-
 
     return (
 
@@ -205,7 +204,7 @@ const DatabasePage: React.FC = () => {
                             />
                         </Controls >
 
-                        <Background className="bg-default/10 dark:bg-background-100" />
+                        <Background className=" dark:bg-background-100" />
                     </ReactFlow>
                     <div
                         className="absolute left-[24px] bottom-[24px] "

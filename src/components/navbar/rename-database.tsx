@@ -11,7 +11,7 @@ import { Save } from "lucide-react";
 const RenameDatabase: React.FC = ({ }) => {
     const { database } = useDatabase();
     const { editDatabase } = useDatabaseOperations();
-    const [editMode, setEditMode] = useState<boolean>(true);
+    const [editMode, setEditMode] = useState<boolean>(false);
     const [dbName, setDbName] = useState<string>(database.name);
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -72,7 +72,6 @@ const RenameDatabase: React.FC = ({ }) => {
                         placeholder={database.name}
                         type="text"
                         size="sm"
-                        autoFocus
                         radius="sm"
                         variant="faded"
                         onChange={(event: any) => setDbName(event.target.value)}

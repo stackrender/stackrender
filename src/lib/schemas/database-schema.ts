@@ -11,7 +11,7 @@ export const databases = sqliteTable('databases', {
         .unique(),
     name: text('name').notNull(),
     dialect: text("dialect", {
-        enum: ["postgres", "mysql", "sqlite"],
+        enum: ["postgres", "mysql", "sqlite" , "mariadb"],
     }).notNull().default("postgres"),
 
     numOfTables: integer("numOfTables")

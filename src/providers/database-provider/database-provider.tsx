@@ -15,6 +15,7 @@ import { getTimestamp } from "@/utils/utils";
 import { IndexInsertType, indices } from "@/lib/schemas/index-schema";
 import { field_indices } from "@/lib/schemas/field_index-schema";
 import { v4 } from "uuid";
+import { DataType } from "@/lib/schemas/data-type-schema";
 
 
 interface Props { children: React.ReactNode }
@@ -28,10 +29,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         db.query.databases.findMany()
     ));
 
-    // Fetch all data types
-    const { data: data_types, isLoading: loadingDataTypes } = useQuery(toCompilableQuery(
-        db.query.data_types.findMany()
-    ));
+
 
     // Fetch the current database with nested tables, fields, and relationships
     let { data: database, isLoading: loadingCurrentDatabase, isFetching } = useQuery(
@@ -69,7 +67,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             })
         )
     );
-
+  
 
     const switchDatabase = useCallback((databaseId: string | undefined) => {
         setCurrentDatabaseId(databaseId);
@@ -83,6 +81,13 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     if (database.length == 1)
         database = database[0] as any;
 
+  // Fetch all data types
+    const { data: data_types, isLoading: loadingDataTypes } = useQuery(toCompilableQuery(
+        db.query.data_types.findMany({
+            where : (data_types , { eq })=> eq(data_types.dialect, (database as any).dialect)
+        })
+    ));
+    
     // Auto-select first database if none is selected
     useEffect(() => {
         if (databases.length > 0 && !currentDatabaseId) {
@@ -119,7 +124,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             .from(tables)
             .where(eq(tables.databaseId, databaseId))
 
-        console.log(numOfTables)
+ 
         await tx.update(databaseModel).set({
             numOfTables
         }).where(eq(databaseModel.id, databaseId))
@@ -346,6 +351,11 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         }
     }, [db, currentDatabaseId]);
 
+
+    const getDefaultPrimaryKeyType = useCallback(() => {
+        return data_types.find((dataType : DataType) => dataType.name == "bigint" )
+    } , [data_types ]) ;  
+
     const databaseOpsValue = useMemo(() => ({
 
         createDatabase,
@@ -404,8 +414,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             databases: databases as DatabaseType[],
             isLoading,
             isSwitchingDatabase,
-
-
+            getDefaultPrimaryKeyType ,
             getField,
         }}>
             <DatabaseOperationsContext.Provider value={databaseOpsValue}>

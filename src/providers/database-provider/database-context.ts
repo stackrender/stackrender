@@ -20,6 +20,7 @@ interface DatabaseDataContextType {
     isLoading: boolean,
     isSwitchingDatabase: boolean,
     getField: (tableId: string, id: string) => FieldType | undefined,
+    getDefaultPrimaryKeyType : () => DataType | undefined  
 
 }
 

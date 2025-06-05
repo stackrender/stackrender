@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip"
 import { Accordion, AccordionItem, Button, Input } from "@heroui/react"
-import {  Code, List, Table } from "lucide-react"
+import { Code, List, Table } from "lucide-react"
 import { useTranslation } from "react-i18next";
 import { Ref, useCallback, useEffect, useRef, useState } from "react";
 import TableAccordionHeader from "./table-accordion-item/table-accordion-header";
@@ -9,8 +9,10 @@ import { useDatabase, useDatabaseOperations } from "@/providers/database-provide
 import { TableInsertType, TableType } from "@/lib/schemas/table-schema";
 import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
-import { useReactFlow  } from "@xyflow/react";
-import { randomColor } from "@/lib/colors";
+import { useReactFlow } from "@xyflow/react";
+import SqlPreview from "../sql-preview";
+
+
 
 
 interface Props { }
@@ -19,14 +21,15 @@ const PADDING_Y = 80;
 
 const TablesController: React.FC<Props> = ({ }) => {
 
-    const { database } = useDatabase();
-    const { createTable } = useDatabaseOperations();
+    const { database, getDefaultPrimaryKeyType } = useDatabase();
+    const { createTable, data_types } = useDatabaseOperations();
     const { getViewport } = useReactFlow();
     const { tables: allTables } = database;
     const [tables, setTables] = useState<TableType[]>(allTables);
 
     const { t } = useTranslation();
     const [selectedTable, setSelectedTable] = useState(new Set([]));
+    const [showSqlPreview, setShowSqlPreview] = useState<boolean>(false);
     const { focusedTableId } = useDiagram();
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
@@ -46,17 +49,19 @@ const TablesController: React.FC<Props> = ({ }) => {
             name: `table_${tables.length + 1}`,
             posX,
             posY,
-      
+
             fields: [{
                 id: v4(),
                 name: "id",
                 isPrimary: true,
-                unique: true
+                unique: true,
+                typeId: getDefaultPrimaryKeyType()?.id
+
             }]
         } as TableInsertType);
 
         setSelectedTable(new Set([newTableId]) as any);
-    }, [tables, getViewport]);
+    }, [tables, getViewport, getDefaultPrimaryKeyType]);
 
 
     useEffect(() => {
@@ -71,7 +76,17 @@ const TablesController: React.FC<Props> = ({ }) => {
         const keyword = nameRef.current?.value;
         if (keyword !== undefined)
             setTables(() => allTables.filter((table: TableType) => table.name.toLowerCase().trim().includes(keyword?.toLowerCase().trim())))
-    }, [nameRef, allTables])
+    }, [nameRef, allTables]);
+
+
+
+    const toggleSqlPreview = useCallback(() => {
+        setShowSqlPreview(preview => !preview);
+    }, [])
+
+
+
+
 
     return (
         <div className="w-full h-full flex flex-col gap-2">
@@ -84,12 +99,9 @@ const TablesController: React.FC<Props> = ({ }) => {
                                     variant="light"
                                     className="size-8 p-0 text-icon hover:text-font/90"
                                     isIconOnly
-                                    onPress={() =>
-                                        //setShowDBML((value) => !value)
-                                        console.log("hello world ")
-                                    }
+                                    onPressEnd={toggleSqlPreview}
                                 >
-                                    {false ? (
+                                    {showSqlPreview ? (
                                         <List className="size-4" />
                                     ) : (
                                         <Code className="size-4" />
@@ -108,15 +120,15 @@ const TablesController: React.FC<Props> = ({ }) => {
                         type="text"
                         size="sm"
                         autoFocus
-                        radius="sm" 
+                        radius="sm"
                         variant="faded"
                         placeholder={t("db_controller.filter")}
                         className="h-8 w-full focus-visible:ring-0 shadow-none "
                         classNames={{
-                            inputWrapper : "dark:bg-default border-divider group-hover:border-primary " , 
+                            inputWrapper: "dark:bg-default border-divider group-hover:border-primary ",
                         }}
                         onKeyUp={searchTables}
-                   
+
                     />
                 </div>
                 <Button
@@ -132,37 +144,43 @@ const TablesController: React.FC<Props> = ({ }) => {
                 >  {t("db_controller.add_table")}
                 </Button>
             </div>
-            <div className=" flex-1 overflow-auto">
+            {
+                !showSqlPreview &&
+                <div className=" flex-1 overflow-auto">
 
-                <Accordion
-                    hideIndicator
-                    
-                    selectedKeys={selectedTable}
-                    onSelectionChange={setSelectedTable as any}
-                    isCompact
+                    <Accordion
+                        hideIndicator
 
-                >
-                    {tables.map((table: TableType) => (
-                        <AccordionItem
-                            key={table.id}
-                            aria-label={table.name}
-                            classNames={{
-                                trigger: "w-full h-12 hover:bg-default transition-all duration-200 dark:hover:bg-background",
-                                base: "rounded-md mb-1  mt-1 p-0 overflow-hidden  dark:border-background-100",
-                                content : "bg-transparent"
-                            }}
-                            subtitle={
-                                <TableAccordionHeader
-                                    isOpen={selectedTableId == table.id}
-                                    table={table}
-                                />
-                            }
-                        >
-                            <TableAccordionBody table={table} />
-                        </AccordionItem>
-                    ))}
-                </Accordion>
-            </div>
+                        selectedKeys={selectedTable}
+                        onSelectionChange={setSelectedTable as any}
+                        isCompact
+
+                    >
+                        {tables.map((table: TableType) => (
+                            <AccordionItem
+                                key={table.id}
+                                aria-label={table.name}
+                                classNames={{
+                                    trigger: "w-full h-12 hover:bg-default transition-all duration-200 dark:hover:bg-background",
+                                    base: "rounded-md mb-1  mt-1 p-0 overflow-hidden  dark:border-background-100",
+                                    content: "bg-transparent"
+                                }}
+                                subtitle={
+                                    <TableAccordionHeader
+                                        isOpen={selectedTableId == table.id}
+                                        table={table}
+                                    />
+                                }
+                            >
+                                <TableAccordionBody table={table} />
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                </div>
+            }
+            {
+                showSqlPreview && <SqlPreview/>
+            }
         </div>
     )
 }
@@ -172,5 +190,6 @@ const TablesController: React.FC<Props> = ({ }) => {
 
 
 export default TablesController
+
 
 
