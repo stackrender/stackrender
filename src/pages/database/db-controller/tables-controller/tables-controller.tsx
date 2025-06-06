@@ -79,14 +79,9 @@ const TablesController: React.FC<Props> = ({ }) => {
     }, [nameRef, allTables]);
 
 
-
     const toggleSqlPreview = useCallback(() => {
         setShowSqlPreview(preview => !preview);
     }, [])
-
-
-
-
 
     return (
         <div className="w-full h-full flex flex-col gap-2">
@@ -179,7 +174,11 @@ const TablesController: React.FC<Props> = ({ }) => {
                 </div>
             }
             {
-                showSqlPreview && <SqlPreview/>
+                showSqlPreview &&
+                <div className=" flex-1 overflow-auto ">
+                    <SqlPreview />
+
+                </div>
             }
         </div>
     )

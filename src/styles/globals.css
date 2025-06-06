@@ -174,3 +174,8 @@ tbody[role="rowgroup"] tr td:first-child {
   border-radius: 4px 0px 0px 4px !important;
 
 }
+
+.cm-editor  {
+  
+  min-width : 100% !important ; 
+}

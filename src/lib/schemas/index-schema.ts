@@ -4,7 +4,7 @@ import { sqliteTable, text, integer  } from 'drizzle-orm/sqlite-core';
 import { tables } from './table-schema';
 import { InferInsertModel, InferSelectModel, relations } from 'drizzle-orm';
 import { field_indices, FieldIndexInsertType, FieldIndexType } from './field_index-schema';
-import { fields } from './field-schema';
+import { fields, FieldType } from './field-schema';
 
 
 
@@ -32,7 +32,8 @@ export const indicesRlationships = relations(indices, ({ one, many }) => ({
 
 
 export interface IndexType extends InferSelectModel<typeof indices> {
-    fieldIndices: FieldIndexType[]
+    fieldIndices: FieldIndexType[] ; 
+    fields : FieldType[] ; 
 };
 export interface IndexInsertType extends InferInsertModel<typeof indices> {
     fieldIndices? : FieldIndexInsertType[]

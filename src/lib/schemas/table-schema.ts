@@ -1,7 +1,7 @@
 import { InferInsertModel, InferSelectModel, relations } from 'drizzle-orm';
 import { sqliteTable, text, real, integer } from 'drizzle-orm/sqlite-core';
 import { fields, FieldType } from './field-schema';
-import { relationships } from './relationship-schema';
+import { relationships, RelationshipType } from './relationship-schema';
 import { databases } from './database-schema';
 import { IndexType, indices } from './index-schema';
 
@@ -43,11 +43,14 @@ export const tablesRelations = relations(tables, ({ many, one }) => ({
 export interface TableType extends InferSelectModel<typeof tables> {
     fields: FieldType[];
     indices : IndexType[] ; 
+    
+    sourceRelations? :RelationshipType[] ; 
+    targetRelations? : RelationshipType[] ; 
+    
 };
 
 
 export interface TableInsertType extends InferInsertModel<typeof tables> {
     fields?: FieldType[];
-    
     
 }; 

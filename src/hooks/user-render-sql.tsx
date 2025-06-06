@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { Parser } from "node-sql-parser";
 import { DatabaseType } from "@/lib/schemas/database-schema";
+import { format } from 'sql-formatter';
 
 const parser = new Parser();
 
@@ -16,13 +17,14 @@ export const useRenderSql = (database: DatabaseType) => {
 
     useEffect(() => {
         const dbAst: any = DatabaseToAst(database, data_types);
+        const formattedSqlCode = format(parser.sqlify(dbAst), { language: 'sql' }); // or 'mysql', 'postgresql', etc.
         setSql(
-            parser.sqlify(dbAst)
+            formattedSqlCode
         );
 
-    }, [database]) ; 
+    }, [database]);
 
 
-    return sql ; 
+    return sql;
 
 }
