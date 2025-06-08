@@ -11,7 +11,7 @@ import { RelationshipInsertType, relationships } from "@/lib/schemas/relationshi
 import DatabaseHistoryProvider from "../database-history/database-history-provider";
 import { DBDiffOperation } from "@/utils/database";
 import { DatabaseInsertType, DatabaseType, databases as databaseModel } from "@/lib/schemas/database-schema";
-import { getTimestamp } from "@/utils/utils";
+import { getTimestamp, groupBy } from "@/utils/utils";
 import { IndexInsertType, indices } from "@/lib/schemas/index-schema";
 import { field_indices } from "@/lib/schemas/field_index-schema";
 import { v4 } from "uuid";
@@ -87,6 +87,12 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             where : (data_types , { eq })=> eq(data_types.dialect, (database as any).dialect)
         })
     ));
+
+    const grouped_data_types : any = useMemo(() => {
+        return groupBy(data_types , "type") ; 
+    } , [data_types])
+    
+    
     
     // Auto-select first database if none is selected
     useEffect(() => {
@@ -380,7 +386,8 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editIndex,
         deleteIndex,
         editFieldIndices,
-        data_types
+        data_types , 
+        grouped_data_types
     }), [
         createDatabase,
         editDatabase,
@@ -403,7 +410,8 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editIndex,
         deleteIndex,
         editFieldIndices,
-        data_types
+        data_types , 
+        grouped_data_types
     ]);
 
     return (

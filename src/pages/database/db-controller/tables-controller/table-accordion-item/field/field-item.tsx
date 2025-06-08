@@ -21,7 +21,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
     const [fieldName, setFieldName] = useState<string>(field.name);
 
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
-    const { data_types } = useDatabaseOperations();
+    const { data_types , grouped_data_types } = useDatabaseOperations();
     const { deleteField, editField } = useDatabaseOperations();
 
     const [note, setNote] = useState<string | undefined>(field.note as string | undefined);
@@ -109,9 +109,9 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                 }}
             />
             <Autocomplete
-                items={data_types}
+                items={grouped_data_types}
                 onSelectionChange={updateFieldType}
-
+                grouped 
                 selectedItem={selectedType}
                 placeholder={t("db_controller.type")}
             />

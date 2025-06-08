@@ -10,11 +10,11 @@ export interface DatabaseType {
 
 export const DBTypes: DatabaseType[] = [
     {
-        name: "PostgreSql",
+        name: "Postgresql",
         dialect: "postgres",
         logo: "/postgresql_logo.png"
     }, {
-        name: "Mysql",
+        name: "MySQL",
         dialect: "mysql",
         logo: "/mysql_logo.png"
     },

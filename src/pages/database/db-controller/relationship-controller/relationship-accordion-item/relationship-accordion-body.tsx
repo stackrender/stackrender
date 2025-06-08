@@ -2,18 +2,16 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 import { Cardinality, RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
+ 
 import { Button, Select, SelectItem, SharedSelection } from "@heroui/react";
 import { ChevronsLeftRightEllipsis, FileMinus2, FileOutput, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 
-
 interface RelationshipAccordionBodyProps {
     relationship: RelationshipType
 }
-
-
 
 const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ relationship }) => {
     const [cardinality, setCardinality] = useState(new Set([relationship.cardinality]));
@@ -21,15 +19,16 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
 
     const { t } = useTranslation();
 
-
-
     const changeCardinality = (keys: SharedSelection) => {
 
-        if (keys.anchorKey != relationship.cardinality)
+        if (keys.anchorKey != relationship.cardinality) {
+
             editRelationship({
                 id: relationship.id,
-                cardinality: keys.anchorKey as Cardinality
+                cardinality: keys.anchorKey as Cardinality,
+
             } as RelationshipInsertType);
+        }
 
         setCardinality(keys as any);
     }

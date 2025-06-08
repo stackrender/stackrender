@@ -11,23 +11,27 @@ import { Parser } from "node-sql-parser";
 const parser = new Parser();
 const code = `
 
--- Addresses table with a foreign key to users
-CREATE TABLE addresses (
-    id INTEGER PRIMARY KEY,
-    user_id INT NOT NULL,
-    street VARCHAR(255),
-    city VARCHAR(100),
-    state VARCHAR(100),
-    postal_code VARCHAR(20),
-    country VARCHAR(100),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+CREATE TABLE \`users\` (
+  id BIGINT NOT NULL PRIMARY KEY UNIQUE,
+  name VARCHAR(255) NOT NULL,
+  lastname VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  profile_url VARCHAR(255),
+  age SMALLINT,
+  birthday DATE,
+  created_at TIMESTAMP NOT NULL
 );
 
--- Indexes to improve lookup performance
-CREATE UNIQUE  INDEX idx_addresses_user_id ON addresses(user_id);
-CREATE INDEX idx_addresses_city ON addresses(city , country);
-
+CREATE TABLE \`addresses\` (
+  id BIGINT NOT NULL PRIMARY KEY UNIQUE,
+  street_line VARCHAR(255) NOT NULL,
+  latitude FLOAT,
+  longitude FLOAT, -- fixed spelling
+  state_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`)
+);
 
 `
 
@@ -40,7 +44,9 @@ const SqlPreview: React.FC = ({ }) => {
     const {resolvedTheme} = useTheme(); 
 
     useEffect(() => {
-        const ast = parser.astify(code )
+        const ast = parser.astify(code , {
+            database : "Mysql"
+        } )
         console.log (ast)
     }, [])
 

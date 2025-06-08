@@ -27,6 +27,7 @@ interface DatabaseDataContextType {
 
 interface DatabaseOperationsContextType {
     data_types: DataType[],
+    grouped_data_types : any ; 
     // database operations 
     createDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,
     editDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,

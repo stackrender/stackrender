@@ -20,7 +20,7 @@ import { TableInsertType } from "@/lib/schemas/table-schema";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useTableToNode } from "@/hooks/use-table-to-node";
 import { useRelationshipToEdge } from "@/hooks/use-relationship-to-edge";
-import { RelationshipInsertType } from "@/lib/schemas/relationship-schema";
+import { Cardinality, RelationshipInsertType } from "@/lib/schemas/relationship-schema";
 
 // Utils and constants
 import { v4 } from "uuid";
@@ -38,6 +38,8 @@ import { useTranslation } from "react-i18next";
 import useOverlappingTables from "@/hooks/use-overlapping-tables";
 import { useTheme } from "next-themes";
 import { Parser } from "node-sql-parser";
+import { getRelationshipSourceAndTarget } from "@/utils/relationship";
+
 const parser = new Parser();
 const DatabasePage: React.FC = () => {
 
@@ -65,25 +67,29 @@ const DatabasePage: React.FC = () => {
     const edgeTypes = useMemo(() => ({ 'relationship-edge': Relationship }), []);
 
     // Called when a connection is made between fields
-    const onConnect = useCallback((connection: Connection) => {
-        const sourceFieldId: string | undefined = (connection.sourceHandle as string).split("_").pop();
-        const targetFieldId: string = (connection.targetHandle as string).replace(TARGET_PREFIX, "");
+    const onConnect = useCallback(async (connection: Connection) => {
+        const sourceId: string | undefined = (connection.sourceHandle as string).split("_").pop();
+        const targetId: string = (connection.targetHandle as string).replace(TARGET_PREFIX, "");
 
-        const sourceField: FieldType | undefined = getField(connection.source, sourceFieldId as string);
-        const targetField: FieldType | undefined = getField(connection.target, targetFieldId);
+        const sourceField: FieldType = getField(connection.source, sourceId as string) as FieldType;
+        const targetField: FieldType = getField(connection.target, targetId) as FieldType;
+
+
+        const { sourceTableId, targetTableId, sourceFieldId, targetFieldId  } = getRelationshipSourceAndTarget(connection.source, sourceField, connection.target, targetField);
 
         // Check if both fields have the same type (valid relationship)
         if (sourceField?.typeId == targetField?.typeId) {
-            createRelationship({
+            await createRelationship({
                 id: v4(),
-                sourceTableId: connection.source,
-                targetTableId: connection.target,
+                sourceTableId,
+                targetTableId,
                 sourceFieldId,
-                targetFieldId
+                targetFieldId,
+  
             } as RelationshipInsertType);
 
             // Add edge to the diagram
-            setEdges((eds) => addEdge(connection, eds));
+            //setEdges((eds) => addEdge(connection, eds));
         } else {
             // Show error toast if invalid relationship
             addToast({

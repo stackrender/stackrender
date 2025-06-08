@@ -1,6 +1,6 @@
 import { FieldType } from "@/lib/schemas/field-schema";
 import { v4 } from "uuid";
- 
+
 
 
 
@@ -17,13 +17,13 @@ export const getNextSequence = (fields: FieldType[]): number => {
 
 
 
-export const cloneField = ( field : FieldType) : FieldType  => {
+export const cloneField = (field: FieldType): FieldType => {
     return {
-        ...field , 
-        id : v4() ,  
-    } as FieldType ; 
+        ...field,
+        id: v4(),
+    } as FieldType;
 }
 
 
 
- 
+

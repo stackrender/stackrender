@@ -9,6 +9,7 @@ export const data_types = sqliteTable('data_types', {
     dialect: text("dialect", {
         enum: ["postgres", "mysql", "sqlite", "mariadb"],
     }).notNull().default("postgres"),
+    type: text('type').notNull()
 });
 
 

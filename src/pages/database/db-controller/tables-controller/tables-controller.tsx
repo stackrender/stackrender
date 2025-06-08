@@ -12,9 +12,6 @@ import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { useReactFlow } from "@xyflow/react";
 import SqlPreview from "../sql-preview";
 
-
-
-
 interface Props { }
 const PADDING_X = 40;
 const PADDING_Y = 80;
