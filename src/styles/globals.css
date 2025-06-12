@@ -175,7 +175,35 @@ tbody[role="rowgroup"] tr td:first-child {
 
 }
 
-.cm-editor  {
+.cm-editor {
+
+  min-width: 100% !important;
+}
+
+
+.cm-scroller::-webkit-scrollbar {
+  height: 6px;
+}
+
+button[data-testid="remove"] {
+
+  top : 1px ;
+  position: relative;
+}
+
+button[data-testid="remove"]:after {
+  content: '×' ; 
+  color : white; 
+  font-size : 11px   ;   
+  position: relative;
+  top: -2px ; 
   
-  min-width : 100% !important ; 
+
+}
+button[data-testid="remove"] svg {
+
+  
+
+  display: none ;  
+
 }

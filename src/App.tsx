@@ -8,7 +8,7 @@ import { SyncProvider } from "./providers/sync-provider/sync-provider";
 import DatabaseProvider from "./providers/database-provider/database-provider";
 import DiagramProvider from "./providers/diagram-provider/diagram-provider";
 
-import {  ToastProvider } from "@heroui/react";
+import { ToastProvider } from "@heroui/react";
 import { ModalProvider } from "./providers/modal-provider/modal-provider";
 
 
@@ -19,7 +19,6 @@ function App() {
   return (
     <>
       <ToastProvider placement="bottom-right" />
-
       <SyncProvider>
         <ReactFlowProvider>
           <DatabaseProvider>

@@ -26,7 +26,7 @@ const RelationshipController: React.FC = ({ }) => {
     
     const { open } = useModal();
     const { database } = useDatabase();
-    const { relationships: allRelationships } = database;
+    const { relationships: allRelationships } = database || { relationships : []};
     const [relationships, setRelationships] = useState<RelationshipType[]>(allRelationships);
 
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
@@ -108,7 +108,7 @@ const RelationshipController: React.FC = ({ }) => {
                         className="h-8 w-full focus-visible:ring-0 shadow-none "
                         onKeyUp={searchRelationships}
                         classNames={{
-                            inputWrapper: "dark:bg-default border-divider group-hover:border-primary ",
+                            inputWrapper: "dark:bg-default   group-hover:border-primary ",
                         }}
 
                     />

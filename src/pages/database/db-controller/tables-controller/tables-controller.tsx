@@ -21,7 +21,7 @@ const TablesController: React.FC<Props> = ({ }) => {
     const { database, getDefaultPrimaryKeyType } = useDatabase();
     const { createTable, data_types } = useDatabaseOperations();
     const { getViewport } = useReactFlow();
-    const { tables: allTables } = database;
+    const { tables: allTables } = database || { tables : []};
     const [tables, setTables] = useState<TableType[]>(allTables);
 
     const { t } = useTranslation();

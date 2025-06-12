@@ -14,7 +14,7 @@ import { createContext } from "react";
 
 interface DatabaseDataContextType {
 
-    database: DatabaseType,
+    database: DatabaseType | undefined ,
     currentDatabaseId: string | undefined,
     databases: DatabaseType[],
     isLoading: boolean,

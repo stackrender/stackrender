@@ -18,18 +18,16 @@ import { v4 } from "uuid";
 import { DataType } from "@/lib/schemas/data-type-schema";
 
 
+
 interface Props { children: React.ReactNode }
 
 const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
     const [currentDatabaseId, setCurrentDatabaseId] = useState<string | undefined>(localStorage.getItem("database_id") as string | undefined);
-
     // Fetch all databases
     const { data: databases, isLoading: loadingDatabases } = useQuery(toCompilableQuery(
         db.query.databases.findMany()
     ));
-
-
 
     // Fetch the current database with nested tables, fields, and relationships
     let { data: database, isLoading: loadingCurrentDatabase, isFetching } = useQuery(
@@ -67,7 +65,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             })
         )
     );
-  
+
 
     const switchDatabase = useCallback((databaseId: string | undefined) => {
         setCurrentDatabaseId(databaseId);
@@ -80,25 +78,27 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     // Normalize result to single object
     if (database.length == 1)
         database = database[0] as any;
+    else
+        database = undefined as any;
 
-  // Fetch all data types
-    const { data: data_types, isLoading: loadingDataTypes } = useQuery(toCompilableQuery(
+    // Fetch all data types
+    let { data: data_types, isLoading: loadingDataTypes } = useQuery(toCompilableQuery(
         db.query.data_types.findMany({
-            where : (data_types , { eq })=> eq(data_types.dialect, (database as any).dialect)
+            where: (data_types, { eq }) => eq(data_types.dialect, (database as any)?.dialect)
         })
     ));
+ 
+    const grouped_data_types: any = useMemo(() => {
+        return groupBy(data_types, "type");
+    }, [data_types]);
 
-    const grouped_data_types : any = useMemo(() => {
-        return groupBy(data_types , "type") ; 
-    } , [data_types])
-    
-    
-    
+
     // Auto-select first database if none is selected
     useEffect(() => {
         if (databases.length > 0 && !currentDatabaseId) {
             switchDatabase(databases[0].id);
         }
+
     }, [currentDatabaseId, databases]);
 
     const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;
@@ -109,10 +109,12 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
     // CRUD for database 
     const createDatabase = useCallback(async (database: DatabaseInsertType): Promise<QueryResult> => {
+
         return await db.insert(databaseModel).values({
             ...database,
             createdAt: getTimestamp()
         });
+
     }, [db]);
 
     const editDatabase = useCallback(async (database: DatabaseInsertType): Promise<QueryResult> => {
@@ -130,7 +132,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             .from(tables)
             .where(eq(tables.databaseId, databaseId))
 
- 
+
         await tx.update(databaseModel).set({
             numOfTables
         }).where(eq(databaseModel.id, databaseId))
@@ -291,10 +293,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             await db.transaction(async (tx) => {
                 for (const operation of operations) {
 
-                    if ( operation.type == "RENAME_DATABASE") {  
+                    if (operation.type == "RENAME_DATABASE") {
                         currentDatabaseId && await tx.update(databaseModel).set({
-                            name : operation.chnages.name  
-                        }).where(eq(databaseModel.id , currentDatabaseId)) ; 
+                            name: operation.chnages.name
+                        }).where(eq(databaseModel.id, currentDatabaseId));
                     }
 
                     else if (operation.type == "CREATE_TABLE") {
@@ -359,8 +361,8 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
 
     const getDefaultPrimaryKeyType = useCallback(() => {
-        return data_types.find((dataType : DataType) => dataType.name == "bigint" )
-    } , [data_types ]) ;  
+        return data_types.find((dataType: DataType) => dataType.name == "bigint")
+    }, [data_types]);
 
     const databaseOpsValue = useMemo(() => ({
 
@@ -386,7 +388,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editIndex,
         deleteIndex,
         editFieldIndices,
-        data_types , 
+        data_types,
         grouped_data_types
     }), [
         createDatabase,
@@ -410,9 +412,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editIndex,
         deleteIndex,
         editFieldIndices,
-        data_types , 
+        data_types,
         grouped_data_types
     ]);
+
 
     return (
         <DatabaseDataContext.Provider value={{
@@ -422,10 +425,16 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             databases: databases as DatabaseType[],
             isLoading,
             isSwitchingDatabase,
-            getDefaultPrimaryKeyType ,
+            getDefaultPrimaryKeyType,
             getField,
         }}>
             <DatabaseOperationsContext.Provider value={databaseOpsValue}>
+                {
+                    !database && !isLoading && 
+                    <>
+                        {children}
+                    </>
+                }
                 {
                     database && !isLoading && !isSwitchingDatabase &&
                     <DatabaseHistoryProvider>

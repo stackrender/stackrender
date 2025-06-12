@@ -32,7 +32,7 @@ const CreateRelationshipModal: React.FC<CreateRelationshipModalProps> = ({ onRel
 
 
     const { database } = useDatabase();
-    const { tables } = database;
+    const { tables } = database ||  { tables : []};
 
     const { t } = useTranslation();
 

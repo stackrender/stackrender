@@ -1,6 +1,7 @@
 
 
-import Menu from "../menu/menu"; 
+import { useDatabase } from "@/providers/database-provider/database-provider";
+import Menu from "../menu/menu";
 import ConnectionStatus from "./connection-status";
 import RenameDatabase from "./rename-database";
 
@@ -10,8 +11,8 @@ interface Props {
 
 
 const Navbar: React.FC<Props> = ({ }) => {
+    const { database } = useDatabase();
 
-    
     return (
 
         <nav className="h-12 fixed z-50 bg-background w-full flex  items-center p-4 border-b  border-divider ">
@@ -28,7 +29,7 @@ const Navbar: React.FC<Props> = ({ }) => {
 
                     <Menu />
                     <div className=" w-full h-full flex items-center justify-center">
-                        <RenameDatabase/>
+                        {database && <RenameDatabase database={database} />}
                     </div>
                     <ConnectionStatus />
 

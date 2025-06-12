@@ -3,13 +3,16 @@ import React, { useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip/tooltip";
 import { useTranslation } from "react-i18next";
 import { Button, Divider, Image, Input } from "@heroui/react";
-import { getDatabaseByDialect } from "@/lib/database";
+import { DatabaseDialect,  getDatabaseByDialect } from "@/lib/database";
 import { Save } from "lucide-react";
+import { DatabaseType } from "@/lib/schemas/database-schema";
 
+interface RenameDatabaseProps {
+    database : DatabaseType
+}
 
-
-const RenameDatabase: React.FC = ({ }) => {
-    const { database } = useDatabase();
+const RenameDatabase: React.FC<RenameDatabaseProps> = ({ database}) => {
+    
     const { editDatabase } = useDatabaseOperations();
     const [editMode, setEditMode] = useState<boolean>(false);
     const [dbName, setDbName] = useState<string>(database.name);
@@ -44,7 +47,7 @@ const RenameDatabase: React.FC = ({ }) => {
                             onDoubleClick={() => setEditMode(true)}
                         >
                             <Image
-                                src={getDatabaseByDialect(database.dialect).logo}
+                                src={getDatabaseByDialect(database.dialect as DatabaseDialect).logo}
                                 width={22}
                                 className=" rounded-none "
                             />
@@ -62,7 +65,7 @@ const RenameDatabase: React.FC = ({ }) => {
                 editMode &&
                 <div className="flex justify-center items-center gap-4">
                     <Image
-                        src={getDatabaseByDialect(database.dialect).logo}
+                        src={getDatabaseByDialect(database.dialect as DatabaseDialect).logo}
                         width={32}
                         className=" rounded-none "
                     />

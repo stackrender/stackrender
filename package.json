@@ -37,6 +37,7 @@
     "react-dom": "18.3.1",
     "react-i18next": "^15.5.1",
     "react-router-dom": "6.23.0",
+    "react-tag-input": "^6.10.6",
     "sql-formatter": "^15.6.3",
     "tailwind-merge": "^3.2.0",
     "tailwind-variants": "0.3.0",

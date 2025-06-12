@@ -1,5 +1,6 @@
 
 
+import { DatabaseDialect } from "@/lib/database";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { FieldType } from "@/lib/schemas/field-schema";
@@ -7,29 +8,40 @@ import { FieldIndexType } from "@/lib/schemas/field_index-schema";
 import { IndexType } from "@/lib/schemas/index-schema";
 import { Cardinality, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { TableType } from "@/lib/schemas/table-schema";
+import { RenderableTable, SortableTable, toRenderableTable, toSortableTable } from "@/lib/table";
+import { getForeignRelationships } from "@/utils/relationship";
+import { orderTables } from "@/utils/tables";
 
 
 export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) => {
     let dbAst: any = [];
     if (!data_types || data_types.length == 0)
         return dbAst;
-    for (const table of database.tables) {
-        dbAst.push(TableToAst({
-            ...table,
-        }, data_types));
 
-        if (table.indices && table.indices.length > 0)
-            for (const index of table.indices)
-                dbAst.push(IndexToAst({
-                    ...index,
-                    fields: index.fieldIndices.map((fieldIndex: FieldIndexType) => table.fields.find((field: FieldType) => field.id == fieldIndex.fieldId)) as FieldType[]
-                }, table));
-    };
+    let renderableTables: RenderableTable[] = database.tables.map((table: TableType) => toRenderableTable(table, database));
+    let sortableTables: SortableTable[] = renderableTables.map((table: RenderableTable) => toSortableTable(table));
+    try {
+        const sortedTablesIds: string[] = orderTables(sortableTables)
+        const sortedTables: TableType[] = sortedTablesIds.map((id: string) =>
+            renderableTables.find((table: TableType) => table.id == id) as TableType
+        );
 
-    for (const relationship of database.relationships) {
-        dbAst.push(relationshipToAst(relationship))
-    }
-    //console.log (dbAst)
+
+        for (const table of sortedTables) {
+            dbAst.push(TableToAst(table, data_types));
+
+            if (table.indices && table.indices.length > 0)
+                for (const index of table.indices)
+                    dbAst.push(IndexToAst({
+                        ...index,
+                        fields: index.fieldIndices.map((fieldIndex: FieldIndexType) =>
+                            table.fields.find((field: FieldType) => field.id == fieldIndex.fieldId)
+                        ) as FieldType[],
+                    }, table));
+        };
+    } catch (error) {
+        console.log(error);
+    }   
     return dbAst;
 }
 
@@ -47,12 +59,10 @@ export const TableToAst = (table: TableType, data_types: DataType[]) => {
         }))
     }] : [];
 
+    let foreignRelationships = getForeignRelationships(table);
 
-
-
-
-
-    const constraints: any[] = [...primaryKeysConstraints];
+    const foreignKeysConstraints = foreignRelationships.map((relationship: RelationshipType) => relationshipToAst(relationship));
+    const constraints: any[] = [...primaryKeysConstraints, ...foreignKeysConstraints];
     const filed_definitions = table.fields.map((field: FieldType) => FieldToAst({
         ...field,
         type: data_types.find((dataType: DataType) => dataType.id == field.typeId) as DataType,
@@ -84,8 +94,8 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
         },
         definition: {
             dataType: field.type?.name?.toLocaleUpperCase(),
-            length : field.type.name == "varchar" && field.type.dialect == "mysql" ? 255 : null , 
-          
+            length: field.type?.name == "varchar" && (field.type?.dialect == DatabaseDialect.MYSQL || field.type?.dialect == DatabaseDialect.MARIADB)   ? 255 : null,
+
 
         },
         primary_key: field.isPrimary && !ignorePrimaryKey ? "primary key" : null,
@@ -112,52 +122,53 @@ export const IndexToAst = (index: IndexType, table: TableType) => {
 }
 
 
+
+
+
+
 export const relationshipToAst = (relationship: RelationshipType) => {
 
-    console.log(relationship);
     let primaryKey: FieldType = relationship.sourceField;
     let foreignKey: FieldType = relationship.targetField;
 
-    let sourceTable : TableType = relationship.sourceTable ; 
-    let targetTable : TableType = relationship.targetTable ; 
+    let sourceTable: TableType = relationship.sourceTable;
+    let targetTable: TableType = relationship.targetTable;
 
     if (relationship.cardinality == Cardinality.many_to_one) {
         primaryKey = relationship.targetField;
         foreignKey = relationship.sourceField;
-        sourceTable = relationship.targetTable ; 
-        targetTable = relationship.sourceTable ; 
+        sourceTable = relationship.targetTable;
+        targetTable = relationship.sourceTable;
     }
 
 
     return {
-        table: [{
-            table: targetTable.name,
-        }],
-        type: "alter",
-        expr: [{
-            action: "add",
-            resource: "constraint",
-            type: "alter",
-            create_definitions: {
-                constraint: relationship.name ? relationship.name : null,
-                constraint_type: "FOREIGN KEY",
-                index: null,
-                keyword: null,
-                resource: "constraint",
-                definition: [{
-                    column: foreignKey.name,
-                    type: "column_ref"
-                }],
-                reference_definition: {
-                    keyword: "references",
-                    on_action: [],
-                    table: [{ table: sourceTable.name }],
-                    definition: [{
-                        column: primaryKey.name,
-                        type: "column_ref"
-                    }],
-                }
+        constraint: null,
+        definition: [
+            {
+                type: "column_ref",
+                column: foreignKey.name,
+
             }
-        }]
+        ],
+        constraint_type: "FOREIGN KEY",
+        resource: "constraint",
+        reference_definition: {
+            definition: [
+                {
+                    type: "column_ref",
+                    column: primaryKey.name,
+                }
+            ],
+            table: [
+                {
+                    table: sourceTable.name,
+                }
+            ],
+            keyword: "references",
+            on_action: []
+        }
     }
+
+
 }

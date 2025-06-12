@@ -33,13 +33,13 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
     const [connector] = useState(new StackRenderConnector());
 
     useEffect(() => {
+
         powerSync.init();
         powerSync.connect(connector);
+        
         (async () => {
-            await powerSync.execute("PRAGMA foreign_keys = ON;");            
-        })()
-
-
+            await powerSync.execute("PRAGMA foreign_keys = ON;");
+        })();
     }, [powerSync, connector])
 
 

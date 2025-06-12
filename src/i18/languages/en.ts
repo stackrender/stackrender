@@ -12,9 +12,9 @@ export const en = {
         color_picker: {
             default_color: "Default color"
         },
-        navbar :  {
-            rename_db : "Rename database" , 
-        } , 
+        navbar: {
+            rename_db: "Rename database",
+        },
         db_controller: {
             filter: "Filter",
             add_table: "Add Table",
@@ -34,9 +34,6 @@ export const en = {
             unique: "Unique",
             table_note: "Table note",
             collapse: "Collapse All",
-
-
-
             primary_key: "Primary Key",
             foreign_key: "Foreign Key",
 
@@ -55,14 +52,37 @@ export const en = {
                 many_to_many: "Many to Many",
 
             },
+            field_settings: {
+                title: "Field Setting",
+                unique: "Unique",
+                unsigned: "Unsigned",
+                numeric_setting : "Numeric Setting" , 
+                   decimal_setting : "Decimal Setting" , 
+                zeroFill: "Zero Fill",
+                autoIncrement: "Auto Increment",
+                note: "Note",
+
+                delete_field: "Delete Field",
+                field_note: "Field note",
+                precision : "Precision" , 
+                text_setting : "Text Setting" , 
+                charset : "Charset" , 
+                collation : "Collation" , 
+                scale : "Scale"  , 
+                max_length : "Max length" , 
+                default_value : "Default value" ,
+                value : "Value" , 
+                length : "Length" , 
+                values : "Values" , 
+                type_enter : "Type and press enter"
+            },
             delete: "Delete",
-            field_setting: "Field Setting",
+
             index_setting: "Index Setting",
             table_actions: "Table Actions",
             actions: "Actions",
 
-            field_note: "Field note",
-            delete_field: "Delete Field",
+
             delete_index: "Delete Index",
             index_name: "Index name",
 
@@ -124,18 +144,18 @@ export const en = {
 
         modals: {
             close: "Close",
-            create: "Create" , 
+            create: "Create",
             pick_database: "Pick your Database.",
-            create_database_header: "Every database offers distinct features and functionalities." , 
-            db_name : "Database name" , 
-            db_name_error : "Please provide a Database name" , 
-            continue : "Continue" , 
-            open : "Open" , 
-            open_database : "Open Database" , 
-            open_database_header : "Open a database by selecting one from the list." , 
-            delete_database : "Delete Database" , 
-            delete_database_content : "This action is irreversible and will permanently remove the diagram." , 
-            delete : "Delete"
+            create_database_header: "Every database offers distinct features and functionalities.",
+            db_name: "Database name",
+            db_name_error: "Please provide a Database name",
+            continue: "Continue",
+            open: "Open",
+            open_database: "Open Database",
+            open_database_header: "Open a database by selecting one from the list.",
+            delete_database: "Delete Database",
+            delete_database_content: "This action is irreversible and will permanently remove the diagram.",
+            delete: "Delete"
         }
 
     }

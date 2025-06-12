@@ -21,6 +21,16 @@ export const fields = sqliteTable("fields", {
     note: text("note"),
     typeId: text("typeId").references(() => data_types.id, { onDelete: "cascade" }),
     sequence: integer("sequence").default(0),
+    maxLength: integer('maxLength') , // or `.nullable()` if you're using drizzle-kit latest
+    unsigned: integer('unsigned' , {mode : "boolean"}).default(false),
+    isForeign: integer('isForeign', {mode : "boolean"}).default(false),
+    zeroFill: integer('zeroFill', {mode : "boolean"}).default(false),
+    autoIncrement: integer('autoIncrement', {mode : "boolean"}).default(false),
+    precision: integer('precision'),
+    scale: integer('scale'),
+    charset: text('charset'),
+    collate: text('collate'),
+    values: text('values'),
 });
 
 export const fieldsRelations = relations(fields, ({ one, many }) => ({

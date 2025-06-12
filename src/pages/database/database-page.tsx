@@ -37,27 +37,30 @@ import useHighlightedEdges from "@/hooks/use-highlighted-edges";
 import { useTranslation } from "react-i18next";
 import useOverlappingTables from "@/hooks/use-overlapping-tables";
 import { useTheme } from "next-themes";
-import { Parser } from "node-sql-parser";
-import { getRelationshipSourceAndTarget } from "@/utils/relationship";
 
-const parser = new Parser();
+import { getRelationshipSourceAndTarget } from "@/utils/relationship";
+import { useModal } from "@/providers/modal-provider/modal-provider";
+
+
 const DatabasePage: React.FC = () => {
+    const { open } = useModal();
 
     const { t } = useTranslation();
     const { resolvedTheme } = useTheme();
     // Extract database state and operations
     const { database, getField } = useDatabase();
+
     const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabaseOperations();
 
     // Node and edge state hooks
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
+ 
     // Diagram-related state (e.g. connection in progress)
     const { setIsConnectionInProgress } = useDiagramOps();
 
     // Destructure tables and relationships from database
-    const { tables, relationships } = database;
+    const { tables, relationships } = database || { tables: [], relationships: [] };
 
     // Hook to allow zooming and centering the diagram
     const { fitView } = useReactFlow();
@@ -75,7 +78,7 @@ const DatabasePage: React.FC = () => {
         const targetField: FieldType = getField(connection.target, targetId) as FieldType;
 
 
-        const { sourceTableId, targetTableId, sourceFieldId, targetFieldId  } = getRelationshipSourceAndTarget(connection.source, sourceField, connection.target, targetField);
+        const { sourceTableId, targetTableId, sourceFieldId, targetFieldId } = getRelationshipSourceAndTarget(connection.source, sourceField, connection.target, targetField);
 
         // Check if both fields have the same type (valid relationship)
         if (sourceField?.typeId == targetField?.typeId) {
@@ -85,7 +88,7 @@ const DatabasePage: React.FC = () => {
                 targetTableId,
                 sourceFieldId,
                 targetFieldId,
-  
+
             } as RelationshipInsertType);
 
             // Add edge to the diagram

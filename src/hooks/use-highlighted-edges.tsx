@@ -33,6 +33,7 @@ const useHighlightedEdges = (nodes: Node[], relationships: RelationshipType[], e
      * This avoids recomputation unless `selectedNodeIds` or `relationships` change.
      */
     const selectedEdgeIds: string[] = useMemo(() => {
+        
         return relationships
             .filter((relationship: RelationshipType) =>
                 selectedNodeIds.includes(relationship.sourceTableId) ||
