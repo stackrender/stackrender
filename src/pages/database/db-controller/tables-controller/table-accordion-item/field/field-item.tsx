@@ -85,7 +85,6 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                 placeholder={t("db_controller.name")}
                 value={fieldName}
                 onValueChange={setFieldName}
-
                 onBlur={saveFieldName}
                 classNames={{
                     inputWrapper: "border-divider group-hover:border-primary",
@@ -109,8 +108,6 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                 >
                     N
                 </ToggleButton>
-
-
                 <ToggleButton
                     onToggle={togglePrimaryKey}
                     active={field.isPrimary as boolean}
@@ -119,7 +116,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                     <KeyRound className="size-4" />
                 </ToggleButton>
 
-                <Popover placement="right-start" radius="sm" shadow="sm"  isOpen={popOverOpen} onOpenChange={setPopOverOpen} >
+                <Popover placement="bottom" radius="sm" shadow="sm"  isOpen={popOverOpen} onOpenChange={setPopOverOpen} >
                     <PopoverTrigger>
                         <Button
                             size="sm"

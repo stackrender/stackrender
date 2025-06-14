@@ -63,8 +63,7 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
             const operations: DBDiffOperation[] = mapDiffToDBDiffOperation(differences);
 
             (async () => {
-                try {
-                    console.log(operations)
+                try { 
                     await executeDbDiffOps(operations)
                     setIsProcessing(false);
                 }

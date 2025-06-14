@@ -49,7 +49,7 @@ const TagInput: React.FC<TagInputProps> = ({ defaultItems = [], onItemsChange })
                 tags={tags}
                 classNames={{
                     tag: "font-normal inline-block m-0.5   border-1 border-default  rounded-full px-2  py-1 flex-row ",
-                    remove: "bg-green-500 bg-default-900 rounded-full  text-xs text-center ml-1 min-w-[15px] max-w-[15px] min-h-[15px] max-h-[15px] transition-colors duration-300 hover:bg-black",
+                    remove: " bg-default-900 rounded-full  text-xs text-center ml-1 min-w-[15px] max-w-[15px] min-h-[15px] max-h-[15px] transition-colors duration-300 hover:bg-black",
                     tagInputField: "relative w-full inline-flex flex-row items-center  bg-default-100 border-1 border-divider hover:border-primary focus-within:border-default-400 h-8 min-h-8 px-2 rounded-small transition-background !duration-150 transition-colors outline-none dark:bg-default placeholder:text-foreground-500 mt-2" , 
                     tags : "max-h-[256px] overflow-auto "
                 }}

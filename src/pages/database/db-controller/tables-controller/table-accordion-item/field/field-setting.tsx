@@ -1,10 +1,11 @@
 import TagInput from "@/components/tag-input/tag-input";
-import { Modifiers, PostgreSQLCharset, PostgreSQLCollation } from "@/lib/field";
+import { DatabaseDialect } from "@/lib/database";
+import { Modifiers, MySQLCharset, MySQLCollation, PostgreSQLCharset, PostgreSQLCollation, SQLiteCharset, SQLiteCollation } from "@/lib/field";
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema";
 import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { Button, Checkbox, Input, Select, SelectItem, SharedSelection, Switch, Textarea } from "@heroui/react";
 import { Trash2 } from "lucide-react";
-import React, { Ref, useCallback, useRef, useState } from "react";
+import React, { Ref, useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 
@@ -18,8 +19,7 @@ interface FieldSettingProps {
 
 const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
 
-    console.log(field.type)
-    const modifiers: string[] = field.type.modifiers ? JSON.parse(field.type.modifiers) : [];
+    const modifiers: string[] = field.type?.modifiers ? JSON.parse(field.type.modifiers) : [];
 
     const { deleteField, editField } = useDatabaseOperations();
     const { t } = useTranslation();
@@ -32,9 +32,34 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
     const scaleRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
     const precisionRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
+    const collations = useMemo(() => {
+        if (!field.type)
+            return undefined;
+
+        if (field.type.dialect == DatabaseDialect.MYSQL || field.type.dialect == DatabaseDialect.MARIADB)
+            return MySQLCollation;
+        if (field.type.dialect == DatabaseDialect.POSTGRES)
+            return PostgreSQLCollation;
+        if (field.type.dialect == DatabaseDialect.SQLITE)
+            return SQLiteCollation;
+
+    }, [field]);
+    const charsets = useMemo(() => {
+        if (!field.type)
+            return undefined;
+
+        if (field.type.dialect == DatabaseDialect.MYSQL || field.type.dialect == DatabaseDialect.MARIADB)
+            return MySQLCharset;
+        if (field.type.dialect == DatabaseDialect.POSTGRES)
+            return PostgreSQLCharset;
+        if (field.type.dialect == DatabaseDialect.SQLITE)
+            return SQLiteCharset;
+
+    }, [field])
     const removeField = () => {
         deleteField(field.id)
     }
+ 
 
     const updateFieldNote = useCallback(() => {
         editField({
@@ -73,29 +98,29 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
 
 
     const changeCharset = useCallback((keys: SharedSelection) => {
-
+  
         if (keys.anchorKey != field.charset) {
-
+      
             editField({
                 id: field.id,
                 charset: keys.anchorKey,
 
             } as FieldInsertType);
-        }
+        } 
         setCharset(keys as any);
     }, [field]);
 
 
     const changeCollation = useCallback((keys: SharedSelection) => {
-
-        if (keys.anchorKey != field.charset) {
-
+ 
+        if (keys.anchorKey != field.collate) {
+ 
             editField({
                 id: field.id,
                 collate: keys.anchorKey,
 
             } as FieldInsertType);
-        }
+        } 
         setCollation(keys as any);
     }, [field])
 
@@ -142,7 +167,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
 
     const updateValues = useCallback((values: string[]) => {
         const jsonValues = JSON.stringify(values);
-        console.log(jsonValues)
+ 
         if (jsonValues != field.values)
             editField({
                 id: field.id,
@@ -155,7 +180,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
     const showDecimalModifiers: boolean = modifiers.includes(Modifiers.PRECISION) || modifiers.includes(Modifiers.SCALE);
     const showTextModifiers: boolean = modifiers.includes(Modifiers.COLLATE) || modifiers.includes(Modifiers.CHARSET);
 
- 
+
 
     return (
         <div className="w-full flex flex-col gap-2 p-2 min-w-[260px] max-w-[260px]">
@@ -273,7 +298,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                     </h3>
                     <hr className="border-divider" />
                     {
-                        modifiers.includes(Modifiers.CHARSET) && <>
+                        modifiers.includes(Modifiers.CHARSET) && charsets && <>
                             <label className="text-xs font-medium text-icon dark:text-font/90">
                                 {t("db_controller.field_settings.charset")}
                             </label>
@@ -290,13 +315,13 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                                 }}
                             >
                                 {
-                                    Object.values(PostgreSQLCharset).map((charset: string) => (<SelectItem key={charset}>{charset}</SelectItem>))
+                                    Object.values(charsets).map((charset: string) => (<SelectItem key={charset}>{charset}</SelectItem>))
                                 }
                             </Select>
                         </>
                     }
                     {
-                        modifiers.includes(Modifiers.COLLATE) && <>
+                        modifiers.includes(Modifiers.COLLATE) && collations && <>
                             <label className="text-xs font-medium text-icon dark:text-font/90">
                                 {t("db_controller.field_settings.collation")}
                             </label>
@@ -313,7 +338,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                                 }}
                             >
                                 {
-                                    Object.values(PostgreSQLCollation).map((collation: string) => (<SelectItem key={collation}>{collation}</SelectItem>))
+                                    Object.values(collations).map((collation: string) => (<SelectItem key={collation}>{collation}</SelectItem>))
                                 }
                             </Select>
                         </>

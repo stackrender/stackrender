@@ -16,6 +16,7 @@ import { IndexInsertType, indices } from "@/lib/schemas/index-schema";
 import { field_indices } from "@/lib/schemas/field_index-schema";
 import { v4 } from "uuid";
 import { DataType } from "@/lib/schemas/data-type-schema";
+import { Modifiers } from "@/lib/field";
 
 
 
@@ -81,12 +82,23 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     else
         database = undefined as any;
 
-    // Fetch all data types
+    // Fetch all data types 
     let { data: data_types, isLoading: loadingDataTypes } = useQuery(toCompilableQuery(
         db.query.data_types.findMany({
             where: (data_types, { eq }) => eq(data_types.dialect, (database as any)?.dialect)
         })
     ));
+
+
+    const charsetOrCollationDataTypes = data_types.filter((dataType : DataType) => {
+        const modifiers : string[] | undefined = dataType.modifiers ? JSON.parse(dataType.modifiers) : undefined ; 
+        if ( modifiers) { 
+            return modifiers.includes(Modifiers.COLLATE ||  Modifiers.CHARSET)
+        }
+    }).map((dataType : DataType) => dataType.name?.toUpperCase()) ; 
+
+ 
+
  
     const grouped_data_types: any = useMemo(() => {
         return groupBy(data_types, "type");
@@ -98,7 +110,6 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         if (databases.length > 0 && !currentDatabaseId) {
             switchDatabase(databases[0].id);
         }
-
     }, [currentDatabaseId, databases]);
 
     const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;

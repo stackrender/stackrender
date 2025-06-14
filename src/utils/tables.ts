@@ -40,8 +40,7 @@ const adjustTablesPositions = async (
             sources: [rel.sourceTableId],
             targets: [rel.targetTableId],
         })),
-    };
-    console.log(graph.children);
+    }; 
     // Run ELK layout (async)
     const layoutedGraph = await elk.layout(graph);
 

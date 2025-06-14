@@ -6,33 +6,16 @@ import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { useTheme } from "next-themes";
-import { Parser } from "node-sql-parser"; 
+import { Parser } from "node-sql-parser";
 import { overrideDarkTheme, overrideLightTheme } from "@/lib/colors";
+import { DatabaseType } from "@/lib/schemas/database-schema";
 const parser = new Parser();
 const code = `
-
 CREATE TABLE \`users\` (
-  id BIGINT NOT NULL PRIMARY KEY UNIQUE,
-  name VARCHAR(255) NOT NULL,
-  lastname VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  profile_url VARCHAR(255),
-  age SMALLINT,
-  birthday DATE,
-  created_at TIMESTAMP NOT NULL
-);
-
-CREATE TABLE \`addresses\` (
-  id BIGINT NOT NULL PRIMARY KEY UNIQUE,
-  street_line VARCHAR(255) NOT NULL,
-  latitude FLOAT,
-  longitude FLOAT, -- fixed spelling
-  state_id BIGINT NOT NULL,
-  user_id BIGINT NOT NULL,
-  FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`)
-);
-
+  username VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL DEFAULT "test" , 
+  username VARCHAR(100) NOT NULL DEFAULT "test" CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  
+  
+)
 `
 
 
@@ -41,14 +24,14 @@ CREATE TABLE \`addresses\` (
 const SqlPreview: React.FC = ({ }) => {
 
     const { database } = useDatabase();
-    const sqlCode = useRenderSql(database);
+    const sqlCode = useRenderSql(database as DatabaseType);
     const { resolvedTheme } = useTheme();
 
     useEffect(() => {
         const ast = parser.astify(code, {
             database: "Mysql"
         })
-        console.log(ast)
+     //   console.log(ast)
     }, [])
 
     return (
@@ -59,7 +42,7 @@ const SqlPreview: React.FC = ({ }) => {
                     value={sqlCode}
                     className="flex flex-1 w-full"
                     extensions={[sql()]}
-                    theme={resolvedTheme == "light" ? overrideLightTheme :   [oneDark , overrideDarkTheme]  }
+                    theme={resolvedTheme == "light" ? overrideLightTheme : [oneDark, overrideDarkTheme]}
                 />
             }
         </div>

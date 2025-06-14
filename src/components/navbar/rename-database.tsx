@@ -19,8 +19,7 @@ const RenameDatabase: React.FC<RenameDatabaseProps> = ({ database}) => {
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    useEffect(() => {
-        console.log (database.name) ; 
+    useEffect(() => { 
         setDbName(database.name);
     }, [database.name])
 

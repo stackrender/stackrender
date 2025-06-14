@@ -1,6 +1,7 @@
 
 
 import { DatabaseDialect } from "@/lib/database";
+import { Modifiers } from "@/lib/field";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { FieldType } from "@/lib/schemas/field-schema";
@@ -41,7 +42,7 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
         };
     } catch (error) {
         console.log(error);
-    }   
+    }
     return dbAst;
 }
 
@@ -77,26 +78,119 @@ export const TableToAst = (table: TableType, data_types: DataType[]) => {
     }
 }
 export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) => {
+
+    const modifiers: string[] = field?.type.modifiers ? JSON.parse(field?.type.modifiers) : [];
+    let suffix: string[] = [];
+    if (modifiers.includes(Modifiers.ZEROFILL) && field.zeroFill) {
+        suffix.push(Modifiers.ZEROFILL.toUpperCase());
+    }
+    if (modifiers.includes(Modifiers.UNSIGNED) && field.unsigned) {
+        suffix.push(Modifiers.UNSIGNED.toUpperCase());
+    }
+
+
+    let length: number | null = null;
+    let scale: number | null = null;
+
+    let character_set: any | null = null;
+    let collate: any | null = null;
+
+    let values: any[] = [];
+    let valuesExpr: any | null;
+
+    let default_val: any | null = null;
+
+    if (modifiers.includes(Modifiers.PRECISION) && field.precision)
+        length = field.precision;
+
+    if (modifiers.includes(Modifiers.SCALE) && field.scale)
+        scale = field.scale;
+
+    if (modifiers.includes(Modifiers.LENGTH) && field.maxLength)
+        length = field.maxLength;
+
+
+    if (modifiers.includes(Modifiers.CHARSET) && field.charset)
+        character_set = {
+            type: "CHARACTER SET",
+            value: {
+                type: "default",
+                value: field.charset
+            }
+        }
+
+    if (modifiers.includes(Modifiers.COLLATE) && field.collate)
+        collate = {
+            keyword: "collate",
+            type: "collate",
+            collate: {
+                name: field.collate,
+            }
+        }
+
+    if (modifiers.includes(Modifiers.VALUES) && field.values) {
+
+        const jsonValues = JSON.parse(field.values);
+        if (jsonValues.length > 0) {
+            values = jsonValues.map((value: string) => ({
+                type: "single_quote_string",
+                value
+            }));
+
+            valuesExpr = {
+                parentheses: true,
+                type: "expr_list",
+                value: values
+            }
+        }
+    }
+
+    if (field.defaultValue && field.defaultValue.trim().length > 0) {
+        default_val = {
+            type: "default",
+            value: {
+                type: "single_quote_string",
+                value: field.defaultValue
+            }
+        }
+        if (field.defaultValue == "true" || field.defaultValue == "false") {
+            default_val.value.type = "bool"
+            default_val.value.value = Boolean(field.defaultValue);
+        }
+
+        // Check if it's a number (but not empty string or just whitespace)
+        if (!isNaN(Number(field.defaultValue))) {
+            default_val.value.type = "number"
+            default_val.value.value = Number(field.defaultValue);
+        }
+    }
+
+    // field.type?.name == "varchar" && (field.type?.dialect == DatabaseDialect.MYSQL || field.type?.dialect == DatabaseDialect.MARIADB) ? 255 : null
     return {
         column: {
             type: "column_ref",
             column: {
                 expr: {
-                    type: "default", value: field.name
+                    type: "default", value: field.name,
                 }
             },
         },
-        default_val: null,
+        collate,
+        character_set,
+        default_val,
         unique: field.unique ? "unique" : null,
+        auto_increment: (modifiers.includes(Modifiers.AUTO_INCREMENT) && field.autoIncrement) ? "auto_increment" : null,
+
         nullable: {
             type: field.nullable ? "null" : "not null",
             value: field.nullable ? "null" : "not null",
         },
         definition: {
             dataType: field.type?.name?.toLocaleUpperCase(),
-            length: field.type?.name == "varchar" && (field.type?.dialect == DatabaseDialect.MYSQL || field.type?.dialect == DatabaseDialect.MARIADB)   ? 255 : null,
-
-
+            length,
+            scale,
+            suffix,
+            expr: valuesExpr
         },
         primary_key: field.isPrimary && !ignorePrimaryKey ? "primary key" : null,
         resource: "column"
