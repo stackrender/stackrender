@@ -16,7 +16,6 @@ interface RelationshipAccordionBodyProps {
 const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ relationship }) => {
     const [cardinality, setCardinality] = useState(new Set([relationship.cardinality]));
     const { editRelationship, deleteRelationship } = useDatabaseOperations();
-
     const { t } = useTranslation();
 
     const changeCardinality = (keys: SharedSelection) => {

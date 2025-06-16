@@ -1,14 +1,14 @@
 
 export enum Modifiers {
-    LENGTH = "length",
-    UNSIGNED = "unsigned",
-    ZEROFILL = "zerofill",
-    AUTO_INCREMENT = "auto_increment",
-    PRECISION = "precision",
-    SCALE = "scale", 
-    CHARSET = "charset",
-    COLLATE = "collate",
-    VALUES = "values" ,  
+  LENGTH = "length",
+  UNSIGNED = "unsigned",
+  ZEROFILL = "zerofill",
+  AUTO_INCREMENT = "auto_increment",
+  PRECISION = "precision",
+  SCALE = "scale",
+  CHARSET = "charset",
+  COLLATE = "collate",
+  VALUES = "values",
 }
 
 export enum MySQLCharset {
@@ -73,4 +73,24 @@ export enum SQLiteCollation {
   Binary = 'BINARY',
   NoCase = 'NOCASE',
   RTrim = 'RTRIM',
+}
+
+
+
+export enum DataTypes {
+  INTEGER = "integer",
+  NUMERIC = "numeric",
+  BOOLEAN = "boolean",
+  TIME = "time",
+  TEXT = "text",
+  BINARY = "binary",
+  JSON = "JSON",
+  GEOMETRY = "geometry"
+}
+
+
+export enum TimeDefaultValues {
+  NO_VALUE = "no_value",
+  CUSTOM = "custom" , 
+  NOW = "now" 
 }

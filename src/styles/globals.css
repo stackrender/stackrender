@@ -207,3 +207,9 @@ button[data-testid="remove"] svg {
   display: none ;  
 
 }
+
+[data-invalid = "true"] div[data-slot="input-wrapper"] { 
+  border : 1px solid red !important ; 
+  background-color: transparent ;
+  outline: none   ;
+}

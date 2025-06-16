@@ -1,7 +1,7 @@
 
 
 import { DatabaseDialect } from "@/lib/database";
-import { Modifiers } from "@/lib/field";
+import { DataTypes, Modifiers, TimeDefaultValues } from "@/lib/field";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { FieldType } from "@/lib/schemas/field-schema";
@@ -26,8 +26,6 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
         const sortedTables: TableType[] = sortedTablesIds.map((id: string) =>
             renderableTables.find((table: TableType) => table.id == id) as TableType
         );
-
-
         for (const table of sortedTables) {
             dbAst.push(TableToAst(table, data_types));
 
@@ -90,7 +88,7 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
 
 
     let length: number | null = null;
-    let scale: number | null = null;
+    let scale: number | string | null = null;
 
     let character_set: any | null = null;
     let collate: any | null = null;
@@ -100,8 +98,11 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
 
     let default_val: any | null = null;
 
-    if (modifiers.includes(Modifiers.PRECISION) && field.precision)
+    if (modifiers.includes(Modifiers.PRECISION) && field.precision) {
         length = field.precision;
+        if (modifiers.includes(Modifiers.SCALE) && !field.scale)
+            scale = "0";
+    }
 
     if (modifiers.includes(Modifiers.SCALE) && field.scale)
         scale = field.scale;
@@ -153,13 +154,31 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
                 value: field.defaultValue
             }
         }
-        if (field.defaultValue == "true" || field.defaultValue == "false") {
+        if (field.type.type == DataTypes.TIME && field.defaultValue == TimeDefaultValues.NOW)
+            default_val = {
+                type: "default",
+                value: {
+                    type: "function",
+                    name: {
+                        name: [
+                            {
+                                type: "origin",
+                                value: "CURRENT_TIMESTAMP"
+                            }
+                        ]
+                    },
+                    over: null
+                }
+            }
+
+        else if (field.defaultValue == "true" || field.defaultValue == "false") {
+
             default_val.value.type = "bool"
-            default_val.value.value = Boolean(field.defaultValue);
+            default_val.value.value = field.defaultValue == "true" ? true : false;
         }
 
         // Check if it's a number (but not empty string or just whitespace)
-        if (!isNaN(Number(field.defaultValue))) {
+        else if (!isNaN(Number(field.defaultValue))) {
             default_val.value.type = "number"
             default_val.value.value = Number(field.defaultValue);
         }

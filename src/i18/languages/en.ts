@@ -70,11 +70,28 @@ export const en = {
                 collation : "Collation" , 
                 scale : "Scale"  , 
                 max_length : "Max length" , 
+                integer_width : "Integer Width" ,
+                width : "width" ,  
                 default_value : "Default value" ,
                 value : "Value" , 
                 length : "Length" , 
                 values : "Values" , 
-                type_enter : "Type and press enter"
+                type_enter : "Type and press enter" , 
+                precision_def : "Total digits allowed (before + after the decimal)."  , 
+                scale_def : "Digits allowed after the decimal." , 
+                time_default_value : { 
+                    no_value : "No value" , 
+                    custom : "Custom time" , 
+                    now : "Now"
+                } , 
+                errors : { 
+                    max_length : "must be positive number, no decimals." , 
+                    integer_default_value : "Invalid default value for Integer" , 
+                    precision : "Precision must be positive number, no decimals." , 
+                    scale : "Scale must be positive number, no decimals." ,
+                    scale_max_value : "Scale must be ≤ precision."
+                    
+                }
             },
             delete: "Delete",
 

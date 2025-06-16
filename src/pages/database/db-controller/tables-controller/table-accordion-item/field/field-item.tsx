@@ -116,7 +116,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                     <KeyRound className="size-4" />
                 </ToggleButton>
 
-                <Popover placement="bottom" radius="sm" shadow="sm"  isOpen={popOverOpen} onOpenChange={setPopOverOpen} >
+                <Popover placement="right" radius="sm" shadow="sm"   isOpen={popOverOpen} onOpenChange={setPopOverOpen} >
                     <PopoverTrigger>
                         <Button
                             size="sm"
