@@ -9,6 +9,8 @@ export enum Modifiers {
   CHARSET = "charset",
   COLLATE = "collate",
   VALUES = "values",
+  NO_DEFAULT = "no_default" , 
+  NO_UNIQUE = "no_unique"
 }
 
 export enum MySQLCharset {
@@ -85,7 +87,8 @@ export enum DataTypes {
   TEXT = "text",
   BINARY = "binary",
   JSON = "JSON",
-  GEOMETRY = "geometry"
+  GEOMETRY = "geometry", 
+  ENUM = "enum"
 }
 
 
@@ -94,3 +97,6 @@ export enum TimeDefaultValues {
   CUSTOM = "custom" , 
   NOW = "now" 
 }
+
+
+export const MYSQL_MAX_VAR_LENGTH = 255  ; 

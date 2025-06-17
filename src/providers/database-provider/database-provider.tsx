@@ -17,6 +17,7 @@ import { field_indices } from "@/lib/schemas/field_index-schema";
 import { v4 } from "uuid";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { Modifiers } from "@/lib/field";
+import { DatabaseDialect } from "@/lib/database";
 
 
 
@@ -90,16 +91,16 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     ));
 
 
-    const charsetOrCollationDataTypes = data_types.filter((dataType : DataType) => {
-        const modifiers : string[] | undefined = dataType.modifiers ? JSON.parse(dataType.modifiers) : undefined ; 
-        if ( modifiers) { 
-            return modifiers.includes(Modifiers.COLLATE ||  Modifiers.CHARSET)
+    const charsetOrCollationDataTypes = data_types.filter((dataType: DataType) => {
+        const modifiers: string[] | undefined = dataType.modifiers ? JSON.parse(dataType.modifiers) : undefined;
+        if (modifiers) {
+            return modifiers.includes(Modifiers.COLLATE || Modifiers.CHARSET)
         }
-    }).map((dataType : DataType) => dataType.name?.toUpperCase()) ; 
+    }).map((dataType: DataType) => dataType.name?.toUpperCase());
 
- 
 
- 
+
+
     const grouped_data_types: any = useMemo(() => {
         return groupBy(data_types, "type");
     }, [data_types]);
@@ -371,8 +372,11 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [db, currentDatabaseId]);
 
 
-    const getDefaultPrimaryKeyType = useCallback(() => {
-        return data_types.find((dataType: DataType) => dataType.name == "bigint")
+    const getDefaultPrimaryKeyType = useCallback((dialect?: DatabaseDialect) => {
+        if (!dialect || dialect != DatabaseDialect.POSTGRES)
+            return data_types.find((dataType: DataType) => dataType.name == "bigint");
+        else if (dialect == DatabaseDialect.POSTGRES)
+            return data_types.find((dataType: DataType) => dataType.name == "bigserial");
     }, [data_types]);
 
     const databaseOpsValue = useMemo(() => ({
@@ -441,7 +445,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         }}>
             <DatabaseOperationsContext.Provider value={databaseOpsValue}>
                 {
-                    !database && !isLoading && 
+                    !database && !isLoading &&
                     <>
                         {children}
                     </>

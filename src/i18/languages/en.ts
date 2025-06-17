@@ -91,7 +91,8 @@ export const en = {
                     scale : "Scale must be positive number, no decimals." ,
                     scale_max_value : "Scale must be ≤ precision."
                     
-                }
+                } , 
+                pick_value : "Pick value"
             },
             delete: "Delete",
 

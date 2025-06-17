@@ -175,6 +175,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
 
 
     const updateValues = useCallback((values: string[]) => {
+
         const jsonValues = JSON.stringify(values);
 
         if (jsonValues != field.values)
@@ -183,6 +184,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                 values: jsonValues,
 
             } as FieldInsertType);
+
     }, [field])
 
     const showNumericModifiers: boolean = modifiers.includes(Modifiers.AUTO_INCREMENT) || modifiers.includes(Modifiers.UNSIGNED) || modifiers.includes(Modifiers.ZEROFILL)
@@ -257,19 +259,22 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
     }, [precisionRef, scaleRef])
 
 
+
     return (
         <div className="w-full flex flex-col gap-2 p-2 min-w-[260px] max-w-[260px]">
             <h3 className="font-semibold text-sm text-font/90">
                 {t("db_controller.field_settings.title")}
             </h3>
             <hr className="border-divider" />
-
-            <div className="flex w-full justify-between">
-                <span className="text-xs text-font/70 font-medium dark:text-font/90">
-                    {t("db_controller.field_settings.unique")}
-                </span>
-                <Checkbox defaultSelected={field.unique as boolean} size="md" onValueChange={toggleUnqiue} />
-            </div>
+            {
+                !modifiers.includes(Modifiers.NO_UNIQUE) &&
+                <div className="flex w-full justify-between">
+                    <span className="text-xs text-font/70 font-medium dark:text-font/90">
+                        {t("db_controller.field_settings.unique")}
+                    </span>
+                    <Checkbox defaultSelected={field.unique as boolean} size="md" onValueChange={toggleUnqiue} />
+                </div>
+            }
             {
                 showNumericModifiers && <>
                     <h3 className="font-semibold text-sm text-font/90">
@@ -517,9 +522,10 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                 </>
             }
 
-        
+            {
+                !modifiers.includes(Modifiers.NO_DEFAULT) &&
                 <FieldDefaultValue field={field} />
-           
+            }
             <label className="text-xs font-medium text-font/70 dark:text-font/90">
                 {t("db_controller.field_settings.note")}
             </label>

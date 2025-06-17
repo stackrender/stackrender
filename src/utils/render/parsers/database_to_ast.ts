@@ -1,7 +1,7 @@
 
 
 import { DatabaseDialect } from "@/lib/database";
-import { DataTypes, Modifiers, TimeDefaultValues } from "@/lib/field";
+import { DataTypes, Modifiers, MYSQL_MAX_VAR_LENGTH, TimeDefaultValues } from "@/lib/field";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { FieldType } from "@/lib/schemas/field-schema";
@@ -97,6 +97,8 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
     let valuesExpr: any | null;
 
     let default_val: any | null = null;
+    let dataType : string | undefined = field.type?.name?.toLocaleUpperCase() ; 
+
 
     if (modifiers.includes(Modifiers.PRECISION) && field.precision) {
         length = field.precision;
@@ -109,7 +111,8 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
 
     if (modifiers.includes(Modifiers.LENGTH) && field.maxLength)
         length = field.maxLength;
-
+    else if (modifiers.includes(Modifiers.LENGTH) && field.type.dialect == DatabaseDialect.MYSQL && field.type.name?.startsWith('var') && !field.maxLength) 
+        length = MYSQL_MAX_VAR_LENGTH ; 
 
     if (modifiers.includes(Modifiers.CHARSET) && field.charset)
         character_set = {
@@ -172,7 +175,6 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
             }
 
         else if (field.defaultValue == "true" || field.defaultValue == "false") {
-
             default_val.value.type = "bool"
             default_val.value.value = field.defaultValue == "true" ? true : false;
         }
@@ -183,6 +185,9 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
             default_val.value.value = Number(field.defaultValue);
         }
     }
+
+
+  
 
     // field.type?.name == "varchar" && (field.type?.dialect == DatabaseDialect.MYSQL || field.type?.dialect == DatabaseDialect.MARIADB) ? 255 : null
     return {
@@ -198,14 +203,14 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
         character_set,
         default_val,
         unique: field.unique ? "unique" : null,
-        auto_increment: (modifiers.includes(Modifiers.AUTO_INCREMENT) && field.autoIncrement) ? "auto_increment" : null,
+        auto_increment: (modifiers.includes(Modifiers.AUTO_INCREMENT) && field.autoIncrement && field.type.dialect != DatabaseDialect.POSTGRES) ? "auto_increment" : null,
 
         nullable: {
-            type: field.nullable ? "null" : "not null",
+            type: field.nullable ? "null" : "not null", 
             value: field.nullable ? "null" : "not null",
         },
         definition: {
-            dataType: field.type?.name?.toLocaleUpperCase(),
+            dataType ,
             length,
             scale,
             suffix,

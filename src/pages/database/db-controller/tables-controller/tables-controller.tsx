@@ -30,7 +30,6 @@ const TablesController: React.FC<Props> = ({ }) => {
     const { focusedTableId } = useDiagram();
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
-
     useEffect(() => setTables(allTables), [allTables]);
 
     const addNewTable = useCallback(async () => {
@@ -52,13 +51,13 @@ const TablesController: React.FC<Props> = ({ }) => {
                 name: "id",
                 isPrimary: true,
                 unique: true,
-                typeId: getDefaultPrimaryKeyType()?.id
+                typeId: getDefaultPrimaryKeyType(database?.dialect)?.id
 
             }]
         } as TableInsertType);
 
         setSelectedTable(new Set([newTableId]) as any);
-    }, [tables, getViewport, getDefaultPrimaryKeyType]);
+    }, [database , tables, getViewport, getDefaultPrimaryKeyType]);
 
 
     useEffect(() => {

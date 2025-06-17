@@ -11,15 +11,7 @@ import { overrideDarkTheme, overrideLightTheme } from "@/lib/colors";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 const parser = new Parser();
 const code = `
-CREATE TABLE events (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-
-
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-
-  logged_at DATETIME DEFAULT CURRENT_TIMESTAMP 
-);
+ 
 `
 
 
@@ -33,7 +25,7 @@ const SqlPreview: React.FC = ({ }) => {
 
     useEffect(() => {
         const ast = parser.astify(code, {
-            database: "Mysql"
+            database: "Postgresql"
         }) ; 
         
         console.log(ast)

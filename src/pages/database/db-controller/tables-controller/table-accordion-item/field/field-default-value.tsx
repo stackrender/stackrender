@@ -1,6 +1,6 @@
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema"
 import { Checkbox, DatePicker, Input, Select, SelectItem, Switch, TimeInput, Tooltip } from "@heroui/react";
-import React, { Ref, useCallback, useMemo, useRef, useState } from "react";
+import React, { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ModifierValidation } from "./field-setting";
 import { DataTypes, TimeDefaultValues } from "@/lib/field";
@@ -8,12 +8,15 @@ import { Calendar, Clock, TriangleAlert } from "lucide-react";
 import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import dayjs from 'dayjs';
 import { now, parseAbsoluteToLocal, Time } from "@internationalized/date";
+import { DatabaseDialect } from "@/lib/database";
 
 interface DefaultValueType {
     number?: boolean;
     string?: boolean;
     boolean?: boolean;
     time?: boolean;
+    select?: boolean;
+    multiSelect?: boolean
 }
 
 interface FieldDefaultValueProps {
@@ -31,6 +34,8 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
     });
 
     const defaultValueRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
+    const [values, setValues] = useState<string[]>([]);
+
 
     const [timeSelection, setTimeSelection] = useState<string[]>(() => {
 
@@ -67,6 +72,41 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
             return undefined;
         }
     });
+
+    const defaultValueType: DefaultValueType = useMemo(() => {
+        return {
+            number: field.type?.type == DataTypes.INTEGER || field.type?.type == DataTypes.NUMERIC,
+            string: field.type?.type == DataTypes.TEXT || field.type?.name == "year" , 
+            boolean: field.type?.type == DataTypes.BOOLEAN,
+            time: field.type?.type == DataTypes.TIME && field.type?.name != "year",
+            select: field.type?.type == DataTypes.ENUM && field.type?.name != "set",
+            multiSelect: field.type?.type == DataTypes.ENUM && field.type?.name == "set"
+        }
+    }, [field]);
+    const [selectedValues, setSelectedValues] = useState<string[]>(() => {
+        if (!field.defaultValue)
+            return []
+        if (defaultValueType.multiSelect)
+            return field.defaultValue.split(",")
+
+        return [field.defaultValue as string];
+
+    });
+
+
+    useEffect(() => {
+        if (field.values && field.values.length > 0) {
+            try {
+                const jsonValues: string[] = JSON.parse(field.values);
+
+                setValues(jsonValues);
+            } catch (error) {
+                setValues([]);
+            }
+        }
+    }, [field.values]);
+
+
 
     const defaultValueChange = useCallback((value: any) => {
         if (value && value.trim().length > 0) {
@@ -105,14 +145,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
     }, [defaultValueRef, field, defaultValueValidation]);
 
 
-    const defaultValueType: DefaultValueType = useMemo(() => {
-        return {
-            number: field.type?.type == DataTypes.INTEGER || field.type?.type == DataTypes.NUMERIC,
-            string: field.type.type == DataTypes.TEXT || field.type.name == "year",
-            boolean: field.type.type == DataTypes.BOOLEAN,
-            time: field.type.type == DataTypes.TIME && field.type.name != "year"
-        }
-    }, [field])
+
 
     const changeTimeDefaultValue = (selection: any) => {
         let value: string | undefined;
@@ -165,8 +198,26 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
             id: field.id,
             defaultValue: value ? String(value) : null
         }) as FieldInsertType);
-    }, [field, defaultDateTime])
+    }, [field, defaultDateTime]);
 
+    const enumValueChange = useCallback((selection: any) => {
+        let values: string | null = null;
+
+        const arraySelection = Array.from(selection);
+
+        if (arraySelection.length > 0) {
+            values = arraySelection.join(',');
+        } else {
+            values = null;
+        }
+
+        editField({
+            id: field.id,
+            defaultValue: values
+        } as FieldInsertType);
+
+        setSelectedValues(selection);
+    }, [field])
 
 
     return (
@@ -226,7 +277,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                         className="w-full"
                         size="sm"
                         variant="bordered"
-                        aria-label="cardinality"
+                        aria-label="Time"
                         selectedKeys={timeSelection}
                         onSelectionChange={changeTimeDefaultValue}
                         classNames={{
@@ -293,6 +344,31 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                             size="sm" radius="sm" />
                     }
                 </>
+
+            }
+            {
+                (defaultValueType.select || defaultValueType.multiSelect) &&
+                <Select
+                    className="w-full"
+                    size="sm"
+                    variant="bordered"
+                    aria-label="Enum Values"
+                    placeholder={t('db_controller.field_settings.pick_value')}
+                    selectedKeys={selectedValues}
+                    onSelectionChange={enumValueChange}
+                    selectionMode={!defaultValueType.multiSelect ? 'single' : "multiple"}
+                    classNames={{
+                        trigger: "border-divider group-hover:border-primary",
+                    }}
+                >
+                    {
+                        values.map((value: string) => (
+                            <SelectItem key={value}>{value}</SelectItem>
+                        ))
+                    }
+
+
+                </Select>
 
             }
         </>

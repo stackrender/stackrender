@@ -1,4 +1,5 @@
 
+import { DatabaseDialect } from "@/lib/database";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { DatabaseInsertType, DatabaseType } from "@/lib/schemas/database-schema";
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema";
@@ -20,7 +21,7 @@ interface DatabaseDataContextType {
     isLoading: boolean,
     isSwitchingDatabase: boolean,
     getField: (tableId: string, id: string) => FieldType | undefined,
-    getDefaultPrimaryKeyType : () => DataType | undefined  
+    getDefaultPrimaryKeyType : (dialect? : DatabaseDialect) => DataType | undefined  
 
 }
 
