@@ -1,14 +1,9 @@
 
-
-
-
 export interface DatabaseType {
     name: string,
     dialect: string;
     logo: string
 }
-
-
 
 export enum DatabaseDialect {
     MYSQL = "mysql",

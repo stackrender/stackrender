@@ -111,6 +111,13 @@ export const en = {
             invalid_relationship: {
                 title: "Invalid Relationship",
                 description: "The source key type does not match the referenced key type. Please ensure both keys have the same data type."
+            }  , 
+            circular_dependency : { 
+                title : "Circular Dependency Detected" , 
+                toast_description : "A circular reference between tables was found. Check the diagram on the left and remove one of the relationships to fix it." , 
+                description : "Your schema contains a circular foreign key relationship between tables. To fix it" , 
+                suggestion : "remove one of the relationships listed below that are causing the cycle."  , 
+                remove_relationship : "Remove relationship"
             }
         },
         table: {

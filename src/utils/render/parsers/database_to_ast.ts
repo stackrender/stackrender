@@ -27,7 +27,16 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
             renderableTables.find((table: TableType) => table.id == id) as TableType
         );
         for (const table of sortedTables) {
-            dbAst.push(TableToAst(table, data_types));
+            let postgresEnums: FieldType[];
+            if (database.dialect == DatabaseDialect.POSTGRES) {
+                postgresEnums = table.fields.filter((field: FieldType) => field.type?.name == "enum");
+                if (postgresEnums.length > 0) {
+                    for (const postgresEnum of postgresEnums)
+                        dbAst.push(PotgresEnumToAst(postgresEnum));
+                }
+            }
+
+            dbAst.push(TableToAst(table, data_types, database.dialect == DatabaseDialect.POSTGRES));
 
             if (table.indices && table.indices.length > 0)
                 for (const index of table.indices)
@@ -39,16 +48,18 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
                     }, table));
         };
     } catch (error) {
-        console.log(error);
+        throw error ; 
+
     }
     return dbAst;
 }
 
 
-export const TableToAst = (table: TableType, data_types: DataType[]) => {
+export const TableToAst = (table: TableType, data_types: DataType[], isPostgresDialect: boolean = false) => {
 
     const primaryKeys: FieldType[] = table.fields.filter((field: FieldType) => field.isPrimary);
     const multiPrimaryKeys: boolean = primaryKeys.length > 1;
+
     const primaryKeysConstraints: any[] | undefined = multiPrimaryKeys ? [{
         constraint_type: "primary key",
         resource: "constraint",
@@ -59,13 +70,26 @@ export const TableToAst = (table: TableType, data_types: DataType[]) => {
     }] : [];
 
     let foreignRelationships = getForeignRelationships(table);
-
     const foreignKeysConstraints = foreignRelationships.map((relationship: RelationshipType) => relationshipToAst(relationship));
-    const constraints: any[] = [...primaryKeysConstraints, ...foreignKeysConstraints];
-    const filed_definitions = table.fields.map((field: FieldType) => FieldToAst({
-        ...field,
-        type: data_types.find((dataType: DataType) => dataType.id == field.typeId) as DataType,
-    }, multiPrimaryKeys));
+    const constraints: any[] = [
+        ...primaryKeysConstraints,
+        ...foreignKeysConstraints
+    ];
+
+    const filed_definitions = table.fields.map((field: FieldType) => {
+        const isPostgresEnum: boolean = isPostgresDialect && field.type.name == "enum";
+        
+        return FieldToAst({
+            ...field,
+            type: !(isPostgresEnum) ?
+                data_types.find((dataType: DataType) => dataType.id == field.typeId) as DataType :
+                { name: `${field.name.toLowerCase()}_enum` } as DataType,
+        }, multiPrimaryKeys , !isPostgresEnum)
+    })
+
+
+
+
     return {
         keyword: "table",
         type: "create",
@@ -75,10 +99,11 @@ export const TableToAst = (table: TableType, data_types: DataType[]) => {
         create_definitions: [...filed_definitions, ...constraints]
     }
 }
-export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) => {
+export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false, upperCaseType: boolean = true) => {
 
     const modifiers: string[] = field?.type.modifiers ? JSON.parse(field?.type.modifiers) : [];
     let suffix: string[] = [];
+
     if (modifiers.includes(Modifiers.ZEROFILL) && field.zeroFill) {
         suffix.push(Modifiers.ZEROFILL.toUpperCase());
     }
@@ -97,8 +122,7 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
     let valuesExpr: any | null;
 
     let default_val: any | null = null;
-    let dataType : string | undefined = field.type?.name?.toLocaleUpperCase() ; 
-
+    let dataType: string | undefined = upperCaseType ? field.type?.name?.toLocaleUpperCase() : field.type?.name as string | undefined ; 
 
     if (modifiers.includes(Modifiers.PRECISION) && field.precision) {
         length = field.precision;
@@ -111,8 +135,9 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
 
     if (modifiers.includes(Modifiers.LENGTH) && field.maxLength)
         length = field.maxLength;
-    else if (modifiers.includes(Modifiers.LENGTH) && field.type.dialect == DatabaseDialect.MYSQL && field.type.name?.startsWith('var') && !field.maxLength) 
-        length = MYSQL_MAX_VAR_LENGTH ; 
+
+    else if (modifiers.includes(Modifiers.LENGTH) && (field.type.dialect == DatabaseDialect.MYSQL || field.type.dialect == DatabaseDialect.MARIADB) && field.type.name?.startsWith('var') && !field.maxLength)
+        length = MYSQL_MAX_VAR_LENGTH;
 
     if (modifiers.includes(Modifiers.CHARSET) && field.charset)
         character_set = {
@@ -186,9 +211,6 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
         }
     }
 
-
-  
-
     // field.type?.name == "varchar" && (field.type?.dialect == DatabaseDialect.MYSQL || field.type?.dialect == DatabaseDialect.MARIADB) ? 255 : null
     return {
         column: {
@@ -206,11 +228,11 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false) 
         auto_increment: (modifiers.includes(Modifiers.AUTO_INCREMENT) && field.autoIncrement && field.type.dialect != DatabaseDialect.POSTGRES) ? "auto_increment" : null,
 
         nullable: {
-            type: field.nullable ? "null" : "not null", 
+            type: field.nullable ? "null" : "not null",
             value: field.nullable ? "null" : "not null",
         },
         definition: {
-            dataType ,
+            dataType,
             length,
             scale,
             suffix,
@@ -239,6 +261,29 @@ export const IndexToAst = (index: IndexType, table: TableType) => {
     }
 }
 
+export const PotgresEnumToAst = (field: FieldType) => {
+
+    const jsonValues = field.values ? JSON.parse(field.values) : [];
+  
+    return {
+        as : "as" ,     
+        type: "create",
+        resource: "enum",
+        name: {
+            schema: null,
+            name: `${field.name.toLowerCase()}_enum`
+        },
+        keyword: "type",
+        create_definitions: {
+            parentheses: true,
+            type: "expr_list",
+            value: jsonValues.map((value: string) => ({
+                type: "single_quote_string",
+                value
+            }))
+        }
+    }
+}
 
 
 

@@ -8,7 +8,7 @@ interface DiagramDataContextType {
 
 interface DiagramOpsContextType {
     focusOnTable: (id: string, transition?: boolean) => void,
-    focusOnRelationship: (id: string, transition?: boolean) => void,
+    focusOnRelationship: (id: string, transition?: boolean , withNavigate? : boolean) => void,
     setIsConnectionInProgress: Dispatch<boolean>,
     isConnectionInProgress: boolean
 

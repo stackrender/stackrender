@@ -45,7 +45,6 @@ const TablesController: React.FC<Props> = ({ }) => {
             name: `table_${tables.length + 1}`,
             posX,
             posY,
-
             fields: [{
                 id: v4(),
                 name: "id",

@@ -1,6 +1,6 @@
-import { useCallback, useContext,  useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 
-import {  useReactFlow } from "@xyflow/react";
+import { useReactFlow } from "@xyflow/react";
 import { useNavigate } from "react-router-dom";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
 import { DiagramDataContext, DiagramOpsContext } from "./diagram-context";
@@ -43,8 +43,10 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     }, [setFocusedTableId])
 
 
-    const focusOnRelationship = useCallback((id: string, transition: boolean = false) => {
-        navigate("/database/relationships");
+    const focusOnRelationship = useCallback((id: string, transition: boolean = false, withNavigate: boolean = true) => {
+        if (withNavigate)
+            navigate("/database/relationships");
+        
         setFocusedRelationshipId(id);
 
         setEdges((edges) =>

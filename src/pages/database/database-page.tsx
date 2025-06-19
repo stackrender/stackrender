@@ -98,7 +98,8 @@ const DatabasePage: React.FC = () => {
             addToast({
                 title: t("db_controller.invalid_relationship.title"),
                 description: t("db_controller.invalid_relationship.description"),
-                color: "danger",
+                  color: "danger",
+            variant : "solid"
             });
         }
 

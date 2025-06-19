@@ -373,10 +373,13 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
 
     const getDefaultPrimaryKeyType = useCallback((dialect?: DatabaseDialect) => {
-        if (!dialect || dialect != DatabaseDialect.POSTGRES)
-            return data_types.find((dataType: DataType) => dataType.name == "bigint");
-        else if (dialect == DatabaseDialect.POSTGRES)
+        if (dialect == DatabaseDialect.POSTGRES)
             return data_types.find((dataType: DataType) => dataType.name == "bigserial");
+        else if (dialect == DatabaseDialect.SQLITE)
+            return data_types.find((dataType: DataType) => dataType.name == "integer");
+
+        return data_types.find((dataType: DataType) => dataType.name == "bigint");
+
     }, [data_types]);
 
     const databaseOpsValue = useMemo(() => ({
