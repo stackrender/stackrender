@@ -39,3 +39,24 @@ export const getDatabaseByDialect = (dialect: DatabaseDialect): DatabaseType => 
     const dbType : DatabaseType | undefined = DBTypes.find((dbType : DatabaseType) => dbType.dialect == dialect) ; 
     return dbType ? dbType : DBTypes[0] ; 
 }
+
+
+export enum ImportMethodType {
+    DUMP = "DUMP" , 
+    DB_CLIENT = "DB_CLIENT" , 
+
+} 
+
+export interface ImportDatabaseMethod {
+    id : string ; 
+    name : string ;
+    logo? : string ; 
+    icon? : React.ReactNode ; 
+    instructions? : string ; 
+    type :  ImportMethodType ; 
+}
+
+export interface ImportDatabaseOption   {
+    dialect : DatabaseDialect , 
+    methods : ImportDatabaseMethod []
+}

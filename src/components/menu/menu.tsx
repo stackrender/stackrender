@@ -1,7 +1,7 @@
 
 import { useTheme } from "next-themes";
 import DropdownMenu, { MenuDropdownProps } from "./menu-dropdown";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useModal } from "@/providers/modal-provider/modal-provider";
 import { Modals } from "@/providers/modal-provider/modal-contxet";
@@ -23,6 +23,10 @@ const Menu: React.FC<MenuProps> = ({ }) => {
 
     const { t } = useTranslation();
     const { open } = useModal();
+
+    useEffect(() => { 
+              open(Modals.IMPORT_DATABASE)
+    } , [])
     const menu: MenuDropdownProps[] = useMemo(() => [
         {
             title: t("menu.file"),
@@ -43,12 +47,9 @@ const Menu: React.FC<MenuProps> = ({ }) => {
                 {
                     title: t("menu.import"),
                     divide: true,
-                    children: [
-                        { title: t("menu.json") },
-                        { title: t("menu.dbml") },
-                        { title: t("menu.mysql") },
-                        { title: t("menu.postgresql") },
-                    ],
+                    clickHandler: () => {
+                        open(Modals.IMPORT_DATABASE)
+                    }
                 },
                 {
                     title: t("menu.export_sql"),

@@ -12,7 +12,8 @@ export const data_types = sqliteTable('data_types', {
     }).notNull().default("postgres"),
 
     type: text('type').notNull(),
-    modifiers: text("modifiers")
+    modifiers: text("modifiers"),
+    synonyms: text("synonyms")
 });
 
 
@@ -24,6 +25,7 @@ export const dataTypeRelations = relations(fields, ({ many }) => ({
 
 export interface DataType extends InferSelectModel<typeof data_types> {
 
-    modifiers: string | null | any  ; 
+    modifiers: string | null | any;
+    synonyms: string | null | any;
 
 }; 

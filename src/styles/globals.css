@@ -187,29 +187,44 @@ tbody[role="rowgroup"] tr td:first-child {
 
 button[data-testid="remove"] {
 
-  top : 1px ;
+  top: 1px;
   position: relative;
 }
 
 button[data-testid="remove"]:after {
-  content: '×' ; 
-  color : white; 
-  font-size : 11px   ;   
+  content: '×';
+  color: white;
+  font-size: 11px;
   position: relative;
-  top: -2px ; 
-  
+  top: -2px;
+
 
 }
+
 button[data-testid="remove"] svg {
 
+
+
+  display: none;
+
+}
+
+[data-invalid="true"] div[data-slot="input-wrapper"] {
+  border: 1px solid red !important;
+  background-color: transparent;
+  outline: none;
+}
+
+
+
+
+
+.option-checkbox[data-selected="true"] .option-span {
+  border-color:  hsl(var(--heroui-divider));
+  background-color: hsl(var(--heroui-default));
   
-
-  display: none ;  
-
+  
+  
 }
 
-[data-invalid = "true"] div[data-slot="input-wrapper"] { 
-  border : 1px solid red !important ; 
-  background-color: transparent ;
-  outline: none   ;
-}
+ 

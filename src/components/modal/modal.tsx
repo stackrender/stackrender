@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 
 export interface ModalProps {
     isOpen?: boolean,
-    onOpenChange: (open: boolean) => void,
+    onOpenChange? : (open: boolean) => void,
     className?: string,
     backdrop?: "blur" | "transparent" | "opaque",
     title: string,
@@ -45,7 +45,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
         <HeroUiModal
             ref={targetRef}
             isOpen={isOpen}
-            onOpenChange={onOpenChange}
+            onOpenChange={onOpenChange ? onOpenChange : undefined}
             className={className}
             backdrop={backdrop}
             radius="sm"

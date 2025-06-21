@@ -2,7 +2,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/to
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
-import { CircularDependencyError } from "@/utils/render/parsers/render-uttils";
+import { CircularDependencyError } from "@/utils/render/render-uttils";
 import { addToast, Alert, Button, Listbox, ListboxItem, toast } from "@heroui/react";
 import { AlertTriangle, Trash } from "lucide-react";
 import React, { useCallback, useEffect, useMemo } from "react";
@@ -40,7 +40,7 @@ const CircularDependencyAlert: React.FC<CircularDependencyAlertProps> = ({ error
 
 
     const focus = (key: any) => {
-        console.log(key)
+      
         focusOnRelationship(
             key, true, false
         )

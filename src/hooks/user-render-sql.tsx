@@ -8,7 +8,7 @@ import { Parser } from "node-sql-parser";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { format } from 'sql-formatter';
 import { DatabaseDialect, getDatabaseByDialect } from "@/lib/database";
-import { CircularDependencyError, fixCharsetPlacement, fixSQLiteColumnOrder } from "@/utils/render/parsers/render-uttils";
+import { CircularDependencyError, fixCharsetPlacement, fixSQLiteColumnOrder } from "@/utils/render/render-uttils";
 import { areArraysEqual } from "@/utils/utils";
 
 const parser = new Parser();
@@ -17,7 +17,7 @@ const parser = new Parser();
 export const useRenderSql = (database: DatabaseType) => {
     const [sql, setSql] = useState<string>("");
     const { data_types } = useDatabaseOperations();
-    const [circularDependency , setCircularDependency] = useState<CircularDependencyError | undefined>(undefined)
+    const [circularDependency, setCircularDependency] = useState<CircularDependencyError | undefined>(undefined)
     useEffect(() => {
         try {
             const dbAst: any = DatabaseToAst(database, data_types);
@@ -34,18 +34,22 @@ export const useRenderSql = (database: DatabaseType) => {
             setSql(
                 (formattedSqlCode)
             );
-            setCircularDependency( undefined ) ; 
+            setCircularDependency(undefined);
         } catch (error) {
-            
-            setCircularDependency((previousError) => {
-                if ( !previousError ||  !areArraysEqual( previousError.cycle , (error as CircularDependencyError).cycle) ) 
-                    return error  as  CircularDependencyError ; 
-                return previousError ; 
-            })
-            
+
+            if ((error as CircularDependencyError)?.cycle)
+                setCircularDependency((previousError) => {
+                    if (!previousError)
+                        return error as CircularDependencyError;
+                    else if (Array.isArray(previousError.cycle) && Array.isArray((error as CircularDependencyError).cycle) && !(areArraysEqual(previousError.cycle, (error as CircularDependencyError).cycle)))
+
+                        return error as CircularDependencyError;
+                    return previousError;
+                })
+
         }
     }, [database]);
 
-    return {sql , circularDependency};
+    return { sql, circularDependency };
 
 }

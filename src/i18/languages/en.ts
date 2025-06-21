@@ -180,7 +180,13 @@ export const en = {
             open_database_header: "Open a database by selecting one from the list.",
             delete_database: "Delete Database",
             delete_database_content: "This action is irreversible and will permanently remove the diagram.",
-            delete: "Delete"
+            delete: "Delete" , 
+
+            import_database : { 
+                title : "Import your Database" , 
+                import : "Import" , 
+                import_options : "Would you like to import using :" 
+            }
         }
 
     }

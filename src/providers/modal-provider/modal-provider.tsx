@@ -7,6 +7,7 @@ import CreateRelationshipModal from "@/pages/database/modals/create-relationship
 import { CreateDatabaseModal } from "@/pages/database/modals/create-database-modal";
 import OpenDatabaseModal from "@/pages/database/modals/open-database-modal";
 import DeleteDatabaseModal from "@/pages/database/modals/delete-database-modal";
+import ImportDatabaseModal from "@/pages/database/modals/import-database";
 
 
 interface Props { children: React.ReactNode }
@@ -54,8 +55,12 @@ export const ModalProvider: React.FC<Props> = ({ children }) => {
                     ||
                     currentModal.modal == Modals.DELETE_DATABASE &&
                     <DeleteDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
+                    ||
+                    (currentModal.modal == Modals.IMPORT_DATABASE ) &&
+                    <ImportDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
                 ) : undefined
-            }
+
+}
             {children}
         </ModalContext.Provider>
     )
