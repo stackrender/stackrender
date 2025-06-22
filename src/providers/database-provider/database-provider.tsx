@@ -13,7 +13,7 @@ import { DBDiffOperation } from "@/utils/database";
 import { DatabaseInsertType, DatabaseType, databases as databaseModel } from "@/lib/schemas/database-schema";
 import { getTimestamp, groupBy } from "@/utils/utils";
 import { IndexInsertType, indices } from "@/lib/schemas/index-schema";
-import { field_indices } from "@/lib/schemas/field_index-schema";
+import { field_indices, FieldIndexInsertType } from "@/lib/schemas/field_index-schema";
 import { v4 } from "uuid";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { Modifiers } from "@/lib/field";
@@ -382,6 +382,51 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
     }, [data_types]);
 
+
+
+    const importDatabase = useCallback(async (importedTables: TableInsertType[], importedRelationships: RelationshipInsertType[], importedIndices: IndexInsertType[]) => {
+        if (currentDatabaseId) {
+            return await db.transaction(async (tx) => {
+                for (const table of importedTables) {
+                    await tx.insert(tables).values({
+                        ...table,
+                        databaseId: currentDatabaseId,
+                        createdAt: table.createdAt || getTimestamp()
+                    } as TableInsertType);
+                    await updateDbNumTables(currentDatabaseId, tx);
+                    if (table.fields) {
+                        await tx.insert(fields).values(
+                            table.fields.map((field: FieldInsertType) => ({ ...field, tableId: table.id }))
+                        );
+                    }
+                }
+
+                for (const relationship of importedRelationships) {
+                    await tx.insert(relationships).values({
+                        ...relationship,
+                        databaseId: currentDatabaseId,
+                        createdAt: relationship.createdAt || getTimestamp()
+                    });
+                }
+
+                for (const index of importedIndices) {
+                    await tx.insert(indices).values({
+                        ...index,
+                        createdAt: index.createdAt ? index.createdAt : getTimestamp()
+                    });
+
+                    if (index.fieldIndices) {
+                        await tx.insert(field_indices).values(
+                            index.fieldIndices.map((fieldIndex: FieldIndexInsertType) => ({ ...fieldIndex, indexId: index.id }))
+                        )
+                    }
+                }
+            });
+        } else {
+            throw Error("no database selected")
+        }
+    }, [currentDatabaseId])
+
     const databaseOpsValue = useMemo(() => ({
 
         createDatabase,
@@ -406,6 +451,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editIndex,
         deleteIndex,
         editFieldIndices,
+        importDatabase,
         data_types,
         grouped_data_types
     }), [
@@ -430,6 +476,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editIndex,
         deleteIndex,
         editFieldIndices,
+        importDatabase,
         data_types,
         grouped_data_types
     ]);

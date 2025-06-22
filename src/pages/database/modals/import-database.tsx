@@ -42,7 +42,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
     const { t } = useTranslation();
     const { resolvedTheme } = useTheme();
     const { database } = useDatabase();
-    const { data_types, createTable  , createRelationship} = useDatabaseOperations();
+    const { data_types, importDatabase } = useDatabaseOperations();
     const [sqlCode, setSqlCode] = useState<string>("");
     let currentOption: ImportDatabaseOption | undefined = useMemo(() => {
         return options.find((option: ImportDatabaseOption) => option.dialect == database?.dialect)
@@ -61,23 +61,13 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
             setSelectedMethodId([selectedType]);
     }
 
-
     const selectedImportMethod: ImportDatabaseMethod = useMemo(() => {
         return currentOption?.methods.find((method: ImportDatabaseMethod) => method.id == selectedMethodId?.[0]) as ImportDatabaseMethod;
     }, [selectedMethodId, currentOption])
 
-    const importDatabase = useCallback( async () => {
-
-        const {tables , relationships } = SqlToDatabase(sqlCode, data_types, database?.dialect as DatabaseDialect);
-        
-        
-        for (const table of tables) {
-            await createTable(table)
-        } 
-
-        for ( const relationship of relationships ) { 
-            await createRelationship(relationship) ; 
-        }
+    const onImport = useCallback(async () => {
+        const { tables, relationships, indices } = SqlToDatabase(sqlCode, data_types, database?.dialect as DatabaseDialect);
+        return await importDatabase(tables, relationships, indices)
     }, [sqlCode, database?.dialect, data_types]);
 
 
@@ -88,7 +78,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
             title={t("modals.import_database.title")}
             actionName={t("modals.import_database.import")}
             className="min-w-[860px] max-w-[860px]"
-            actionHandler={importDatabase}
+            actionHandler={onImport}
         >
             <div className="flex flex-col gap-4 ">
                 <div className="w-full   ">

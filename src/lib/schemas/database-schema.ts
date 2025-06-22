@@ -26,6 +26,7 @@ export const databases = sqliteTable('databases', {
 export const databaseRelations = relations(databases, ({ many }) => ({
     tables: many(tables),
     relationships: many(relationships),
+   
 }));
 
 

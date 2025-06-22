@@ -48,7 +48,7 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
                     }, table));
         };
     } catch (error) {
-        throw error ; 
+        throw error;
 
     }
     return dbAst;
@@ -78,13 +78,13 @@ export const TableToAst = (table: TableType, data_types: DataType[], isPostgresD
 
     const filed_definitions = table.fields.map((field: FieldType) => {
         const isPostgresEnum: boolean = isPostgresDialect && field.type.name == "enum";
-        
+
         return FieldToAst({
             ...field,
             type: !(isPostgresEnum) ?
                 data_types.find((dataType: DataType) => dataType.id == field.typeId) as DataType :
                 { name: `${field.name.toLowerCase()}_enum` } as DataType,
-        }, multiPrimaryKeys , !isPostgresEnum)
+        }, multiPrimaryKeys, !isPostgresEnum)
     })
 
 
@@ -122,7 +122,7 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false, 
     let valuesExpr: any | null;
 
     let default_val: any | null = null;
-    let dataType: string | undefined = upperCaseType ? field.type?.name?.toLocaleUpperCase() : field.type?.name as string | undefined ; 
+    let dataType: string | undefined = upperCaseType ? field.type?.name?.toLocaleUpperCase() : field.type?.name as string | undefined;
 
     if (modifiers.includes(Modifiers.PRECISION) && field.precision) {
         length = field.precision;
@@ -211,7 +211,21 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false, 
         }
     }
 
-    // field.type?.name == "varchar" && (field.type?.dialect == DatabaseDialect.MYSQL || field.type?.dialect == DatabaseDialect.MARIADB) ? 255 : null
+    let auto_increment: string | undefined;
+    if (modifiers.includes(Modifiers.AUTO_INCREMENT) && field.autoIncrement && field.type.dialect != DatabaseDialect.POSTGRES) {
+        auto_increment = "auto_increment"
+    } else if (modifiers.includes(Modifiers.AUTO_INCREMENT) && field.autoIncrement && field.type.dialect == DatabaseDialect.POSTGRES) {
+        if (dataType == "INTEGER")
+            dataType = "SERIAL";
+        else
+            dataType = dataType?.replace("INT", "SERIAL");
+
+    } else {
+        auto_increment = undefined;
+    }
+
+
+
     return {
         column: {
             type: "column_ref",
@@ -225,8 +239,7 @@ export const FieldToAst = (field: FieldType, ignorePrimaryKey: boolean = false, 
         character_set,
         default_val,
         unique: field.unique ? "unique" : null,
-        auto_increment: (modifiers.includes(Modifiers.AUTO_INCREMENT) && field.autoIncrement && field.type.dialect != DatabaseDialect.POSTGRES) ? "auto_increment" : null,
-
+        auto_increment,
         nullable: {
             type: field.nullable ? "null" : "not null",
             value: field.nullable ? "null" : "not null",
@@ -264,9 +277,9 @@ export const IndexToAst = (index: IndexType, table: TableType) => {
 export const PotgresEnumToAst = (field: FieldType) => {
 
     const jsonValues = field.values ? JSON.parse(field.values) : [];
-  
+
     return {
-        as : "as" ,     
+        as: "as",
         type: "create",
         resource: "enum",
         name: {

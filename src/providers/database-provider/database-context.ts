@@ -23,6 +23,7 @@ interface DatabaseDataContextType {
     getField: (tableId: string, id: string) => FieldType | undefined,
     getDefaultPrimaryKeyType : (dialect? : DatabaseDialect) => DataType | undefined  
 
+
 }
 
 
@@ -58,6 +59,10 @@ interface DatabaseOperationsContextType {
     deleteMultiRelationships: (ids: string[]) => Promise<QueryResult>,
     // execute the diff operation whenver user click in undo or redo
     executeDbDiffOps: (operations: DBDiffOperation[]) => void,
+    
+    // insert databse tables , relationships , indices in one operation 
+    importDatabase : (tables  : TableInsertType[] , relationships : RelationshipInsertType[] , indices : IndexInsertType[]) => Promise<void> ; 
+     
 }
 
 export const DatabaseDataContext = createContext<DatabaseDataContextType>({} as DatabaseDataContextType);
