@@ -35,6 +35,25 @@ const options: ImportDatabaseOption[] = [{
         logo: "/postgresql_logo.png",
         type: ImportMethodType.DB_CLIENT
     }]
+}, {
+    dialect: DatabaseDialect.MYSQL,
+    methods: [{
+        id: "mysql_dump",
+        name: "mysqldump",
+        icon: <Code className="size-4 text-font/90" />,
+        type: ImportMethodType.DUMP
+
+    }]
+}
+    , {
+    dialect: DatabaseDialect.MARIADB,
+    methods: [{
+        id: "mysql_dump",
+        name: "mysqldump",
+        icon: <Code className="size-4 text-font/90" />,
+        type: ImportMethodType.DUMP
+
+    }]
 }]
 
 const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
@@ -44,10 +63,10 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
     const { database } = useDatabase();
     const { data_types, importDatabase } = useDatabaseOperations();
     const [sqlCode, setSqlCode] = useState<string>("");
+
     let currentOption: ImportDatabaseOption | undefined = useMemo(() => {
         return options.find((option: ImportDatabaseOption) => option.dialect == database?.dialect)
     }, [database]);
-
 
     const [selectedMethodId, setSelectedMethodId] = useState<string[]>(currentOption ? [currentOption.methods[0].id] : []);
 
@@ -67,6 +86,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
 
     const onImport = useCallback(async () => {
         const { tables, relationships, indices } = SqlToDatabase(sqlCode, data_types, database?.dialect as DatabaseDialect);
+
         return await importDatabase(tables, relationships, indices)
     }, [sqlCode, database?.dialect, data_types]);
 
@@ -145,7 +165,6 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
                             </ul>
                         </div>
                     }
-
                     {
                         selectedImportMethod.type == ImportMethodType.DB_CLIENT &&
                         <div className="space-y-2">
@@ -171,7 +190,6 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
                             </ul>
                         </div>
                     }
-
                 </div>
                 <div className="flex flex-1 ">
                     {

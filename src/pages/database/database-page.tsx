@@ -199,6 +199,7 @@ const DatabasePage: React.FC = () => {
                         snapGrid={[20, 20]}
                         onConnectStart={onConnectStart}
                         onConnectEnd={onConnectEnd}
+                        
                     >
 
                         <Controls
