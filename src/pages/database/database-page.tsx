@@ -1,7 +1,7 @@
 // Importing necessary types and hooks from React Flow (XYFlow)
 import {
     addEdge, Background, ColorMode, Connection, Controls, EdgeChange,
-    EdgeRemoveChange, NodeChange, NodePositionChange,
+    EdgeRemoveChange, MiniMap, NodeChange, NodePositionChange,
     NodeRemoveChange, OnEdgesChange, OnNodesChange,
     ReactFlow, useEdgesState, useNodesState, useReactFlow
 } from "@xyflow/react";
@@ -40,22 +40,31 @@ import { useTheme } from "next-themes";
 
 import { getRelationshipSourceAndTarget } from "@/utils/relationship";
 import { useModal } from "@/providers/modal-provider/modal-provider";
+import { Modals } from "@/providers/modal-provider/modal-contxet";
+import { Loading } from "@/components/modal/loading-modal";
+import { usePowerSync, usePowerSyncStatus } from "@powersync/react";
+
 
 
 const DatabasePage: React.FC = () => {
     const { open } = useModal();
+    const syncStatus = usePowerSync();
+
+    
+
+
 
     const { t } = useTranslation();
     const { resolvedTheme } = useTheme();
     // Extract database state and operations
-    const { database, getField } = useDatabase();
+    const { database, getField, databases, isSwitchingDatabase, isLoading, isFetching } = useDatabase();
 
     const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabaseOperations();
 
     // Node and edge state hooks
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
- 
+
     // Diagram-related state (e.g. connection in progress)
     const { setIsConnectionInProgress } = useDiagramOps();
 
@@ -68,6 +77,41 @@ const DatabasePage: React.FC = () => {
     // Define custom node and edge types
     const nodeTypes = useMemo(() => ({ table: Table }), []);
     const edgeTypes = useMemo(() => ({ 'relationship-edge': Relationship }), []);
+
+    useEffect(() => { 
+
+        if (isLoading || isFetching || !(syncStatus.currentStatus as any).options.hasSynced)
+            return;
+      
+        // no database selected , open (open database) Modal  
+        if (!database && databases?.length > 0) {
+            open(Modals.OPEN_DATABASE, {
+                closable: false
+            })
+        }
+        else if (databases.length == 0) {
+            // there is no databases in the first place to select from , 
+            // we have to create a new one . 
+            open(Modals.CREATE_DATABASE, {
+                closable: false
+            });
+        } 
+    }, [database?.id, isLoading, isFetching , (syncStatus.currentStatus as any).options.hasSynced])
+
+
+
+    
+    
+    useEffect(() => {
+        if (isSwitchingDatabase) {
+            setNodes([]);
+            setEdges([]);
+        } else {
+            fitView({
+                duration: 500
+            });
+        }
+    }, [isSwitchingDatabase])
 
     // Called when a connection is made between fields
     const onConnect = useCallback(async (connection: Connection) => {
@@ -98,8 +142,8 @@ const DatabasePage: React.FC = () => {
             addToast({
                 title: t("db_controller.invalid_relationship.title"),
                 description: t("db_controller.invalid_relationship.description"),
-                  color: "danger",
-            variant : "solid"
+                color: "danger",
+                variant: "solid"
             });
         }
 
@@ -108,6 +152,7 @@ const DatabasePage: React.FC = () => {
 
     // Called when nodes are updated (position changes or removed)
     const handleNodesChanges: OnNodesChange<never> = useCallback(async (changes: NodeChange<never>[]) => {
+
         const nodePositionChanges: NodePositionChange[] = changes.filter((change: NodeChange) =>
             change.type == "position" && !change.dragging
         ) as NodePositionChange[];
@@ -127,7 +172,7 @@ const DatabasePage: React.FC = () => {
             deleteMultiTables(nodeRemoveChanges.map((change: NodeRemoveChange) => change.id));
         }
         return onNodesChange(changes);
-    }, [onNodesChange]);
+    }, [onNodesChange, database]);
 
     // Called when edges (relationships) change
     const handleEdgeChanges: OnEdgesChange<any> = useCallback((changes: EdgeChange<any>[]) => {
@@ -137,7 +182,6 @@ const DatabasePage: React.FC = () => {
         if (edgeRemoveChanges.length > 0) {
             deleteMultiRelationships(edgeRemoveChanges.map((change: EdgeRemoveChange) => change.id));
         }
-
         return onEdgesChange(changes as EdgeChange<never>[]);
     }, [onEdgesChange]);
 
@@ -170,9 +214,14 @@ const DatabasePage: React.FC = () => {
     useHighlightedEdges(nodes, relationships, edges);
     const { isOverlapping, puls } = useOverlappingTables(tables);
 
+
+    
     return (
 
         <div className="w-full h-screen flex  relative overflow-hidden">
+            {
+                (isSwitchingDatabase || isLoading || !(syncStatus.currentStatus as any).options.hasSynced) && <Loading />
+            }
             <div className="flex max-w-full">
                 <DBController />
             </div>
@@ -191,31 +240,37 @@ const DatabasePage: React.FC = () => {
                         defaultEdgeOptions={{
                             type: 'relationship-edge',
                         }}
-                        //  onlyRenderVisibleElements
+
                         panOnDrag={true}
                         zoomOnScroll={true}
                         nodeTypes={nodeTypes}
                         edgeTypes={edgeTypes}
                         snapGrid={[20, 20]}
+                        minZoom={0.10}
                         onConnectStart={onConnectStart}
                         onConnectEnd={onConnectEnd}
-                        
                     >
-
                         <Controls
                             position="bottom-center"
                             showFitView={false}
                             showZoom={false}
                             showInteractive={false}
-                            className="shadow-none "
-                        >
+                            className="shadow-none">
 
                             <DatabaseControlButtons
                                 adjustPositions={adjustPositions}
                             />
                         </Controls >
+                        <MiniMap
+                            nodeStrokeWidth={4}
+                            className="dark:bg-content1 bg-background border-1 border-default-200 dark:border-divider rounded-md"
+                            maskStrokeColor={resolvedTheme == "dark" ? "#272c35" : "#e9edf1"}
+                            maskColor={resolvedTheme == "dark" ? "#20252c99" : "#f2f4f733"}
+                            maskStrokeWidth={1}
+                            nodeClassName={"fill-default-300 dark:fill-font/30"}
 
-                        <Background className=" dark:bg-background-100" />
+                        />
+                        <Background className="dark:bg-background-100 " />
                     </ReactFlow>
                     <div
                         className="absolute left-[24px] bottom-[24px] "
@@ -231,8 +286,7 @@ const DatabasePage: React.FC = () => {
                                             isIconOnly
                                             color="danger"
                                             className="size-8 p-1 "
-                                            onPressEnd={puls}
-                                        >
+                                            onPressEnd={puls}>
                                             <AlertTriangle className="size-4 text-white" />
                                         </Button>
                                     </span>
@@ -248,17 +302,17 @@ const DatabasePage: React.FC = () => {
             }
             <svg style={{ position: 'absolute', width: 0, height: 0 }}>
                 <defs>
-                    <CardinalityMarker type="one" direction="start" />
-                    <CardinalityMarker type="one" direction="start" selected />
+                    <CardinalityMarker type="numeric" cardinality="one" direction="start" />
+                    <CardinalityMarker type="numeric" cardinality="one" direction="start" selected />
 
-                    <CardinalityMarker type="one" direction="end" />
-                    <CardinalityMarker type="one" direction="end" selected />
+                    <CardinalityMarker type="numeric" cardinality="one" direction="end" />
+                    <CardinalityMarker type="numeric" cardinality="one" direction="end" selected />
 
-                    <CardinalityMarker type="many" direction="start" />
-                    <CardinalityMarker type="many" direction="start" selected />
+                    <CardinalityMarker type="numeric" cardinality="many" direction="start" />
+                    <CardinalityMarker type="numeric" cardinality="many" direction="start" selected />
 
-                    <CardinalityMarker type="many" direction="end" />
-                    <CardinalityMarker type="many" direction="end" selected />
+                    <CardinalityMarker type="numeric" cardinality="many" direction="end" />
+                    <CardinalityMarker type="numeric" cardinality="many" direction="end" selected />
 
                 </defs>
             </svg>
@@ -269,3 +323,7 @@ const DatabasePage: React.FC = () => {
 
 
 export default DatabasePage; 
+
+
+
+

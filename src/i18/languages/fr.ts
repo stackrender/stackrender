@@ -65,7 +65,7 @@ export const fr = {
             }
         },
         table: {
-            double_click: "Double-cliquez pour éditer" , 
+            double_click: "Double-cliquez pour éditer",
             overlapping_tables: "Tables qui se chevauchent",
         },
         control_buttons: {
@@ -105,6 +105,28 @@ export const fr = {
             help: "Aide",
             show_docs: "Afficher la documentation",
             join_discord: "Rejoindre Discord"
+        },
+
+        import: {
+            instructions: "Instructions",
+            install: "Installer",
+            run_command: "Exécutez la commande suivante dans votre terminal.",
+            example: "Exemple",
+            copy_code: "Copiez le contenu du fichier .sql dans la section de code ci-dessous.",
+            pg_admin: {
+                step1: "Ouvrez <bold>Pg Admin</bold>.",
+                step2: "Faites un clic droit sur votre base de données et sélectionnez <bold>Sauvegarder</bold> dans le menu contextuel.",
+                step3: "Nommez votre fichier <code>.sql</code>, définissez le format sur <bold>Plain</bold> et choisissez <bold>Encodage : UTF8.</bold>",
+                step4: "Assurez-vous que <bold>Only schema</bold> est coché et que <bold>Only data</bold> ne l'est pas dans l'onglet <bold>Data Options</bold>.",
+                step5: "Cliquez sur <bold>Sauvegarder</bold> pour exporter le fichier, puis copiez son contenu dans la section de l'éditeur de code ci-dessous."
+            },
+            workbench: {
+                step1: "Ouvrez <bold>MySQL Workbench</bold> et <bold>connectez-vous</bold> à votre serveur MySQL.",
+                step2: "Dans le menu du haut, allez dans <bold>Server &gt; Data Export</bold>.",
+                step3: "Dans les <bold>Options d'exportation</bold>, choisissez <bold>Dump Structure Only</bold>.",
+                step4: "Cochez <bold>Export to Self-Contained File</bold>, puis choisissez un emplacement et donnez un nom au fichier <code>.sql</code> de sortie.",
+                step5: "Cliquez sur <bold>Démarrer l'exportation</bold> pour lancer le processus. Ensuite, copiez son contenu dans la section de l'éditeur de code ci-dessous."
+            }
         }
     }
 };

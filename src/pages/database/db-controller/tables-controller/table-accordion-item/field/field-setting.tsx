@@ -272,7 +272,14 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                     <span className="text-xs text-font/70 font-medium dark:text-font/90">
                         {t("db_controller.field_settings.unique")}
                     </span>
-                    <Checkbox defaultSelected={field.unique as boolean} size="md" onValueChange={toggleUnqiue} />
+                    <Checkbox
+                        defaultSelected={field.unique as boolean}
+                        size="md"
+
+                        classNames={{
+                            wrapper: "before:border-divider group-data-[hover=true]:before:bg-default",
+                        }}
+                        onValueChange={toggleUnqiue} />
                 </div>
             }
             {
@@ -287,7 +294,11 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                             <span className="text-xs text-font/70 font-medium dark:text-font/90">
                                 {t("db_controller.field_settings.autoIncrement")}
                             </span>
-                            <Checkbox defaultSelected={field.autoIncrement as boolean} size="md" onValueChange={toggleAutoIncrement} />
+                            <Checkbox defaultSelected={field.autoIncrement as boolean} 
+                            classNames={{
+                            wrapper: "before:border-divider group-data-[hover=true]:before:bg-default",
+                        }}
+                            size="md" onValueChange={toggleAutoIncrement} />
                         </div>
                     }
                     {
@@ -296,7 +307,11 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                             <span className="text-xs text-font/70 font-medium dark:text-font/90">
                                 {t("db_controller.field_settings.unsigned")}
                             </span>
-                            <Checkbox defaultSelected={field.unsigned as boolean} size="md" onValueChange={toggleUnsigned} />
+                            <Checkbox
+                            classNames={{
+                            wrapper: "before:border-divider group-data-[hover=true]:before:bg-default",
+                        }}
+                            defaultSelected={field.unsigned as boolean} size="md" onValueChange={toggleUnsigned} />
                         </div>
                     }
                     {
@@ -305,7 +320,11 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                             <span className="text-xs text-font/70 font-medium dark:text-font/90">
                                 {t("db_controller.field_settings.zeroFill")}
                             </span>
-                            <Checkbox defaultSelected={field.zeroFill as boolean} size="md" onValueChange={toggleZeroFill} />
+                            <Checkbox
+                            classNames={{
+                            wrapper: "before:border-divider group-data-[hover=true]:before:bg-default",
+                        }}
+                            defaultSelected={field.zeroFill as boolean} size="md" onValueChange={toggleZeroFill} />
                         </div>
                     }
 
@@ -356,7 +375,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                                     placeholder={t("db_controller.field_settings.precision")}
                                     className="h-8 w-full focus-visible:ring-0 shadow-none "
                                     classNames={{
-                                        inputWrapper: "dark:bg-default border-divider group-hover:border-primary ",
+                                        inputWrapper: "dark:bg-default border-divider group-hover:border-primary  group-data-[focus=true]:border-primary ",
                                     }}
 
                                 />
@@ -400,7 +419,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                                     placeholder={t("db_controller.field_settings.scale")}
                                     className="h-8 w-full focus-visible:ring-0 shadow-none "
                                     classNames={{
-                                        inputWrapper: "dark:bg-default border-divider group-hover:border-primary ",
+                                        inputWrapper: "dark:bg-default border-divider group-hover:border-primary  group-data-[focus=true]:border-primary ",
                                     }}
 
                                 />
@@ -422,16 +441,21 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                                 {t("db_controller.field_settings.charset")}
                             </label>
                             <Select
-                                className="w-full"
                                 size="sm"
                                 variant="bordered"
                                 aria-label="charset"
                                 placeholder={t("db_controller.field_settings.charset")}
                                 selectedKeys={charset as any}
                                 onSelectionChange={changeCharset}
+                                className="h-8 w-full focus-visible:ring-0 shadow-none "
+
                                 classNames={{
-                                    trigger: "border-divider group-hover:border-primary",
+                                    trigger: "border-divider group-hover:border-primary data-[focus=true]:border-primary data-[open=true]:border-primary",
+                                    selectorIcon: "text-icon",
+                                    popoverContent: "rounded-md "
                                 }}
+
+
                             >
                                 {
                                     Object.values(charsets).map((charset: string) => (<SelectItem key={charset}>{charset}</SelectItem>))
@@ -445,15 +469,18 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                                 {t("db_controller.field_settings.collation")}
                             </label>
                             <Select
-                                className="w-full"
                                 size="sm"
                                 variant="bordered"
                                 aria-label="collation"
                                 placeholder={t("db_controller.field_settings.collation")}
                                 selectedKeys={collation as any}
                                 onSelectionChange={changeCollation}
+                                className="h-8 w-full focus-visible:ring-0 shadow-none "
                                 classNames={{
-                                    trigger: "border-divider group-hover:border-primary",
+                                    trigger: "border-divider group-hover:border-primary  data-[focus=true]:border-primary data-[open=true]:border-primary",
+                                    selectorIcon: "text-icon",
+                                    popoverContent: "rounded-md "
+
                                 }}
                             >
                                 {
@@ -503,9 +530,9 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                         }
                         className="h-8 w-full focus-visible:ring-0 shadow-none "
                         classNames={{
-                            inputWrapper: "dark:bg-default border-divider group-hover:border-primary ",
-
+                            inputWrapper: "dark:bg-default border-divider group-hover:border-primary  group-data-[focus=true]:border-primary ",
                         }}
+
                     />
                 </>
             }
@@ -539,9 +566,10 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                 onValueChange={setNote}
                 onBlur={updateFieldNote}
                 classNames={{
-                    inputWrapper: "bg-default border-divider ",
                     base: "max-w-xs",
                     input: "resize-y min-h-[60px] max-h-[180px]",
+                    inputWrapper: "bg-default border-divider dark:bg-background-100 group-hover:border-primary group-data-[focus=true]:border-primary",
+                    label: "text-font/90 group-data-[focus=true]:text-font/70"
                 }} />
             <hr className="border-divider" />
             <Button

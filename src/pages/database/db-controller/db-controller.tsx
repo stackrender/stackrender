@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { Outlet } from "react-router-dom"
 import { ResizableBox as ResizableBoxRaw } from 'react-resizable';
 import 'react-resizable/css/styles.css';
+import { GripVertical } from "lucide-react";
 
 const ResizableBox = ResizableBoxRaw as unknown as React.FC<any>;
 
@@ -16,17 +17,17 @@ const DBController: React.FC<Props> = ({ }) => {
     const onResize = (event: any, params: any) => {
         setWidth(params.size.width);
     }
-     
-    
+
+
     return (
         <ResizableBox
             width={width}
-            onResize={onResize} className="min-h-full overflow-hidden "
+            onResize={onResize} className="min-h-full overflow-visible "
             minConstraints={[512]}
-            
             axis="x"
             handle={
-                <div className="w-[6px] border-r-2 border-transparent  h-full absolute right-0 top-0 cursor-ew-resize hover:border-primary active:border-primary transition-colors duration-200">
+
+                <div className="w-[6px] border-r-2 border-transparent  h-full absolute right-0 top-0 cursor-ew-resize hover:border-primary-300 active:border-primary-400 transition-colors duration-200 ">
                 </div>
             }
         >

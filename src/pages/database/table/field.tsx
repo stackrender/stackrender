@@ -46,11 +46,9 @@ const Field: React.FC<Props> = (props) => {
         setEditMode(false);
     }, [fieldName])
 
-
-
     return (
         <div className={cn(
-            "group relative flex h-8 items-center justify-between gap-1 border-t border-divider  px-3 text-sm last:rounded-b-[6px] hover:bg-slate-100 dark:hover:bg-primary/5 transition-all duration-200 ease-in-out",
+            "group relative flex h-8 items-center justify-between gap-1 border-t border-divider  px-3 text-sm last:rounded-b-[6px] hover:bg-default dark:hover:bg-primary/10 transition-all duration-200 ease-in-out",
             highlight ? "bg-primary/5" : ""
         )}>
             {
@@ -70,7 +68,7 @@ const Field: React.FC<Props> = (props) => {
                                 <TooltipTrigger>
                                     <MessageSquareQuote className="size-3.5 text-icon" />
                                 </TooltipTrigger>
-                                <TooltipContent> 
+                                <TooltipContent>
                                     {field.note}
                                 </TooltipContent>
                             </Tooltip>
@@ -111,12 +109,12 @@ const Field: React.FC<Props> = (props) => {
                         onClick={(e) => e.stopPropagation()}
                         onChange={(e) => setFieldName(e.target.value)}
 
-                        className="rounded-md outline-none px-2 py-0.5 w-full border-[0.5px] border-primary-700  bg-slate-100 focus-visible:ring-0   text-sm dark:bg-transparent text-font/90"
+                        className="rounded-sm outline-none px-2 py-0.5 w-full border-[0.5px] border-primary  bg-content1 focus-visible:ring-0 text-sm dark:text-white"
 
                     />
                     <Button
                         variant="light"
-                        className="size-6 p-0 text-icon  hover:text-font/90"
+                        className="text-icon hover:bg-default hover:text-font/90"
                         size="sm"
                         isIconOnly
                         onPress={saveFieldName}

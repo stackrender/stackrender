@@ -39,7 +39,7 @@ export default {
             DEFAULT: "#cecfd2"
           },
           content1: {
-            DEFAULT: "#1c2026"
+            DEFAULT: "#20252c"
           },
  
           default: {

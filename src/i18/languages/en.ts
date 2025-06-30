@@ -56,43 +56,43 @@ export const en = {
                 title: "Field Setting",
                 unique: "Unique",
                 unsigned: "Unsigned",
-                numeric_setting : "Numeric Setting" , 
-                   decimal_setting : "Decimal Setting" , 
+                numeric_setting: "Numeric Setting",
+                decimal_setting: "Decimal Setting",
                 zeroFill: "Zero Fill",
                 autoIncrement: "Auto Increment",
                 note: "Note",
 
                 delete_field: "Delete Field",
                 field_note: "Field note",
-                precision : "Precision" , 
-                text_setting : "Text Setting" , 
-                charset : "Charset" , 
-                collation : "Collation" , 
-                scale : "Scale"  , 
-                max_length : "Max length" , 
-                integer_width : "Integer Width" ,
-                width : "width" ,  
-                default_value : "Default value" ,
-                value : "Value" , 
-                length : "Length" , 
-                values : "Values" , 
-                type_enter : "Type and press enter" , 
-                precision_def : "Total digits allowed (before + after the decimal)."  , 
-                scale_def : "Digits allowed after the decimal." , 
-                time_default_value : { 
-                    no_value : "No value" , 
-                    custom : "Custom time" , 
-                    now : "Now"
-                } , 
-                errors : { 
-                    max_length : "must be positive number, no decimals." , 
-                    integer_default_value : "Invalid default value for Integer" , 
-                    precision : "Precision must be positive number, no decimals." , 
-                    scale : "Scale must be positive number, no decimals." ,
-                    scale_max_value : "Scale must be ≤ precision."
-                    
-                } , 
-                pick_value : "Pick value"
+                precision: "Precision",
+                text_setting: "Text Setting",
+                charset: "Charset",
+                collation: "Collation",
+                scale: "Scale",
+                max_length: "Max length",
+                integer_width: "Integer Width",
+                width: "width",
+                default_value: "Default value",
+                value: "Value",
+                length: "Length",
+                values: "Values",
+                type_enter: "Type and press enter",
+                precision_def: "Total digits allowed (before + after the decimal).",
+                scale_def: "Digits allowed after the decimal.",
+                time_default_value: {
+                    no_value: "No value",
+                    custom: "Custom time",
+                    now: "Now"
+                },
+                errors: {
+                    max_length: "must be positive number, no decimals.",
+                    integer_default_value: "Invalid default value for Integer",
+                    precision: "Precision must be positive number, no decimals.",
+                    scale: "Scale must be positive number, no decimals.",
+                    scale_max_value: "Scale must be ≤ precision."
+
+                },
+                pick_value: "Pick value"
             },
             delete: "Delete",
 
@@ -111,13 +111,13 @@ export const en = {
             invalid_relationship: {
                 title: "Invalid Relationship",
                 description: "The source key type does not match the referenced key type. Please ensure both keys have the same data type."
-            }  , 
-            circular_dependency : { 
-                title : "Circular Dependency Detected" , 
-                toast_description : "A circular reference between tables was found. Check the diagram on the left and remove one of the relationships to fix it." , 
-                description : "Your schema contains a circular foreign key relationship between tables. To fix it" , 
-                suggestion : "remove one of the relationships listed below that are causing the cycle."  , 
-                remove_relationship : "Remove relationship"
+            },
+            circular_dependency: {
+                title: "Circular Dependency Detected",
+                toast_description: "A circular reference between tables was found. Check the diagram on the left and remove one of the relationships to fix it.",
+                description: "Your schema contains a circular foreign key relationship between tables. To fix it",
+                suggestion: "remove one of the relationships listed below that are causing the cycle.",
+                remove_relationship: "Remove relationship"
             }
         },
         table: {
@@ -180,13 +180,67 @@ export const en = {
             open_database_header: "Open a database by selecting one from the list.",
             delete_database: "Delete Database",
             delete_database_content: "This action is irreversible and will permanently remove the diagram.",
-            delete: "Delete" , 
+            delete: "Delete",
 
-            import_database : { 
-                title : "Import your Database" , 
-                import : "Import" , 
-                import_options : "Would you like to import using :" 
+            import_database: {
+                title: "Import your Database",
+                import: "Import",
+                import_options: "Would you like to import using :"
             }
+        },
+        clipboard: {
+            copy: "Copy",
+            copied: "Copied"
+        },
+
+        connection_status : {
+            online: "Online" , 
+            offline : "Offline" , 
+            saving : "Saving" , 
+            saved : "Saved"  , 
+            last_synced : "Last synced" , 
+            min_ago : "min ago" , 
+            hour_ago : "hour ago" , 
+            just_now : "Just now"
+        }, 
+        import: {
+            instructions: "Instructions",
+            install: "Install",
+            run_command: "Run the following command in your terminal.",
+            example: "Example",
+            copy_code: "Copy the content of .sql file in code section below.",
+            pg_admin: {
+                "step1": "Open <bold>Pg Admin</bold>.",
+                "step2": "Right-click your database and select <bold>Backup</bold> from the context menu.",
+                "step3": "Name your <code>.sql</code> file, set Format to <bold>Plain</bold>, and choose <bold>Encoding: UTF8.</bold>",
+                "step4": "Make sure <bold>Only schema</bold> is checked and <bold>Only data</bold> is unchecked in the <bold>Data Options tab</bold>.",
+                "step5": "Click <bold>Backup</bold> to export the file, then copy its content into the code editor section below."
+            },
+            workbench: {
+                "step1": "Open <bold>MySQL Workbench</bold> and <bold>connect</bold> to your MySQL server.",
+                "step2": "In the top menu, go to <bold>Server > Data Export</bold>.",
+                "step3": "In the <bold>Export Options</bold>, choose <bold>Dump Structure Only</bold>.",
+                "step4": "Check <bold>Export to Self-Contained File</bold>, then choose a location and enter a name for the output <code>.sql</code> file.",
+                "step5": "Click <bold>Start Export</bold> to begin the export process. Then, copy its content into the code editor section below."
+
+            },
+            heidisql: {
+                "step1": "<bold>Open HeidiSQL</bold> and connect to your server.",
+                "step2": "In the <bold>left sidebar, right-click</bold> on the database you want to export.",
+                "step3": "Choose <bold>Export database as SQL</bold> from the context menu.",
+                "step4": "Select <bold>No data</bold> and make sure <bold>Create</bold> is checked to export the table structure only.",
+                "step5": "Click the <bold>Export</bold> button, and finally copy the content of the <code>.sql</code> file into the <bold>code editor</bold> below."
+
+            },
+            dbbrowser: {
+                step1: "Launch <bold>DB Browser for SQLite</bold>.",
+                step2: "Click <bold>File > Open Database</bold> and select your <code>.sqlite</code> or <code>.db</code> file.",
+                step3: "Go to <bold>File > Export > Database to SQL file</bold> from the top menu.",
+                step4: "In the dialog, choose <bold>Export schema only</bold> and click <bold>Save</bold>.",
+                step5: "Finally, copy the contents of the <code>.sql</code> file into the <bold>code editor</bold> below."
+
+            },
+
         }
 
     }

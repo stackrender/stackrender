@@ -23,11 +23,13 @@ function App() {
         <ReactFlowProvider>
           <DatabaseProvider>
             <DiagramProvider>
-              <ModalProvider>
-                <TooltipProvider delayDuration={0}>
+
+              <TooltipProvider delayDuration={0}>
+                <ModalProvider>
                   {appRoutes}
-                </TooltipProvider>
-              </ModalProvider>
+                </ModalProvider>
+              </TooltipProvider>
+
             </DiagramProvider>
           </DatabaseProvider>
         </ReactFlowProvider>

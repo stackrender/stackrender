@@ -72,3 +72,10 @@ export const getForeignRelationships = (table: TableType): RelationshipType[] =>
 
     return foreignRelationships;
 }
+
+
+export const getDefaultRelationshipName = (relationship: RelationshipType) => {
+    if (!relationship.sourceTable || !relationship.targetTable || !relationship.sourceField || !relationship.targetField)
+        return "";
+    return `fk_${relationship.sourceTable?.name}_${relationship.targetTable?.name}`
+}

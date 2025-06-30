@@ -8,7 +8,7 @@ import ColorPicker from "@/components/color-picker/color-picker";
 import FieldList from "./field/field-list";
 import IndexesList from "./index/indexes-list";
 import { TableType } from "@/lib/schemas/table-schema";
-import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { getNextSequence } from "@/utils/field";
 import { v4 } from "uuid";
 import { IndexInsertType } from "@/lib/schemas/index-schema";
@@ -16,14 +16,16 @@ import { IndexInsertType } from "@/lib/schemas/index-schema";
 
 export interface TableAccordionBodyProps {
     table: TableType,
+    keys?: string[];
 }
 
-const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
+const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table, keys }) => {
 
     const [selectedKeys, setSelectedKeys] = useState(new Set(["fields"]));
     const [note, setNote] = useState<string>(table.note ? table.note : "");
     const { t } = useTranslation();
-    const { editTable, createField, createIndex } = useDatabaseOperations();
+
+    const { editTable, createField, createIndex, getInteger } = useDatabaseOperations();
 
     const onColorChange = useCallback((color: string | undefined) => {
         editTable({ id: table.id, color: color ? color : null } as TableType);
@@ -38,7 +40,8 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
             tableId: table.id,
             sequence: getNextSequence(table.fields),
             nullable: true,
-        })
+            typeId: getInteger()?.id
+        });
     }
 
     const addIndex = (event: any) => {
@@ -49,6 +52,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
             unique: true,
             tableId: table.id
         } as IndexInsertType);
+
     }
     const saveNote = () => {
         editTable({
@@ -63,7 +67,13 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
     }, [table.note]);
 
 
+    useEffect(() => {
+        setSelectedKeys(new Set([...selectedKeys, "fields"]))
+    }, [table.fields.length])
 
+    useEffect(() => {
+        setSelectedKeys(new Set([...selectedKeys, "indexes"]))
+    }, [table.indices.length])
 
     return (
         <div className="w-full dark:bg-background-50">
@@ -149,7 +159,8 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table }) => {
                     }>
                     <Textarea variant="bordered" className="w-full " label={t("db_controller.table_note")}
                         classNames={{
-                            inputWrapper: "bg-default border-divider dark:bg-background-100    ",
+                            inputWrapper: "bg-default border-divider dark:bg-background-100 group-hover:border-primary group-data-[focus=true]:border-primary",
+                            label: "text-font/90 group-data-[focus=true]:text-font/70"
                         }}
                         value={note}
                         onValueChange={setNote}

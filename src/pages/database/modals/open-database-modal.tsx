@@ -12,21 +12,23 @@ import { useTranslation } from "react-i18next";
 
 
 
-const OpenDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
-
+const OpenDatabaseModal: React.FC<ModalProps> = (props) => {
+    const { isOpen, onOpenChange } = props;
     const { t } = useTranslation();
-    const { databases , currentDatabaseId} = useDatabase();
-    const { switchDatabase  } = useDatabaseOperations();
+    const { databases, currentDatabaseId } = useDatabase();
+    const { switchDatabase } = useDatabaseOperations();
     const [selectedDatabase, setSelectedDatabase] = useState<any | undefined>(
         (() => currentDatabaseId ? new Set([currentDatabaseId]) : undefined)
     );
- 
+
     const openDatabase = () => {
-        switchDatabase( selectedDatabase.currentKey)
+        switchDatabase(selectedDatabase.currentKey) ; 
+        onOpenChange && onOpenChange(false) ; 
     }
 
     return (
         <Modal
+            {...props}
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             title={t("modals.open_database")}
@@ -35,19 +37,18 @@ const OpenDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
             actionHandler={openDatabase}
             header={t("modals.open_database_header")}
             isDisabled={!selectedDatabase?.size}
+
         >
             <Table
                 aria-label="Example static collection table"
                 color={"primary"}
-
-
                 selectionMode="single"
                 selectedKeys={selectedDatabase}
                 onSelectionChange={setSelectedDatabase}
                 classNames={{
-                    wrapper: "min-h-[360px]  shadow-none border-1  border-divider  rounded-sm"  , 
-                    th : "dark:bg-background" , 
-                    tr : "hover:bg-default-100 dark:hover:bg-background rounded-lg cursor-pointer text-font/90 transition-colors duration-200 "
+                    wrapper: "min-h-[360px]  shadow-none border-1  border-divider  rounded-sm",
+                    th: "dark:bg-background",
+                    tr: "hover:bg-default-100 dark:hover:bg-background rounded-lg cursor-pointer text-font/90 transition-colors duration-200 "
                 }}
             >
                 <TableHeader className="rounded-sm">
@@ -62,8 +63,9 @@ const OpenDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
                             <TableRow key={database.id}>
                                 <TableCell>
                                     <Image
-                                        src={getDatabaseByDialect(database.dialect).logo}
+                                        src={getDatabaseByDialect(database.dialect).small_logo}
                                         width={24}
+                                        radius="none"
                                     />
                                 </TableCell>
                                 <TableCell className="font-semibold">{database.name}</TableCell>

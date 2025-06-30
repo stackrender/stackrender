@@ -42,13 +42,13 @@ const RenameDatabase: React.FC<RenameDatabaseProps> = ({ database}) => {
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <label
-                            className=" w-full text-editable truncate h-8   px-3 text-sm font-bold dark:text-white flex gap-4 items-center justify-center text-font/90 hover:underline"
+                            className=" w-full text-editable truncate h-8   px-3 text-sm font-bold dark:text-white flex gap-4 items-center justify-center text-font hover:underline"
                             onDoubleClick={() => setEditMode(true)}
                         >
                             <Image
-                                src={getDatabaseByDialect(database.dialect as DatabaseDialect).logo}
-                                width={22}
-                                className=" rounded-none "
+                                src={getDatabaseByDialect(database.dialect as DatabaseDialect).small_logo}
+                                width={20}
+                                className="rounded-none "
                             />
 
                             {dbName}
@@ -64,27 +64,25 @@ const RenameDatabase: React.FC<RenameDatabaseProps> = ({ database}) => {
                 editMode &&
                 <div className="flex justify-center items-center gap-4">
                     <Image
-                        src={getDatabaseByDialect(database.dialect as DatabaseDialect).logo}
-                        width={32}
+                        src={getDatabaseByDialect(database.dialect as DatabaseDialect).small_logo}
+                        width={30}
                         className=" rounded-none "
                     />
-
-
                     <Input
                         placeholder={database.name}
                         type="text"
                         size="sm"
                         radius="sm"
-                        variant="faded"
+                        variant="bordered"
                         onChange={(event: any) => setDbName(event.target.value)}
                         value={dbName}
                         onBlur={saveDatabaseName}
+                        autoFocus
                         className="h-8 w-full focus-visible:ring-0 shadow-none"
                         classNames={{
-                            inputWrapper: "dark:bg-default border-divider group-hover:border-primary ",
+                            inputWrapper: "rounded-sm  focus-visible:border-0 text-sm dark:bg-content1 bg-background group-data-[hover=true]:border-primary group-data-[focus=true]:border-primary border-primary  ",
+                            input: "font-semibold text-black dark:text-font"
                         }}
-
-
                     />
                     <Button
                         variant="solid"

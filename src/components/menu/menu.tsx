@@ -7,26 +7,14 @@ import { useModal } from "@/providers/modal-provider/modal-provider";
 import { Modals } from "@/providers/modal-provider/modal-contxet";
 
 
-
-
-
-
-
-
-
-interface MenuProps {
-}
-
-const Menu: React.FC<MenuProps> = ({ }) => {
+const Menu: React.FC<any > = ({ }) => {
 
     const { setTheme } = useTheme()
 
     const { t } = useTranslation();
     const { open } = useModal();
 
-    useEffect(() => { 
-              open(Modals.IMPORT_DATABASE)
-    } , [])
+
     const menu: MenuDropdownProps[] = useMemo(() => [
         {
             title: t("menu.file"),

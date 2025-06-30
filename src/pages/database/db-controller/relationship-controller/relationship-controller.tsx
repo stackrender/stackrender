@@ -10,23 +10,23 @@ import CreateRelationshipForm from "../../modals/create-relationship-modal";
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 
-import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
-import { getDefaultRelationshipName } from "@/hooks/use-relationship-name";
+import { useDiagram } from "@/providers/diagram-provider/diagram-provider"; 
 import { useModal } from "@/providers/modal-provider/modal-provider";
 import { Modals } from "@/providers/modal-provider/modal-contxet";
+import { getDefaultRelationshipName } from "@/utils/relationship";
 
 
 
 
- 
+
 
 
 const RelationshipController: React.FC = ({ }) => {
 
-    
+
     const { open } = useModal();
     const { database } = useDatabase();
-    const { relationships: allRelationships } = database || { relationships : []};
+    const { relationships: allRelationships } = database || { relationships: [] };
     const [relationships, setRelationships] = useState<RelationshipType[]>(allRelationships);
 
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
@@ -34,8 +34,7 @@ const RelationshipController: React.FC = ({ }) => {
     const [selectedRelationship, setSelectedRelationship] = useState(new Set([]));
     const { focusedRelationshipId } = useDiagram();
 
-    useEffect(() => setRelationships(allRelationships), [allRelationships]);
-
+    useEffect(() => searchRelationships(), [allRelationships]);
 
     useEffect(() => {
         if (focusedRelationshipId) {
@@ -67,8 +66,12 @@ const RelationshipController: React.FC = ({ }) => {
         }
     }, [nameRef, allRelationships]);
 
+    const selectedRelationshipId = selectedRelationship.values().next().value; 
 
-    const selectedRelationshipId = selectedRelationship.values().next().value;
+
+    const collapseAll = useCallback(() => {
+        setSelectedRelationship(new Set([])) ; 
+    } , [])
 
     return (
         <div className="w-full h-full flex flex-col gap-2">
@@ -81,10 +84,8 @@ const RelationshipController: React.FC = ({ }) => {
                                     variant="light"
                                     className="size-8 p-0 text-icon hover:text-font/90"
                                     isIconOnly
-                                    onPress={() =>
-                                        //setShowDBML((value) => !value)
-                                        console.log("hello world ")
-                                    }
+                                    onPressEnd={collapseAll}    
+                                
 
                                 >
                                     <ListCollapse className="size-4" />
@@ -100,15 +101,14 @@ const RelationshipController: React.FC = ({ }) => {
                     <Input
                         ref={nameRef}
                         type="text"
-
                         size="sm"
                         radius="sm"
                         variant="faded"
                         placeholder={t("db_controller.filter")}
-                        className="h-8 w-full focus-visible:ring-0 shadow-none "
                         onKeyUp={searchRelationships}
+                        className="h-8 w-full focus-visible:ring-0 shadow-none "
                         classNames={{
-                            inputWrapper: "dark:bg-default   group-hover:border-primary ",
+                           inputWrapper: "dark:bg-default border-divider group-hover:border-primary group-data-[focus=true]:border-primary",
                         }}
 
                     />

@@ -1,5 +1,4 @@
 
-import { tags as t } from '@lezer/highlight';
 import { EditorView } from '@uiw/react-codemirror';
 
 export const colorOptions = [
@@ -26,29 +25,30 @@ export const randomColor = () => {
 
 
 export const overrideDarkTheme = EditorView.theme({
- 
+
   '.cm-content': {
-    backgroundColor: "#20252c"
+    backgroundColor: "#20252c" ,  
   },
   ".cm-gutter": {
     backgroundColor: "#20252c",
-  },
+  }, 
+  
   ".cm-gutterElement": {
     color: "#4b515a"
   },
- 
-   ".ͼp": {
+
+  ".ͼp": {
     color: "#A994FF"
   },
 
   ".cm-line .ͼq": {
-      color : "#ff6363"
-  } , 
-  ".ͼu" : { 
-    color : "#B6E672"
-  } , 
+    color: "#ff6363"
+  },
+  ".ͼu": {
+    color: "#B6E672"
+  },
   ".ͼv": {
-      color : "#6cdcc4"
+    color: "#6cdcc4"
   }
 
 }, { dark: true });
@@ -73,5 +73,5 @@ export const overrideLightTheme = EditorView.theme({
   ".cm-line": {
     color: "#333639"
   },
- 
+
 });

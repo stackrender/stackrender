@@ -112,35 +112,66 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
             }
         }
     } else {
-        for (const createTable of createTableStatements) {
+        let foreignKeyConstraints: any[] = [];
+        let referenceDefinitions: any[] = [];
+
+        for (let createTable of createTableStatements) {
 
             try {
-                const instructionAst = parser.astify(createTable, {
-                    database: getDatabaseByDialect(dialect).name
+
+                if (dialect == DatabaseDialect.SQLITE) 
+                    createTable = createTable.replace(/\btext\s*\(\s*\d+\s*\)/gi, 'TEXT');
+                
+ 
+                let instructionAst = parser.astify(createTable, {
+                    database: dialect == DatabaseDialect.MARIADB ? getDatabaseByDialect(DatabaseDialect.MYSQL).name : getDatabaseByDialect(dialect).name
                 });
 
                 if (Array.isArray(instructionAst) && instructionAst.length > 0) {
-                    console.log(instructionAst[0])
-                    const table: TableInsertType = astToTable(instructionAst[0], data_types);
+                    instructionAst = instructionAst[0];
+                }
+                console.log (instructionAst)
+                if (instructionAst) {
+                    const table: TableInsertType = astToTable(instructionAst, data_types);
 
                     tables.push(table);
 
-                    const foreignKeyConstraints = (instructionAst[0] as any).create_definitions.filter((definition: any) => definition.constraint_type == "FOREIGN KEY");
-                    const referenceDefinitions = (instructionAst[0] as any).create_definitions.filter((definition: any) => definition.resource == "column" && definition.reference_definition);
+                    const tableForeignKeyConstraints = (instructionAst as any).create_definitions.filter((definition: any) => definition.constraint_type == "FOREIGN KEY");
+                    const tableReferenceDefinitions = (instructionAst as any).create_definitions.filter((definition: any) => definition.resource == "column" && definition.reference_definition);
 
-                    for (const foreignKeyConstraint of foreignKeyConstraints) {
-                        relationships.push(astToRelationship(tables, table, foreignKeyConstraint) as RelationshipInsertType);
-                    }
-                    for (const referenceDefinition of referenceDefinitions) {
-                        relationships.push(astToRelationship(tables, table, undefined, referenceDefinition) as RelationshipInsertType);
-                    }
+
+                    foreignKeyConstraints = foreignKeyConstraints.concat(
+                        tableForeignKeyConstraints.map((constraint: any) => ({ ...constraint, table: (instructionAst as any).table }))
+                    )
+
+                    referenceDefinitions = referenceDefinitions.concat(
+                        tableReferenceDefinitions.map((constraint: any) => ({ ...constraint, table: (instructionAst as any).table }))
+                    )
+
 
                 }
 
-            } catch (error) {
-                //   console.log (error)
-                continue;
 
+            } catch (error) {
+                console.log(error)
+                continue;
+            }
+        }
+
+        for (const foreignKeyConstraint of foreignKeyConstraints) {
+            try {
+                relationships.push(astToRelationship(tables, foreignKeyConstraint) as RelationshipInsertType);
+            } catch (error) {
+                console.log(error);
+                continue;
+            }
+        }
+        for (const referenceDefinition of referenceDefinitions) {
+            try {
+                relationships.push(astToRelationship(tables, undefined, referenceDefinition) as RelationshipInsertType);
+            } catch (error) {
+                console.log(error);
+                continue;
             }
         }
 
@@ -150,8 +181,10 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                     database: getDatabaseByDialect(dialect).name
                 });
                 if (instructionAst) {
-                    const targetTable: TableInsertType | undefined = tables.find((table: TableInsertType) => table.name == (instructionAst as any).table?.[0].table)
-                    const extractedRelationships: RelationshipInsertType[] = astToRelationship(tables, targetTable, undefined, undefined, instructionAst) as RelationshipInsertType[];
+                    const extractedRelationships: RelationshipInsertType[] = astToRelationship(tables, undefined, undefined, {
+                        ...instructionAst,
+                        table: (instructionAst as any).table?.[0].table
+                    }) as RelationshipInsertType[];
 
                     relationships = relationships.concat(extractedRelationships)
                 }
@@ -181,8 +214,6 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
     }
 
 
-
-
     return { tables, relationships, indices };
 
 }
@@ -191,23 +222,28 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
 
 
 
-export const astToRelationship = (tables: TableInsertType[], targetTable?: TableInsertType, constrainttAst?: any, columnAst?: any, alterTableAst?: any): RelationshipInsertType | RelationshipInsertType[] => {
+export const astToRelationship = (tables: TableInsertType[], constraintAst?: any, columnAst?: any, alterTableAst?: any): RelationshipInsertType | RelationshipInsertType[] => {
 
     let targetField: FieldInsertType | undefined;
     let sourceTable: TableInsertType | undefined;
     let sourceField: FieldInsertType | undefined;
+    let targetTable: TableInsertType | undefined;
+
 
     let relationships: RelationshipInsertType[] = [];
 
-    if (constrainttAst) {
+    if (constraintAst) {
 
-        targetField = targetTable?.fields?.find((field: FieldInsertType) => field.name == constrainttAst.definition?.[0].column);
-        sourceTable = tables.find((table: TableInsertType) => table.name == constrainttAst.reference_definition?.table?.[0].table);
-        sourceField = sourceTable?.fields?.find((field: FieldInsertType) => field.name == constrainttAst.reference_definition?.definition?.[0].column);
+        targetTable = tables.find((table: TableInsertType) => table.name == constraintAst.table?.[0].table);
+        targetField = targetTable?.fields?.find((field: FieldInsertType) => field.name == constraintAst.definition?.[0].column);
+        sourceTable = tables.find((table: TableInsertType) => table.name == constraintAst.reference_definition?.table?.[0].table);
+        sourceField = sourceTable?.fields?.find((field: FieldInsertType) => field.name == constraintAst.reference_definition?.definition?.[0].column);
 
     }
 
     if (columnAst) {
+
+        targetTable = tables.find((table: TableInsertType) => table.name == columnAst.table?.[0].table);
         targetField = targetTable?.fields?.find((field: FieldInsertType) => field.name == columnAst.column?.column);
         sourceTable = tables.find((table: TableInsertType) => table.name == columnAst.reference_definition?.table?.[0].table);
         sourceField = sourceTable?.fields?.find((field: FieldInsertType) => field.name == columnAst.reference_definition?.definition?.[0].column);
@@ -216,7 +252,7 @@ export const astToRelationship = (tables: TableInsertType[], targetTable?: Table
     if (alterTableAst) {
         const expressions = alterTableAst.expr;
         const foreignKeyExpressions = expressions.filter((expression: any) => expression.resource == "constraint" && expression.create_definitions?.constraint_type == "FOREIGN KEY")
-
+        targetTable = tables.find((table: TableInsertType) => table.name == alterTableAst.table?.[0].table);
         for (const expression of foreignKeyExpressions) {
 
             const targetField: FieldInsertType | undefined = targetTable?.fields?.find((field: FieldInsertType) => field.name == expression.create_definitions?.definition?.[0].column);
@@ -265,7 +301,7 @@ export const astToRelationship = (tables: TableInsertType[], targetTable?: Table
 
 
 const astToTable = (ast: any, data_types: DataType[]): TableInsertType => {
-    console.log(ast)
+
     return {
         id: v4(),
         name: ast.table[0]?.table,
@@ -294,10 +330,6 @@ export const astToField = (ast: any, data_types: DataType[], sequence: number): 
 
     let charset: string | undefined;
     let collate: string | undefined;
-
-
-
-
 
     let defaultValue: string | undefined = ast.default_val?.value?.value ? ast.default_val?.value?.value : undefined;
 

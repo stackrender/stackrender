@@ -5,7 +5,7 @@
 
 
 .text-editable {
-  @apply dark:group-hover:bg-background group-hover:bg-slate-100 group-hover:ring-[0.5px] group-hover:ring-primary dark:group-hover:ring-divider rounded-sm cursor-pointer;
+  @apply dark:group-hover:bg-content1 group-hover:bg-background border-[0.5px] border-transparent group-hover:border-primary-300 dark:group-hover:ring-divider rounded-sm cursor-pointer;
 }
 
 
@@ -37,6 +37,17 @@ body {
   /* Firefox */
   -ms-user-select: none;
 
+}
+
+
+.selectable {
+  user-select: text;
+  -webkit-user-select: text;
+  /* Safari */
+  -moz-user-select: text;
+  /* Firefox */
+  -ms-user-select: text;
+  /* IE/Edge */
 }
 
 .react-flow__renderer {
@@ -118,16 +129,7 @@ div[data-slot="content"] hr[role="separator"] {
   cursor: default !important;
 }
 
-svg.text-icon:hover {
 
-  color: #333639
-}
-
-
-
-.dark .bg-background-50 {
-  background-color: red !important;
-}
 
 
 .database-checkbox[data-selected="true"] {
@@ -148,14 +150,9 @@ thead[role="rowgroup"] th:last-child {
 
 thead[role="rowgroup"] th:first-child {
   border-radius: 4px 0px 0px 4px !important;
-
 }
 
-
-
-
 tbody[role="rowgroup"] tr td::before {
-
   display: none;
 }
 
@@ -202,11 +199,7 @@ button[data-testid="remove"]:after {
 }
 
 button[data-testid="remove"] svg {
-
-
-
   display: none;
-
 }
 
 [data-invalid="true"] div[data-slot="input-wrapper"] {
@@ -215,16 +208,8 @@ button[data-testid="remove"] svg {
   outline: none;
 }
 
-
-
-
-
-.option-checkbox[data-selected="true"] .option-span {
-  border-color:  hsl(var(--heroui-divider));
-  background-color: hsl(var(--heroui-default));
-  
-  
-  
-}
-
  
+div[data-slot="calendar"] div[data-slot="input-wrapper"]{
+  background-color: hsl(var(--heroui-default));
+  border : hsl(var(--heroui-divider))
+}

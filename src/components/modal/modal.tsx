@@ -8,13 +8,14 @@ import {
     ModalFooter,
     Button,
     useDraggable,
+    cn,
 } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 
 
 export interface ModalProps {
     isOpen?: boolean,
-    onOpenChange? : (open: boolean) => void,
+    onOpenChange?: (open: boolean) => void,
     className?: string,
     backdrop?: "blur" | "transparent" | "opaque",
     title: string,
@@ -23,10 +24,11 @@ export interface ModalProps {
     actionHandler?: () => void,
     isDisabled?: boolean,
     header?: string,
-    variant?: "default" | "danger"
+    variant?: "default" | "danger",
+    closable?: boolean
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop = "opaque", title, children, actionName = "Action", header, actionHandler, isDisabled, variant = "default" }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop = "opaque", title, children, actionName = "Action", header, actionHandler, isDisabled, variant = "default", closable = true }) => {
 
 
     const targetRef = React.useRef(null);
@@ -39,16 +41,20 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
         setIsLoading(true)
         actionHandler && await actionHandler();
         setIsLoading(false);
-        onClose()
     }
     return (
         <HeroUiModal
             ref={targetRef}
             isOpen={isOpen}
-            onOpenChange={onOpenChange ? onOpenChange : undefined}
+            onOpenChange={onOpenChange && closable ? onOpenChange : undefined}
             className={className}
             backdrop={backdrop}
             radius="sm"
+
+            classNames={{
+                base: "dark:bg-background-100",
+                closeButton: cn("dark:bg-background-100 dark:hover:bg-background rounded-md" , !closable ? "hidden" : "")
+            }}
 
         >
             <ModalContent>
@@ -72,9 +78,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
                                 {
                                     variant == "default" &&
                                     <>
-                                        <Button color="danger" variant="light" onPress={onClose} size="sm">
-                                            {t("modals.close")}
-                                        </Button>
+                                        {
+                                            closable &&
+                                            <Button color="danger" variant="light" onPress={onClose} size="sm">
+                                                {t("modals.close")}
+                                            </Button>
+                                        }
+                                        { 
+                                            !closable && <div></div>
+                                        }
                                         <Button color="primary" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
                                             {actionName}
                                         </Button>
@@ -83,9 +95,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
                                 {
                                     variant == "danger" &&
                                     <>
-                                        <Button color="default" variant="light" onPress={onClose} size="sm">
-                                            {t("modals.close")}
-                                        </Button>
+                                        {
+                                            closable &&
+                                            <Button color="default" variant="light" onPress={onClose} size="sm">
+                                                {t("modals.close")}
+                                            </Button>
+                                        }
+                                        { 
+                                            !closable && <div></div>
+                                        }
                                         <Button color="danger" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
                                             {actionName}
                                         </Button>

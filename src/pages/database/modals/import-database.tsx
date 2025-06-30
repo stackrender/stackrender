@@ -1,66 +1,109 @@
 import Modal, { ModalProps } from "@/components/modal/modal"
 import ReactCodeMirror, { oneDark } from "@uiw/react-codemirror";
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-
 import { overrideDarkTheme, overrideLightTheme } from "@/lib/colors";
-
 import { sql } from '@codemirror/lang-sql';
 import { useTheme } from "next-themes";
-import { DatabaseDialect, ImportDatabaseMethod, ImportDatabaseOption, ImportMethodType } from "@/lib/database";
+import { DatabaseDialect, ImportDatabaseMethod, ImportDatabaseOption, ImportMethodType, MARIADB_DUMP_EXAMPLE, MARIADB_DUMP_INSTRUCTIONS, MYSQL_DUMP_EXAMPLE, MYSQL_DUMP_INSTRUCTIONS, PG_DUMP_EXAMPLE, PG_DUMP_INSTRUCTIONS, SQLITE_DUMP_EXAMPLE, SQLITE_DUMP_INSRUCTION } from "@/lib/database";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { CheckboxGroup } from "@heroui/react";
 import OptionCheckbox from "@/components/checkbox/option-checkbox";
 import { Code } from "lucide-react";
 import { Code as CodeSection } from "@heroui/react";
 import { SqlToDatabase } from "@/utils/render/parsers/sql_to_database";
-import { adjustTablesPositions } from "@/utils/tables";
+import Clipboard from "@/components/clipboard/clipboard";
+import { Trans } from 'react-i18next';
 
-
-
-
-
-
-const options: ImportDatabaseOption[] = [{
-    dialect: DatabaseDialect.POSTGRES,
-    methods: [{
-        id: "pg_dump",
-        name: "pg_dump",
-        icon: <Code className="size-4 text-font/90" />,
-        type: ImportMethodType.DUMP
-
-    }, {
-        id: "pg_admin",
-        name: "pg Admin",
-        logo: "/postgresql_logo.png",
-        type: ImportMethodType.DB_CLIENT
-    }]
-}, {
-    dialect: DatabaseDialect.MYSQL,
-    methods: [{
-        id: "mysql_dump",
-        name: "mysqldump",
-        icon: <Code className="size-4 text-font/90" />,
-        type: ImportMethodType.DUMP
-
-    }]
-}
-    , {
-    dialect: DatabaseDialect.MARIADB,
-    methods: [{
-        id: "mysql_dump",
-        name: "mysqldump",
-        icon: <Code className="size-4 text-font/90" />,
-        type: ImportMethodType.DUMP
-
-    }]
-}]
 
 const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
-
     const { t } = useTranslation();
+    const options: ImportDatabaseOption[] = useMemo(() => [{
+        dialect: DatabaseDialect.POSTGRES,
+        methods: [{
+            id: "pg_dump",
+            name: "pg_dump",
+            icon: <Code className="size-3.5 " />,
+            type: ImportMethodType.DUMP,
+            instruction: PG_DUMP_INSTRUCTIONS,
+            example: PG_DUMP_EXAMPLE
+
+        }, {
+            id: "pg_admin",
+            name: "Pg Admin",
+            logo: "/postgresql_logo.png",
+            type: ImportMethodType.DB_CLIENT,
+            numberOfInstructions: 5,
+
+        }]
+    }, {
+        dialect: DatabaseDialect.MYSQL,
+        methods: [{
+            id: "mysql_dump",
+            name: "mysqldump",
+            icon: <Code className="size-3.5" />,
+            type: ImportMethodType.DUMP,
+            instruction: MYSQL_DUMP_INSTRUCTIONS,
+            example: MYSQL_DUMP_EXAMPLE,
+        }, {
+            id: "workbench",
+            name: "MySQL Workbench",
+            logo: "/mysql_logo.png",
+            type: ImportMethodType.DB_CLIENT,
+            numberOfInstructions: 5,
+        }]
+    }
+        , {
+        dialect: DatabaseDialect.MARIADB,
+        methods: [{
+            id: "mariadb-dump",
+            name: "mariadb-dump",
+            icon: <Code className="size-3.5" />,
+            type: ImportMethodType.DUMP,
+            instruction: MARIADB_DUMP_INSTRUCTIONS,
+            example: MARIADB_DUMP_EXAMPLE,
+        }, {
+            id: "heidisql",
+            name: "HeidiSQL",
+            type: ImportMethodType.DB_CLIENT,
+            numberOfInstructions: 5,
+            logo: "/heidisqlL_logo.png",
+        }, {
+            id: "mysql_dump",
+            name: "mysqldump",
+            icon: <Code className="size-3.5" />,
+            type: ImportMethodType.DUMP,
+            instruction: MYSQL_DUMP_INSTRUCTIONS,
+            example: MYSQL_DUMP_EXAMPLE,
+        }, {
+            id: "workbench",
+            name: "MySQL Workbench",
+            logo: "/mysql_logo.png",
+            type: ImportMethodType.DB_CLIENT,
+            numberOfInstructions: 5,
+        }],
+
+    }, {
+        dialect: DatabaseDialect.SQLITE,
+        methods: [{
+            id: "sqlite3",
+            name: "Sqlite3",
+            icon: <Code className="size-3.5" />,
+            type: ImportMethodType.DUMP,
+            instruction: SQLITE_DUMP_INSRUCTION,
+            example: SQLITE_DUMP_EXAMPLE
+        }, {
+            id: "dbbrowser",
+            name: "DB Browser",
+            logo: "/dbbrowser.png",
+            type: ImportMethodType.DB_CLIENT,
+            numberOfInstructions: 5,
+        }]
+    }
+    ], [t])
+
     const { resolvedTheme } = useTheme();
-    const { database } = useDatabase();
+    const { database , isLoading , isSwitchingDatabase } = useDatabase();
     const { data_types, importDatabase } = useDatabaseOperations();
     const [sqlCode, setSqlCode] = useState<string>("");
 
@@ -68,11 +111,11 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
         return options.find((option: ImportDatabaseOption) => option.dialect == database?.dialect)
     }, [database]);
 
-    const [selectedMethodId, setSelectedMethodId] = useState<string[]>(currentOption ? [currentOption.methods[0].id] : []);
-
-    if (!currentOption) {
-        onOpenChange && onOpenChange(false);
-    }
+    const [selectedMethodId, setSelectedMethodId] = useState<string[]>([]);
+    
+    useEffect(() => {
+        setSelectedMethodId(currentOption ? [currentOption.methods[0].id] : [])
+    }, [currentOption])
 
     const onImportMethodChange = (types: string[]) => {
         const selectedType: string | undefined = types.pop();
@@ -80,16 +123,21 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
             setSelectedMethodId([selectedType]);
     }
 
-    const selectedImportMethod: ImportDatabaseMethod = useMemo(() => {
+    const selectedImportMethod: ImportDatabaseMethod | undefined = useMemo(() => {
         return currentOption?.methods.find((method: ImportDatabaseMethod) => method.id == selectedMethodId?.[0]) as ImportDatabaseMethod;
     }, [selectedMethodId, currentOption])
 
     const onImport = useCallback(async () => {
+
         const { tables, relationships, indices } = SqlToDatabase(sqlCode, data_types, database?.dialect as DatabaseDialect);
+        await importDatabase(tables, relationships, indices);
+        onOpenChange && onOpenChange(false);
 
-        return await importDatabase(tables, relationships, indices)
     }, [sqlCode, database?.dialect, data_types]);
+    
 
+    if (isLoading || isSwitchingDatabase)
+        return ; 
 
     return (
         <Modal
@@ -102,7 +150,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
         >
             <div className="flex flex-col gap-4 ">
                 <div className="w-full   ">
-                    <p className="text-sm text-font/90">
+                    <p className="text-sm text-font">
                         {t("modals.import_database.import_options")}
                     </p>
                     <CheckboxGroup
@@ -121,88 +169,82 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
                                     value={method.id}
                                     icon={method.icon}
                                     logo={method.logo}
+                                    isSelected={selectedImportMethod?.id == method.id}
                                 />
                             ))
                         }
                     </CheckboxGroup>
                     {
-                        selectedImportMethod.type == ImportMethodType.DUMP &&
+                        selectedImportMethod?.type == ImportMethodType.DUMP &&
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold">
-                                Instructions :
+                            <label className="text-sm font-medium ">
+                                {t("import.instructions")}
                             </label>
-                            <ul className="list-decimal list-outside px-4    text-font/90 text-sm space-y-2 marker:font-semibold	">
+                            <ul className="list-decimal list-outside px-4    text-font text-sm space-y-2 marker:font-medium	">
                                 <li>
-                                    install <span className="font-semibold text-font/90">{selectedImportMethod.name}</span> .
+                                    {t("import.install")}  <span className=" font-medium ">{selectedImportMethod?.name}</span> .
                                 </li>
+                                <li className="space-y-2">
+                                    <div>
+                                        {t("import.run_command")}
+                                    </div>
+                                    <CodeSection color="default" radius="md" className="selectable border-1 py-0.5  bg-default w-full text-font/90 flex items-center justify-between dark:border-divider" >
+                                        {selectedImportMethod.instruction}
+                                        <Clipboard text={selectedImportMethod.instruction} />
+                                    </CodeSection>
 
-                                <li>
-                                    Run the following command in your terminal :
-                                    <ReactCodeMirror
-                                        className="flex flex-1 w-full border-1 my-2 rounded-md border-divider overflow-hidden "
-
-                                        editable={false}
-
-                                        value={`pg_dump -h <host> -p <port> -d <database_name> 
--U <username> -s -F p -E UTF-8 
--f <output_file_path>`}
-                                        theme={resolvedTheme == "light" ? overrideLightTheme : [overrideDarkTheme, oneDark]}
-                                    />
-                                    Example :
-                                    <ReactCodeMirror
-                                        className="flex flex-1 w-full border-1 my-2 rounded-md border-divider overflow-hidden  "
-                                        value={`pg_dump -h localhost -p 5432 -d my_db 
--U postgres -s -F p -E UTF-8 
--f schema_export.sql`}
-                                        editable={false}
-                                        theme={resolvedTheme == "light" ? overrideLightTheme : [overrideDarkTheme, oneDark]}
-                                    />
-
+                                    <div>
+                                        {t("import.example")}
+                                    </div>
+                                    <CodeSection color="default" radius="md" className="selectable border-1 py-0.5 bg-default w-full text-font/90 flex items-center justify-between dark:border-divider" >
+                                        {selectedImportMethod.example}
+                                        <Clipboard text={selectedImportMethod.example} />
+                                    </CodeSection>
                                 </li>
                                 <li>
-                                    Drag and drop the output .sql file in code section or copy it content
+                                    {t("import.copy_code")}
+
                                 </li>
                             </ul>
                         </div>
                     }
                     {
-                        selectedImportMethod.type == ImportMethodType.DB_CLIENT &&
+                        selectedImportMethod?.type == ImportMethodType.DB_CLIENT &&
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold">
-                                Instructions :
+                            <label className="text-sm font-medium">
+                                {t("import.instructions")}
                             </label>
-                            <ul className="list-decimal list-outside px-4 text-font/90 text-sm space-y-3 marker:font-semibold	">
-                                <li>
-                                    Open <span className="font-semibold text-font/90">{selectedImportMethod.name}</span> .
-                                </li>
-                                <li>
-                                    Right-click your database and select <span className="font-semibold text-font/90">Backup</span> from the context menu.
-                                </li>
-                                <li>
-                                    Name your <CodeSection className="p-1" color="default" size="sm"> .sql </CodeSection> file, set Format to <span className="font-semibold text-font/90">Plain</span>, and choose <span className="font-semibold text-font/90">Encoding: UTF8.</span>
-                                </li>
-                                <li>
-                                    Make sure <span className="font-semibold text-font/90">Only schema</span> is checked and <span className="font-semibold text-font/90">Only data</span> is unchecked in the <span className="font-semibold text-font/90">Data Options tab</span>.
-                                </li>
-                                <li>
-                                    Click <span className="font-semibold text-font/90">Backup</span> to export the file, then copy its content into the code editor section.
-                                </li>
+                            <ul className="list-decimal list-outside px-4 text-font text-sm space-y-3 marker:font-medium">
+                                {
+                                    Array.from({ length: selectedImportMethod.numberOfInstructions as number }, (_, i) => i).map((index: number) => (
+                                        <li>
+                                            <Trans i18nKey={`import.${selectedImportMethod.id}.step${index + 1}`} components={{
+                                                bold: <span className="font-medium" />,
+                                                code: <CodeSection
+                                                    className="border-1 bg-default text-font/90 px-1 h-7 mx-0.5 dark:border-divider"
+                                                    color="default"
+                                                    size="sm"
+                                                />
+                                            }} />
+                                        </li>
+                                    ))
+                                }
+
                             </ul>
                         </div>
                     }
+
                 </div>
                 <div className="flex flex-1 ">
-                    {
 
-                        <ReactCodeMirror
-                            className="flex  w-full min-h-[360px] max-h-[360px] border-1 rounded-md border-divider overflow-hidden"
-                            extensions={[sql()]}
-                            value={sqlCode}
-                            onChange={setSqlCode}
-                            theme={resolvedTheme == "light" ? overrideLightTheme : [oneDark, overrideDarkTheme]}
-                        />
+                    <ReactCodeMirror
+                        className="flex  w-full min-h-[360px] max-h-[360px] border-1 rounded-md border-divider overflow-hidden"
+                        extensions={[sql()]}
+                        value={sqlCode}
+                        onChange={setSqlCode}
+                        theme={resolvedTheme == "light" ? overrideLightTheme : [oneDark, overrideDarkTheme]}
+                    />
 
-                    }
                 </div>
             </div>
         </Modal>

@@ -14,7 +14,8 @@ const DeleteDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
         return await new Promise(async (res, rej) => {
             await deleteDatabase(currentDatabaseId as string);
             switchDatabase( undefined ) ; 
-            res(currentDatabaseId)
+            res(currentDatabaseId) ; 
+            onOpenChange && onOpenChange(false) ; 
         })
     }, [currentDatabaseId])
 

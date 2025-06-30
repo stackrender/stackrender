@@ -17,7 +17,6 @@ import { field_indices, FieldIndexInsertType } from "@/lib/schemas/field_index-s
 import { v4 } from "uuid";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { Modifiers } from "@/lib/field";
-import { DatabaseDialect } from "@/lib/database";
 
 
 
@@ -27,12 +26,14 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
 
     const [currentDatabaseId, setCurrentDatabaseId] = useState<string | undefined>(localStorage.getItem("database_id") as string | undefined);
     // Fetch all databases
-    const { data: databases, isLoading: loadingDatabases } = useQuery(toCompilableQuery(
-        db.query.databases.findMany()
+    const { data: databases, isLoading: loadingDatabases, isFetching: fetchingDatabases } = useQuery(toCompilableQuery(
+        db.query.databases.findMany({
+            orderBy: desc(databaseModel.createdAt)
+        })
     ));
 
     // Fetch the current database with nested tables, fields, and relationships
-    let { data: database, isLoading: loadingCurrentDatabase, isFetching } = useQuery(
+    let { data: database, isLoading: loadingCurrentDatabase, isFetching: fetchingDatabase } = useQuery(
         toCompilableQuery(
             db.query.databases.findMany({
                 where: (databases, { eq }) => eq(databases.id, currentDatabaseId as string),
@@ -84,49 +85,31 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         database = undefined as any;
 
     // Fetch all data types 
-    let { data: data_types, isLoading: loadingDataTypes } = useQuery(toCompilableQuery(
+    let { data: data_types, isLoading: loadingDataTypes, isFetching: fetchingDatatypes } = useQuery(toCompilableQuery(
         db.query.data_types.findMany({
             where: (data_types, { eq }) => eq(data_types.dialect, (database as any)?.dialect)
         })
     ));
 
-
-    const charsetOrCollationDataTypes = data_types.filter((dataType: DataType) => {
-        const modifiers: string[] | undefined = dataType.modifiers ? JSON.parse(dataType.modifiers) : undefined;
-        if (modifiers) {
-            return modifiers.includes(Modifiers.COLLATE || Modifiers.CHARSET)
-        }
-    }).map((dataType: DataType) => dataType.name?.toUpperCase());
-
-
-
-
     const grouped_data_types: any = useMemo(() => {
         return groupBy(data_types, "type");
     }, [data_types]);
 
-
-    // Auto-select first database if none is selected
-    useEffect(() => {
-        if (databases.length > 0 && !currentDatabaseId) {
-            switchDatabase(databases[0].id);
-        }
-    }, [currentDatabaseId, databases]);
-
     const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;
-    const isSwitchingDatabase: boolean = useMemo(() => {
-        return isFetching && currentDatabaseId != (database as any)?.id
-    }, [currentDatabaseId, database, isFetching]);
+    const isFetching: boolean = fetchingDatabase || fetchingDatatypes || fetchingDatabases;
 
+
+
+    const isSwitchingDatabase: boolean = useMemo(() => {
+        return fetchingDatabase && currentDatabaseId != (database as any)?.id
+    }, [currentDatabaseId, database, fetchingDatabase]);
 
     // CRUD for database 
     const createDatabase = useCallback(async (database: DatabaseInsertType): Promise<QueryResult> => {
-
         return await db.insert(databaseModel).values({
             ...database,
             createdAt: getTimestamp()
         });
-
     }, [db]);
 
     const editDatabase = useCallback(async (database: DatabaseInsertType): Promise<QueryResult> => {
@@ -371,18 +354,9 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         }
     }, [db, currentDatabaseId]);
 
-
-    const getDefaultPrimaryKeyType = useCallback((dialect?: DatabaseDialect) => {
-        if (dialect == DatabaseDialect.POSTGRES)
-            return data_types.find((dataType: DataType) => dataType.name == "bigserial");
-        else if (dialect == DatabaseDialect.SQLITE)
-            return data_types.find((dataType: DataType) => dataType.name == "integer");
-
-        return data_types.find((dataType: DataType) => dataType.name == "bigint");
-
+    const getInteger = useCallback(() => {
+        return data_types.find((dataType: DataType) => dataType.name == "integer");
     }, [data_types]);
-
-
 
     const importDatabase = useCallback(async (importedTables: TableInsertType[], importedRelationships: RelationshipInsertType[], importedIndices: IndexInsertType[]) => {
         if (currentDatabaseId) {
@@ -428,7 +402,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [currentDatabaseId])
 
     const databaseOpsValue = useMemo(() => ({
-
+        isSwitchingDatabase,
         createDatabase,
         editDatabase,
         deleteDatabase,
@@ -453,8 +427,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editFieldIndices,
         importDatabase,
         data_types,
-        grouped_data_types
+        getInteger,
+        grouped_data_types,
     }), [
+        isSwitchingDatabase,
         createDatabase,
         editDatabase,
         deleteDatabase,
@@ -478,6 +454,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         editFieldIndices,
         importDatabase,
         data_types,
+        getInteger,
         grouped_data_types
     ]);
 
@@ -490,18 +467,23 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             databases: databases as DatabaseType[],
             isLoading,
             isSwitchingDatabase,
-            getDefaultPrimaryKeyType,
+            isFetching,
             getField,
         }}>
             <DatabaseOperationsContext.Provider value={databaseOpsValue}>
                 {
-                    !database && !isLoading &&
+                    /*                    !database && !isLoading &&
                     <>
                         {children}
                     </>
                 }
                 {
                     database && !isLoading && !isSwitchingDatabase &&
+                    <DatabaseHistoryProvider>
+                        {children}
+                    </DatabaseHistoryProvider>*/
+                }
+                {
                     <DatabaseHistoryProvider>
                         {children}
                     </DatabaseHistoryProvider>

@@ -19,13 +19,13 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
     const [datatbaseState, { set, undo: undoChanges, redo: redoChanges, canUndo, canRedo }] = useUndo<DatabaseType>(database);
 
     useEffect(() => {
-
-        udpateDbFlag.current = false;
-        const presentHash: string = hash(datatbaseState.present, { algorithm: 'sha1' });
-        const databaseHash: string = hash(database, { algorithm: 'sha1' });
-        if (presentHash != databaseHash)
-            set(database);
-
+        if (datatbaseState.present && database) {
+            udpateDbFlag.current = false;
+            const presentHash: string = hash(datatbaseState.present, { algorithm: 'sha1' });
+            const databaseHash: string = hash(database, { algorithm: 'sha1' });
+            if (presentHash != databaseHash)
+                set(database);
+        }
     }, [database]);
 
 
@@ -50,7 +50,8 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
             return;
         }
 
-
+        if ( ! database || !datatbaseState.present ) 
+            return ; 
         const normalizedDatabase = normalizeDatabase(database);
 
         const normalizedPresent = normalizeDatabase(datatbaseState.present);
@@ -63,7 +64,7 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
             const operations: DBDiffOperation[] = mapDiffToDBDiffOperation(differences);
 
             (async () => {
-                try { 
+                try {
                     await executeDbDiffOps(operations)
                     setIsProcessing(false);
                 }

@@ -114,11 +114,11 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                             value={tableName}
                             onBlur={saveTableName}
                             type="text"
-                            className="rounded-md outline-none px-2 py-0.5 w-full border-[0.5px] border-primary-700 font-bold bg-slate-100 focus-visible:ring-0  text-sm dark:bg-transparent dark:text-white"
+                            className="rounded-sm outline-none px-2 py-0.5 w-full border-[0.5px] border-primary font-bold bg-content1 focus-visible:ring-0 text-sm dark:text-white"
                         />
                         <Button
                             variant="light"
-                            className="size-6 p-0 text-icon hover:bg-primary-foreground hover:text-font/90"
+                            className="text-icon hover:bg-default hover:text-font/90"
                             size="sm"
                             onPressEnd={saveTableName}
                             isIconOnly
@@ -149,7 +149,7 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                             <Button
                                 variant="light"
                                 size="sm"
-                                className="size-6 p-0 text-icon hover:bg-primary-foreground   "
+                                className="text-icon hover:bg-default hover:text-font/90   "
                                 isIconOnly
                                 onPressEnd={focus}
                             >

@@ -23,7 +23,7 @@ const FieldList: React.FC<Props> = ({ tableFields , tableId}) => {
 
     const { t } = useTranslation();
     const [fields, setFields] = useState<FieldType[]>(tableFields);
-    const { createField, orderTableFields } = useDatabaseOperations();
+    const { createField, orderTableFields  , getInteger } = useDatabaseOperations();
 
     useEffect(() => {
 
@@ -59,6 +59,7 @@ const FieldList: React.FC<Props> = ({ tableFields , tableId}) => {
             tableId: tableId,
             sequence: getNextSequence(fields) , 
             nullable: true,
+            typeId: getInteger()?.id
         })
     } 
     return (

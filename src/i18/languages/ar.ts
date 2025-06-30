@@ -64,7 +64,7 @@ export const ar = {
             }
         },
         table: {
-            double_click: "انقر مزدوجًا للتعديل" , 
+            double_click: "انقر مزدوجًا للتعديل",
             overlapping_tables: "الجداول المتداخلة",
         },
         control_buttons: {
@@ -104,6 +104,34 @@ export const ar = {
             help: "مساعدة",
             show_docs: "عرض المستندات",
             join_discord: "الانضمام إلى ديسكورد"
+        },
+        connection_status: {
+            online: "متصل",
+            offline: "غير متصل",
+            saving: "جارٍ الحفظ",
+            saved: "تم الحفظ",
+            last_synced: "آخر مزامنة"
+        },
+        import: {
+            instructions: "التعليمات",
+            install: "التثبيت",
+            run_command: "قم بتشغيل الأمر التالي في الطرفية.",
+            example: "مثال",
+            copy_code: "انسخ محتوى ملف .sql إلى قسم الكود أدناه.",
+            pg_admin: {
+                step1: "افتح <bold>Pg Admin</bold>.",
+                step2: "انقر بزر الفأرة الأيمن على قاعدة البيانات واختر <bold>Backup</bold> من القائمة السياقية.",
+                step3: "قم بتسمية ملف <code>.sql</code>، ثم اختر التنسيق <bold>Plain</bold>، وحدد <bold>Encoding: UTF8</bold>.",
+                step4: "تأكد من أن <bold>Only schema</bold> محددة، و<bold>Only data</bold> غير محددة، وذلك في علامة تبويب <bold>Data Options</bold>.",
+                step5: "انقر على <bold>Backup</bold> لتصدير الملف، ثم انسخ محتواه إلى قسم محرر الكود أدناه."
+            },
+            workbench: {
+                step1: "افتح <bold>MySQL Workbench</bold> و<bold>اتصل</bold> بخادم MySQL الخاص بك.",
+                step2: "من القائمة العلوية، انتقل إلى <bold>Server &gt; Data Export</bold>.",
+                step3: "في قسم <bold>خيارات التصدير</bold>، اختر <bold>Dump Structure Only</bold>.",
+                step4: "حدد <bold>Export to Self-Contained File</bold>، ثم اختر مكان الحفظ واسم ملف الإخراج <code>.sql</code>.",
+                step5: "انقر على <bold>Start Export</bold> لبدء عملية التصدير، ثم انسخ محتوى الملف إلى قسم محرر الكود أدناه."
+            }
         }
     }
 };

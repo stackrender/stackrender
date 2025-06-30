@@ -2,7 +2,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/tooltip/tooltip";
 import { Cardinality, RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
- 
+
 import { Button, Select, SelectItem, SharedSelection } from "@heroui/react";
 import { ChevronsLeftRightEllipsis, FileMinus2, FileOutput, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -19,17 +19,19 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
     const { t } = useTranslation();
 
     const changeCardinality = (keys: SharedSelection) => {
-
-        if (keys.anchorKey != relationship.cardinality) {
+        
+        
+        if (keys.anchorKey && (keys.anchorKey != relationship.cardinality)) {
 
             editRelationship({
                 id: relationship.id,
                 cardinality: keys.anchorKey as Cardinality,
 
             } as RelationshipInsertType);
+            setCardinality(keys as any);
+
         }
 
-        setCardinality(keys as any);
     }
 
     const removeRelationship = () => {
@@ -90,17 +92,18 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
                     {t('db_controller.cardinality.name')}
                 </label>
                 <Select
-                    className="w-full"
                     size="sm"
                     variant="bordered"
                     aria-label="cardinality"
                     selectedKeys={cardinality}
                     onSelectionChange={changeCardinality}
+                    className="h-8 w-full focus-visible:ring-0 shadow-none "
                     classNames={{
-                        trigger: "border-divider group-hover:border-primary",
+                        trigger: "border-divider group-hover:border-primary data-[focus=true]:border-primary data-[open=true]:border-primary",
+                        selectorIcon: "text-icon",
+                        popoverContent: "rounded-md "
+
                     }}
-
-
                 >
                     <SelectItem key={Cardinality.one_to_one}>{t("db_controller.cardinality.one_to_one")}</SelectItem>
                     <SelectItem key={Cardinality.one_to_many}>{t("db_controller.cardinality.one_to_many")}</SelectItem>

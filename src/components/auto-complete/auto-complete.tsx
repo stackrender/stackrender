@@ -1,6 +1,6 @@
 
 import { Autocomplete as HeroUiAutocomplete, AutocompleteItem, AutocompleteSection } from "@heroui/react";
-import { Key } from "react";
+import { Key, useState } from "react";
 
 interface AutocompleteProps {
 
@@ -16,12 +16,13 @@ interface AutocompleteProps {
 
 
 const headingClasses =
-   "flex w-full py-1.5 px-2 bg-default  shadow-small rounded-small";
+    "flex w-full py-1.5 px-2 bg-default  shadow-md border-1 font-medium  rounded-md dark:border-font/5 dark:bg-background-100";
 
 
 const Autocomplete: React.FC<AutocompleteProps> = ({ items, label = "name", onSelectionChange, defaultSelection, placeholder, isDisabled, selectedItem, grouped = false }) => {
 
     
+
     const onItemChange = (item: Key | null) => {
         onSelectionChange && onSelectionChange(item);
     }
@@ -30,7 +31,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ items, label = "name", onSe
             <HeroUiAutocomplete
                 radius="sm"
                 isDisabled={isDisabled}
-                className="w-full"
+
                 defaultItems={items || []}
                 size="sm"
                 onSelectionChange={onItemChange}
@@ -39,11 +40,15 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ items, label = "name", onSe
                 aria-label={placeholder}
                 placeholder={placeholder}
                 selectedKey={selectedItem as any}
+                className="h-8 w-full focus-visible:ring-0 shadow-none "
+                classNames={{
+                    clearButton: "text-icon",
+                    selectorButton: "text-icon",
+                    popoverContent: "rounded-md "
+                }}
                 inputProps={{
                     classNames: {
-                        
-                        inputWrapper: "border-divider group-hover:border-primary",
-
+                        inputWrapper: " border-divider group-hover:border-primary group-data-[focus=true]:border-primary",
                     },
                 }}
 
@@ -55,35 +60,37 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ items, label = "name", onSe
         return <HeroUiAutocomplete
             radius="sm"
             isDisabled={isDisabled}
-            className="w-full"
-
             size="sm"
             onSelectionChange={onItemChange}
             defaultSelectedKey={defaultSelection as any}
             variant="bordered"
             aria-label={placeholder}
             placeholder={placeholder}
-            
+            className="h-8 w-full focus-visible:ring-0 shadow-none "
             selectedKey={selectedItem as any}
+            classNames={{
+                clearButton: "text-icon",
+                selectorButton: "text-icon",
+                popoverContent: "rounded-md "
+            }}
             inputProps={{
                 classNames: {
-
-                    inputWrapper: "border-divider group-hover:border-primary",
-
+                    inputWrapper: "border-divider group-hover:border-primary group-data-[focus=true]:border-primary",
                 },
             }}
 
         >
             {
-                items ? Object.keys(items).map((key: any) => (
+                items ? Object.keys(items).map((key: string) => (
                     <AutocompleteSection
-                        classNames={{ 
+                        classNames={{
                             heading: headingClasses,
                         }}
-                        title={key}
+                        
+                        title={key.toUpperCase()}
                     >
                         {
-                            items[key].map((item: any) => (
+                            items[key as any].map((item: any) => (
                                 <AutocompleteItem key={item.id}>{item[label]}</AutocompleteItem>
                             ))
                         }

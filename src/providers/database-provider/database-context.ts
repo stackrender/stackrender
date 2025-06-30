@@ -19,9 +19,10 @@ interface DatabaseDataContextType {
     currentDatabaseId: string | undefined,
     databases: DatabaseType[],
     isLoading: boolean,
+    isFetching : boolean , 
     isSwitchingDatabase: boolean,
     getField: (tableId: string, id: string) => FieldType | undefined,
-    getDefaultPrimaryKeyType : (dialect? : DatabaseDialect) => DataType | undefined  
+    
 
 
 }
@@ -30,6 +31,8 @@ interface DatabaseDataContextType {
 interface DatabaseOperationsContextType {
     data_types: DataType[],
     grouped_data_types : any ; 
+    isSwitchingDatabase : boolean  ; 
+    getInteger : () => DataType | undefined   ; 
     // database operations 
     createDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,
     editDatabase: (database: DatabaseInsertType) => Promise<QueryResult>,

@@ -2,12 +2,12 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { Button, Input, Popover, PopoverContent, PopoverTrigger, Switch, Textarea } from "@heroui/react";
-import {  Ellipsis, EllipsisVertical, GripVertical, KeyRound, Settings, Settings2  } from "lucide-react";
+import { Ellipsis, EllipsisVertical, GripVertical, KeyRound, Settings, Settings2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { CSS } from "@dnd-kit/utilities";
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema";
 import { Key, useEffect, useState } from "react";
-import {  useDatabaseOperations } from "@/providers/database-provider/database-provider";
+import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import Autocomplete from "@/components/auto-complete/auto-complete";
 import ToggleButton from "@/components/toggle/toggle";
 import FieldSetting from "./field-setting";
@@ -22,8 +22,8 @@ const FieldItem: React.FC<Props> = ({ field }) => {
     const [fieldName, setFieldName] = useState<string>(field.name);
 
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
-    const {  grouped_data_types } = useDatabaseOperations();
-    const {  editField } = useDatabaseOperations();
+    const { grouped_data_types } = useDatabaseOperations();
+    const { editField } = useDatabaseOperations();
 
     const [selectedType, setSelectedType] = useState<string | undefined>(field.typeId as string | undefined);
     const { t } = useTranslation();
@@ -42,7 +42,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
         setSelectedType(field.typeId as string | undefined);
     }, [field.typeId])
 
- 
+
     const saveFieldName = () => {
         editField({
             id: field.id,
@@ -50,11 +50,14 @@ const FieldItem: React.FC<Props> = ({ field }) => {
         } as FieldType);
     }
     const updateFieldType = (key: Key | null) => {
-        editField({
-            id: field.id,
-            typeId: key
-        } as FieldType);
-        setSelectedType(key as string | undefined);
+     
+        if (key != null) {
+            editField({
+                id: field.id,
+                typeId: key
+            } as FieldType);
+            setSelectedType(key as string | undefined);
+        }
     }
 
     const toggleNullable = (nullable: boolean) => {
@@ -86,14 +89,15 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                 value={fieldName}
                 onValueChange={setFieldName}
                 onBlur={saveFieldName}
+                className="h-8 w-full focus-visible:ring-0 shadow-none "
                 classNames={{
-                    inputWrapper: "border-divider group-hover:border-primary",
+                    inputWrapper: " border-divider group-hover:border-primary group-data-[focus=true]:border-primary",
                 }}
             />
             <Autocomplete
                 items={grouped_data_types}
                 onSelectionChange={updateFieldType}
-                grouped 
+                grouped
                 selectedItem={selectedType}
                 placeholder={t("db_controller.type")}
             />
@@ -116,7 +120,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                     <KeyRound className="size-4" />
                 </ToggleButton>
 
-                <Popover placement="right" radius="sm" shadow="sm"   isOpen={popOverOpen} onOpenChange={setPopOverOpen} >
+                <Popover placement="right" radius="sm" shadow="sm" isOpen={popOverOpen} onOpenChange={setPopOverOpen} >
                     <PopoverTrigger>
                         <Button
                             size="sm"
@@ -128,7 +132,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent  >
-                        <FieldSetting field={field}/>
+                        <FieldSetting field={field} />
                     </PopoverContent>
                 </Popover>
             </div>

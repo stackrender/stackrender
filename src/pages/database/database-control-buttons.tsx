@@ -16,8 +16,11 @@ interface DbControlButtons {
 const ZOOM_DURATION = 100
 
 const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions }) => {
-    const { zoomIn, zoomOut, fitView } = useReactFlow();
-    const [zoom, setZoom] = useState<string>();
+    const { zoomIn, zoomOut, fitView , getZoom} = useReactFlow();
+    console.log ()
+    const [zoom, setZoom] = useState<string>(
+        `${Math.round(getZoom() * 100)}%`
+    );
     const { t } = useTranslation();
     const { undo, redo, canRedo, canUndo } = useDatabaseHistory();
 
@@ -71,7 +74,7 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
                         >
                             <Undo className={cn(
                                 "size-4 dark:text-white",
-                                !canUndo ? "text-font/30" : ""
+                                !canUndo ? "text-font/30 dark:text-font/30" : ""
                             )} />
                         </Button>
                     </span>
@@ -185,14 +188,13 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
                         >
                             <Redo className={cn(
                                 "size-4 dark:text-white",
-                                !canRedo ? "text-font/30" : ""
+                                !canRedo ? "text-font/30 dark:text-font/30" : ""
                             )} />
                         </Button>
                     </span>
                 </TooltipTrigger>
                 <TooltipContent>
                     {t("control_buttons.redo")}
-
                     <span className="ml-2 text-default-400">
                         Ctnl + Shift + Z
                     </span>

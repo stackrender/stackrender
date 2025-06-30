@@ -79,8 +79,8 @@ const CreateRelationshipModal: React.FC<CreateRelationshipModalProps> = ({ onRel
             id,
         } as RelationshipInsertType);
         onRlationshipCreated && onRlationshipCreated(id);
-
-    }, [relationship]);
+        onOpenChange && onOpenChange(false) ; 
+    }, [relationship , onOpenChange]);
 
 
     return (
@@ -92,7 +92,6 @@ const CreateRelationshipModal: React.FC<CreateRelationshipModalProps> = ({ onRel
             className="min-w-[520px]"
             isDisabled={!isValid}
             actionHandler={addRelationship}
-
         >
 
             <div className="grid grid-cols-2 grid-rows-2 gap-4">

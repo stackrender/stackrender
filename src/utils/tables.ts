@@ -20,8 +20,6 @@ const adjustTablesPositions = async (
     const tables: TableType[] = nodes.map((node: Node) => (
         { ...node.data.table as TableType }
     )) as TableType[];
-
-
     // Build the ELK graph structure
     const graph = {
         id: "root",
@@ -29,6 +27,7 @@ const adjustTablesPositions = async (
             'elk.algorithm': 'layered',
             'elk.layered.spacing.nodeNodeBetweenLayers': '100',
             'elk.spacing.nodeNode': '80',
+        
         },
         children: nodes.map((node) => ({
             id: node.id,
@@ -40,27 +39,20 @@ const adjustTablesPositions = async (
             sources: [rel.sourceTableId],
             targets: [rel.targetTableId],
         })),
-    }; 
+    };
     // Run ELK layout (async)
     const layoutedGraph = await elk.layout(graph);
-
     // Map positions back to your tables
     tables.forEach((table) => {
         const node = layoutedGraph?.children?.find((n) => n.id === table.id);
         if (node) {
             // ELK positions are top-left, adjust to center like before
-            table.posX = node.x || 0 + (node.width / 2) + 112;
-            table.posY = node.y || 0 + (node.height / 2) + 75;
+            table.posX = (node.x || 0);
+            table.posY = (node.y || 0);
         }
     });
-
     return tables;
 };
-
-
-
-
-
 
 const isTablesOverlapping = (tableA: TableType, tableB: TableType) => {
     const tableAWidth: number = 224;

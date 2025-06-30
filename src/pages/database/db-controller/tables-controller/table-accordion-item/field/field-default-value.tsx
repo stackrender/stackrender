@@ -76,7 +76,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
     const defaultValueType: DefaultValueType = useMemo(() => {
         return {
             number: field.type?.type == DataTypes.INTEGER || field.type?.type == DataTypes.NUMERIC,
-            string: field.type?.type == DataTypes.TEXT || field.type?.name == "year" , 
+            string: field.type?.type == DataTypes.TEXT || field.type?.name == "year",
             boolean: field.type?.type == DataTypes.BOOLEAN,
             time: field.type?.type == DataTypes.TIME && field.type?.name != "year",
             select: field.type?.type == DataTypes.ENUM && field.type?.name != "set",
@@ -251,7 +251,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                     placeholder={t("db_controller.field_settings.value")}
                     className="h-8 w-full focus-visible:ring-0 shadow-none "
                     classNames={{
-                        inputWrapper: "dark:bg-default border-divider group-hover:border-primary ",
+                        inputWrapper: "dark:bg-default border-divider group-hover:border-primary  group-data-[focus=true]:border-primary ",
                     }}
                 />
             }
@@ -274,15 +274,20 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                 defaultValueType.time &&
                 <>
                     <Select
-                        className="w-full"
+
                         size="sm"
                         variant="bordered"
                         aria-label="Time"
                         selectedKeys={timeSelection}
                         onSelectionChange={changeTimeDefaultValue}
+                        className="h-8 w-full focus-visible:ring-0 shadow-none "
+
                         classNames={{
-                            trigger: "border-divider group-hover:border-primary",
+                            trigger: "border-divider group-hover:border-primary data-[focus=true]:border-primary data-[open=true]:border-primary",
+                            selectorIcon: "text-icon",
+                            popoverContent: "rounded-md "
                         }}
+
                     >
                         <SelectItem key={TimeDefaultValues.NO_VALUE}>{t("db_controller.field_settings.time_default_value.no_value")}</SelectItem>
                         <SelectItem key={TimeDefaultValues.CUSTOM}>{t("db_controller.field_settings.time_default_value.custom")}</SelectItem>
@@ -310,15 +315,22 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                                 onChange={setDefaultDateTime}
                                 granularity={field.type.name == "date" ? "day" : "second"}
                                 hideTimeZone
+                                className="h-8 w-full focus-visible:ring-0 shadow-none "
                                 classNames={{
-                                    inputWrapper: "border-divider group-hover:border-primary",
+                                    inputWrapper: "border-divider group-hover:border-primary focus-within:border-primary",
+                                    
 
                                 }}
                                 calendarProps={{
                                     classNames: {
-                                        title: " text-font/90"
-                                    }
+                                        title: "text-font/90",
+                                        header : "bg-background" , 
+                                        
+                                    } , 
+                                    
+                                    
                                 }}
+                                
                             />
 
                         </>
@@ -333,8 +345,9 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                             endContent={
                                 <Clock className="text-icon size-4" />
                             }
+                            className="h-8 w-full focus-visible:ring-0 shadow-none "
                             classNames={{
-                                inputWrapper: "border-divider group-hover:border-primary",
+                                inputWrapper: "border-divider group-hover:border-primary focus-within:border-primary",
 
                             }}
                             onBlur={saveDefaultDateTime}
@@ -348,8 +361,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
             }
             {
                 (defaultValueType.select || defaultValueType.multiSelect) &&
-                <Select
-                    className="w-full"
+                <Select 
                     size="sm"
                     variant="bordered"
                     aria-label="Enum Values"
@@ -357,8 +369,13 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                     selectedKeys={selectedValues}
                     onSelectionChange={enumValueChange}
                     selectionMode={!defaultValueType.multiSelect ? 'single' : "multiple"}
+                    className="h-8 w-full focus-visible:ring-0 shadow-none "
+
                     classNames={{
-                        trigger: "border-divider group-hover:border-primary",
+                        trigger: "border-divider group-hover:border-primary data-[focus=true]:border-primary data-[open=true]:border-primary",
+                        selectorIcon: "text-icon",
+                        popoverContent: "rounded-md "
+
                     }}
                 >
                     {
@@ -377,4 +394,9 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
 }
 
 
-export default React.memo(fieldDefautlValue); 
+export default React.memo(fieldDefautlValue);
+
+
+
+
+

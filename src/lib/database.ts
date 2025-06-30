@@ -2,7 +2,8 @@
 export interface DatabaseType {
     name: string,
     dialect: string;
-    logo: string
+    logo: string;
+    small_logo?: string
 }
 
 export enum DatabaseDialect {
@@ -16,47 +17,71 @@ export const DBTypes: DatabaseType[] = [
     {
         name: "Postgresql",
         dialect: DatabaseDialect.POSTGRES,
-        logo: "/postgresql_logo.png"
+        logo: "/postgresql_logo.png",
+        small_logo: "/postgresql_logo_small.png"
     }, {
         name: "MySQL",
         dialect: DatabaseDialect.MYSQL,
-        logo: "/mysql_logo.png"
+        logo: "/mysql_logo.png",
+
+        small_logo: "/mysql_logo_small.png"
     },
     {
         name: "Sqlite",
         dialect: DatabaseDialect.SQLITE,
-        logo: "/sqlite_logo.png"
+        logo: "/sqlite_logo.png",
+        small_logo: "/sqlite_logo_small.png"
+
     },
-      {
+    {
         name: "MariaDB",
         dialect: DatabaseDialect.MARIADB,
-        logo: "/mariadb_logo.png"
+        logo: "/mariadb_logo.png",
+        small_logo: "/mariadb_logo_small.png"
     },
 ]
 
 
 export const getDatabaseByDialect = (dialect: DatabaseDialect): DatabaseType => {
-    const dbType : DatabaseType | undefined = DBTypes.find((dbType : DatabaseType) => dbType.dialect == dialect) ; 
-    return dbType ? dbType : DBTypes[0] ; 
+    const dbType: DatabaseType | undefined = DBTypes.find((dbType: DatabaseType) => dbType.dialect == dialect);
+    return dbType ? dbType : DBTypes[0];
 }
 
 
 export enum ImportMethodType {
-    DUMP = "DUMP" , 
-    DB_CLIENT = "DB_CLIENT" , 
+    DUMP = "DUMP",
+    DB_CLIENT = "DB_CLIENT",
 
-} 
+}
 
 export interface ImportDatabaseMethod {
-    id : string ; 
-    name : string ;
-    logo? : string ; 
-    icon? : React.ReactNode ; 
-    instructions? : string ; 
-    type :  ImportMethodType ; 
+    id: string;
+    name: string;
+    logo?: string;
+    icon?: React.ReactNode;
+    instruction?: string;
+    example?: string;
+    type: ImportMethodType;
+    numberOfInstructions?: number;
 }
 
-export interface ImportDatabaseOption   {
-    dialect : DatabaseDialect , 
-    methods : ImportDatabaseMethod []
+export interface ImportDatabaseOption {
+    dialect: DatabaseDialect,
+    methods: ImportDatabaseMethod[]
 }
+
+
+
+export const PG_DUMP_INSTRUCTIONS = "pg_dump -U [username] -d [database_name] -f [output_file.sql]";
+export const PG_DUMP_EXAMPLE = "pg_dump -U root -d example_db -f example_db.sql";
+
+export const MYSQL_DUMP_INSTRUCTIONS = "mysqldump -u [username] -p --no-data [database_name] > [output_file.sql]";
+export const MYSQL_DUMP_EXAMPLE = "mysqldump -u root -p --no-data example_db > example_db.sql";
+
+
+export const MARIADB_DUMP_INSTRUCTIONS = "mariadb-dump -u [username] -p --no-data [database_name] > [output_file.sql]";
+export const MARIADB_DUMP_EXAMPLE = "mariadb-dump -u root -p --no-data example_db > example_db.sql";
+
+
+export const SQLITE_DUMP_INSRUCTION = "sqlite3 [daabase_path] .schema > [output_file.sql]";
+export const SQLITE_DUMP_EXAMPLE = "sqlite3 example_db.sqlite .schema > example_db.sql";

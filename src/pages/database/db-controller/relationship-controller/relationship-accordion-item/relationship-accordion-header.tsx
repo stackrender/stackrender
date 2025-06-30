@@ -1,12 +1,14 @@
-import { useRelationshipName } from "@/hooks/use-relationship-name";
+
+
 import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
 import { Button, cn, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@heroui/react";
 import { Check, ChevronRight, EllipsisVertical, Focus, Pencil, Trash } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import hash from "object-hash";
+import { getDefaultRelationshipName } from "@/utils/relationship";
 
 
 interface RelationshipAccordionHeaderProps {
@@ -14,13 +16,17 @@ interface RelationshipAccordionHeaderProps {
     relationship: RelationshipType
 }
 
-
 const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = ({ isOpen, relationship }) => {
+    const defaultName : string = useMemo(() => {
+        return getDefaultRelationshipName(relationship);
+    }, [relationship])
+
 
     const [editMode, setEditMode] = useState<boolean>(false);
-    const { name: defaultName } = useRelationshipName(relationship);
+
     const { editRelationship, deleteRelationship } = useDatabaseOperations();
     const { t } = useTranslation();
+
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
     const [name, setName] = useState<string>(relationship.name ? relationship.name : defaultName);
     const { focusOnRelationship } = useDiagramOps();
@@ -48,10 +54,10 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
     return (
         <div className="group w-full flex h-12 gap-1  flex p-2 items-center" >
             <div className={cn(
-                'tarnsition-all duration-200',
+                'tarnsition-all duration-200  text-icon  hover:text-font/90',
                 isOpen ? "rotate-[90deg]" : ""
             )}>
-                <ChevronRight className="size-4 text-icon" />
+                <ChevronRight className="size-4" />
             </div>
             {
                 editMode && <>
@@ -64,16 +70,20 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                         onValueChange={setName}
                         onBlur={editRelationshipName}
                         type="text"
-                        className="rounded-md px-2 py-0.5 w-full border-primary-700 focus-visible:ring-0 text-sm"
+                        onClick={(event) => event.stopPropagation()}
+                        classNames={{
+                            inputWrapper: "rounded-sm  focus-visible:border-0 text-sm dark:bg-content1 bg-background group-data-[hover=true]:border-primary group-data-[focus=true]:border-primary border-primary  ",
+                            input: "font-semibold text-black dark:text-font"
+                        }}
                     />
                     <Button
                         variant="light"
-                        className="size-6 p-0 text-icon hover:bg-primary-foreground hover:text-font "
+                        className=" text-icon hover:bg-default hover:text-font/90 "
                         size="sm"
                         onPress={editRelationshipName}
                         isIconOnly
                     >
-                        <Check className="size-4 text-icon dark:text-white" />
+                        <Check className="size-4 " />
                     </Button>
                 </>
             }
@@ -82,63 +92,68 @@ const RelationshipAccordionHeader: React.FC<RelationshipAccordionHeaderProps> = 
                 !editMode && <>
 
                     <label
-                        className="w-full  truncate px-2 py-1 text-sm font-semibold text-black dark:text-font"
+                        className=" flex-1 truncate  px-2 py-1 text-sm font-semibold text-black dark:text-font"
                     >
                         {relationship.name ? relationship.name : defaultName}
                     </label>
-                    <div className="hidden shrink-0 flex-row group-hover:flex">
+                    <div className="flex w-fit shrink-0 items-center justify-stretch  ">
+                        <div className="hidden shrink-0  group-hover:block  ">
 
-                        <Button
-                            size="sm"
-                            isIconOnly
-                            variant="light"
-                            onPressEnd={() => focusOnRelationship(relationship.id, true)}
-                        >
-                            <Focus className="size-4 text-icon" />
-                        </Button>
-                        <Button
-                            size="sm"
-                            isIconOnly
-                            variant="light"
-                            onPress={() => setEditMode(true)}
-                        >
-                            <Pencil className="size-4 text-icon" />
-                        </Button>
-                    </div>
-
-
-
-                    <Popover placement="bottom" radius="sm" shadow="sm" showArrow isOpen={popOverOpen} onOpenChange={setPopOverOpen} >
-                        <PopoverTrigger>
                             <Button
                                 size="sm"
                                 isIconOnly
                                 variant="light"
+                                className="text-icon hover:bg-default hover:text-font/90"
+                                onPressEnd={() => focusOnRelationship(relationship.id, true)}
                             >
-                                <EllipsisVertical className="size-4 text-icon" />
+                                <Focus className="size-4" />
                             </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[160px]" >
-                            <div className="w-full flex flex-col gap-2 ">
-                                <h3 className="font-semibold text-sm text-font/90 p-2">
-                                    {t("db_controller.actions")}
-                                </h3>
-                            </div>
-                            <hr className="border-divider" />
-                            <Listbox aria-label="Actions" className="p-0 pb-1" >
-
-                                <ListboxItem
-                                    key="delete"
-                                    className="text-danger"
-                                    color="danger"
-                                    onPressEnd={onDeleteRelationship}
-                                    endContent={<Trash className="size-4" />}
+                            <Button
+                                size="sm"
+                                isIconOnly
+                                variant="light"
+                                className="text-icon hover:bg-default hover:text-font/90"
+                                onPress={() => setEditMode(true)}
+                            >
+                                <Pencil className="size-4 " />
+                            </Button>
+                        </div>
+                        <Popover placement="bottom" radius="sm" shadow="sm" showArrow isOpen={popOverOpen} onOpenChange={setPopOverOpen} >
+                            <PopoverTrigger>
+                                <Button
+                                    size="sm"
+                                    isIconOnly
+                                    variant="light"
+                                    className="text-icon hover:bg-default hover:text-font/90"
                                 >
-                                    {t("db_controller.delete")}
-                                </ListboxItem>
-                            </Listbox>
-                        </PopoverContent>
-                    </Popover>
+                                    <EllipsisVertical className="size-4 " />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[160px]" >
+                                <div className="w-full flex flex-col gap-2 ">
+                                    <h3 className="font-semibold text-sm text-font/90 p-2">
+                                        {t("db_controller.actions")}
+                                    </h3>
+                                </div>
+                                <hr className="border-divider" />
+                                <Listbox aria-label="Actions" className="p-0 pb-1" >
+
+                                    <ListboxItem
+                                        key="delete"
+                                        className="text-danger"
+                                        color="danger"
+                                        onPressEnd={onDeleteRelationship}
+                                        endContent={<Trash className="size-4" />}
+                                    >
+                                        {t("db_controller.delete")}
+                                    </ListboxItem>
+                                </Listbox>
+                            </PopoverContent>
+                        </Popover>
+
+
+
+                    </div>
                 </>
             }
         </div>

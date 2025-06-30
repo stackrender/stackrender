@@ -1,17 +1,22 @@
+import { cn } from "@heroui/react";
+import React from "react";
+
 export interface CardinalityMarkerProps {
 
     selected?: boolean,
     direction?: "start" | "end",
-    type: "one" | "many"
+    cardinality: "one" | "many",
+    type?: "symbole" | "numeric"
 }
 
 
 
-const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false, type, direction = "start" }) => {
+const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false, cardinality, direction = "start", type = "symbole" }) => {
 
-    const id = `${type}_${direction}${selected ? "_selected" : ""}`;
+    const id = `${cardinality}_${direction}${selected ? "_selected" : ""}`;
     const renderMarker = () => {
-        if (type == "many") {
+
+        if (cardinality == "many") {
             if (direction == "start")
                 return (<path d="M 0 50 L 100 50 M 100 50 L 0 0 M 100 50 L 0 100 " />)
             else if (direction == "end")
@@ -19,7 +24,7 @@ const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false,
 
         }
 
-        if (type == "one") {
+        if (cardinality == "one") {
             if (direction == "start") {
                 return (<path d="M 0 50 L 100 50 M 50 50 M 50 50 M 75 25 L 75 75" />)
             }
@@ -27,34 +32,78 @@ const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false,
                 return (<path d="M 100 50 L 0 50 M 50 50 M 50 50 M 25 25 L 25 75" />)
             }
         }
+
+
     }
-    return (
-        <>
+
+    
+    if (type == "symbole")
+        return (
+            <>
+                <marker
+                    id={id}
+                    markerWidth="24"
+                    markerHeight="24"
+                    refX="12"
+                    refY="12"
+                    orient="auto"
+                    markerUnits="userSpaceOnUse"
+                >
+                    <svg
+                        fill="transparent"
+                        className={selected ? "stroke-primary" : "stroke-default-600 dark:stroke-default-400"}
+                        strokeWidth="4"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 100 100">
+                        {
+                            renderMarker()
+                        }
+                    </svg>
+                </marker>
+            </>
+        )
+    else if (type == "numeric") {
+        return (
             <marker
                 id={id}
+                viewBox="0 0 24 24"
                 markerWidth="24"
                 markerHeight="24"
-                refX="12"
+                refX={direction == "start" ? "4" : "20"}
                 refY="12"
                 orient="auto"
-                markerUnits="userSpaceOnUse"
             >
-                <svg
-                    fill="transparent"
-                    className={selected ? "stroke-primary" : "stroke-default-600 dark:stroke-default-400"}
-                    strokeWidth="4"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 100 100">
-                    {
-                        renderMarker()
+                <circle
+                    cx="12"
+                    cy="12"
+                    r="6"
+                    stroke-width="1"
+                    className={
+                        cn("dark:fill-default fill-default",
+                            selected ? " stroke-primary fill-background dark:fill-primary-900" : " stroke-default-600 dark:stroke-default-400"
+                        )
                     }
-                </svg>
+                />
+                <text
+                    x="12"
+                    y="13"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-size="7"
+                    className={
+                        cn("fill-font/90 dark:fill-font/90" , 
+                            selected ? "fill-primary dark:fill-primary" : "" , 
+                        )
+                    }
+                >
+                    {cardinality == "one" ? "I" : "N"}
+                </text>
             </marker>
-        </>
-    )
+        )
+    }
 
 }
 
 
-export default CardinalityMarker; 
+export default React.memo( CardinalityMarker); 

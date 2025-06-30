@@ -2,8 +2,11 @@ import { usePowerSync } from "@powersync/react";
 import { Wifi, WifiOff } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip/tooltip";
-import { cn, Divider, Progress } from "@heroui/react";
+import { addToast, cn, Divider, Progress } from "@heroui/react";
 import { differenceInHours, differenceInMinutes } from "date-fns";
+import { useTranslation } from "react-i18next";
+
+ 
 
 const ConnectionStatus: React.FC = () => {
 
@@ -11,6 +14,10 @@ const ConnectionStatus: React.FC = () => {
     const [syncStatus, setSyncStatus] = useState(powerSync.currentStatus);
     const [downloadProgress, setDownloadProgress] = useState<number | undefined>(undefined);
     const clearProgressHandler: any = useRef(undefined);
+    const { t } = useTranslation(); 
+
+
+
     const [lastUploadAt, setLastUploadAt] = useState<Date | undefined>(() => {
         const last_upload_at = localStorage.getItem("last_upload_at");
         if (last_upload_at)
@@ -65,20 +72,23 @@ const ConnectionStatus: React.FC = () => {
             const hours = differenceInHours(currentDate, lastUploadAt);
 
             if (hours > 0 && hours < 24) {
-                return `${hours} hour ago`
+                return `${hours} ${t("connection_status.hour_ago")}`
             }
             if (minutes > 0 && minutes < 60)
-                return `${minutes} min ago`
+                return `${minutes} ${t("connection_status.min_ago")}`
 
             if (hours > 24) {
                 return `${lastUploadAt.toLocaleDateString()}`
             }
         }
-        return "Just now";
+        return t("connection_status.just_now") ;
 
-    }, [lastUploadAt]);
+    }, [lastUploadAt , t]);
 
-
+    const lastSyncedDate: string | undefined = useMemo(() => {
+        return syncStatus.lastSyncedAt ? syncStatus.lastSyncedAt.toLocaleString("en-US") : undefined;
+    }, [syncStatus.lastSyncedAt]);
+    
     return (
         <div className="flex items-center ">
             <Tooltip>
@@ -89,10 +99,9 @@ const ConnectionStatus: React.FC = () => {
                                 syncStatus.connected ?
                                     <Wifi className="size-4 " /> :
                                     <WifiOff className="size-4 " />
-
                             }
                             {
-                                syncStatus.connected ? "Online" : "Offline"
+                                syncStatus.connected ? t("connection_status.online") : t("connection_status.offline")
                             }
 
                         </span>
@@ -103,7 +112,7 @@ const ConnectionStatus: React.FC = () => {
                             downloadProgress !== undefined ?
                                 <>
                                     <span className="text-font/90  w-[96px]  truncate">
-                                        Saving ...
+                                        {t("connection_status.saving")} ...
                                     </span>
 
                                     <Progress
@@ -122,16 +131,19 @@ const ConnectionStatus: React.FC = () => {
                                 </>
                                 :
                                 <span className="text-font/70  truncate font-semibold" >
-                                    Saved {deltaUploadTime}
+                                    {t("connection_status.saved")} {deltaUploadTime}
                                 </span>
 
                         }
                     </div>
 
                 </TooltipTrigger>
-                <TooltipContent className="dark:bg-default-900">
-                    Last synced {syncStatus.lastSyncedAt?.toISOString()}
-                </TooltipContent>
+                {
+                    lastSyncedDate &&
+                    <TooltipContent >
+                        {t("connection_status.last_synced")} : {lastSyncedDate}
+                    </TooltipContent>
+                }
             </Tooltip>
         </div>
     )

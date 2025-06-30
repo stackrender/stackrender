@@ -67,14 +67,18 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
     return (
         <div className="flex gap-2 w-full">
             <Select
-                className="w-full"
                 placeholder={t("db_controller.select_fields")}
                 selectionMode="multiple"
                 size="sm"
                 aria-label={t("db_controller.select_fields")}
                 variant="bordered"
+                className="h-8 w-full focus-visible:ring-0 shadow-none "
+
                 classNames={{
-                    trigger: "border-divider group-hover:border-primary",
+                    trigger: "border-divider group-hover:border-primary data-[focus=true]:border-primary data-[open=true]:border-primary",
+                    selectorIcon: "text-icon",
+                    popoverContent: "rounded-md "
+
                 }}
 
                 onSelectionChange={onInexFieldChange}
@@ -122,8 +126,9 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                                 placeholder={t("db_controller.index_name")}
                                 onBlur={editIndexName}
                                 size="sm"
+                                autoFocus
                                 classNames={{
-                                    inputWrapper: "border-divider group-hover:border-primary ",
+                                    inputWrapper: " border-divider group-hover:border-primary group-data-[focus=true]:border-primary",
                                 }}
                                 defaultValue={index.name}
                             />
@@ -140,7 +145,7 @@ const IndexItem: React.FC<Props> = ({ index, fields }) => {
                                 <span className="font-medium text-sm">
                                     {t("db_controller.delete_index")}
                                 </span>
-                                 <Trash2 className="mr-1 size-3.5 text-danger dark:text-white" />
+                                <Trash2 className="mr-1 size-3.5 text-danger dark:text-white" />
                             </Button>
                         </div>
                     </PopoverContent>

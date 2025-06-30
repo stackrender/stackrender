@@ -124,10 +124,7 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
                 markerEnd={`url(#${endMarker})`}
                 fill="none"
                 className={cn([
-
                     `!stroke-1  ${selected ? '!stroke-primary' : 'stroke-default-600 dark:stroke-default-300'}`,
-
-
                 ])}
                 onClick={(e) => {
                     if (e.detail === 2) {
