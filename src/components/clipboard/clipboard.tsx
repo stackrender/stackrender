@@ -40,7 +40,7 @@ const Clipboard: React.FC<ClipboardProps> = ({ text }) => {
                         size="sm"
                         isIconOnly
                         variant="bordered"
-                        className="text-font/90 border-divider"
+                        className="text-font/90 border-1 border-divider"
                         onPressEnd={copyToClipboard}
                     >
                         {

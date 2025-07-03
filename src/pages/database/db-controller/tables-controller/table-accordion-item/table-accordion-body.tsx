@@ -160,7 +160,7 @@ const TableAccordionBody: React.FC<TableAccordionBodyProps> = ({ table, keys }) 
                     <Textarea variant="bordered" className="w-full " label={t("db_controller.table_note")}
                         classNames={{
                             inputWrapper: "bg-default border-divider dark:bg-background-100 group-hover:border-primary group-data-[focus=true]:border-primary",
-                            label: "text-font/90 group-data-[focus=true]:text-font/70"
+                            label: "text-font/90 group-data-[focus=true]:text-font/70 group-data-[filled-within=true]:text-font/70"
                         }}
                         value={note}
                         onValueChange={setNote}

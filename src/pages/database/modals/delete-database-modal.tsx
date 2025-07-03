@@ -29,9 +29,8 @@ const DeleteDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
             className="min-w-[560px]"
             actionHandler={onDelete}
             variant="danger"
-
         >
-            <p className="text-font/90">
+            <p className="text-font/90 text-sm font-medium">
                 {t("modals.delete_database_content")}
             </p>
         </Modal>

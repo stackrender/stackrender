@@ -21,15 +21,12 @@ export interface TableAccordionHeaderProps {
 
 
 const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOpen }) => {
-    const { editTable, deleteTable, createField, createTable, createIndex , getInteger } = useDatabaseOperations();
-
+    const { editTable, deleteTable, createField, createTable, createIndex, getInteger } = useDatabaseOperations();
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
     const [tableName, setTableName] = useState<string>(table.name);
-
     const { t } = useTranslation();
     const [editMode, setEditMode] = useState<boolean>(false);
     const { focusOnTable } = useDiagramOps();
-
 
     useEffect(() => {
         setTableName(table.name);
@@ -40,12 +37,13 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
         setEditMode(false);
     }, [tableName])
 
-    const onDeleteTable = async () => {
+    const onDeleteTable = useCallback(async () => {
+ 
         deleteTable(table.id)
         setPopOverOpen(false);
-    }
+    }, [table]);
 
-    const addField = () => {
+    const addField = useCallback(() => {
         setPopOverOpen(false)
         createField({
             id: v4(),
@@ -53,30 +51,26 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
             tableId: table.id,
             sequence: getNextSequence(table.fields),
             nullable: true,
-            typeId : getInteger()?.id
+            typeId: getInteger()?.id
         })
-    }
+    }, [table, getInteger])
 
-    const addIndex = (event: any) => {
+    const addIndex = useCallback((event: any) => {
         setPopOverOpen(false)
-
         createIndex({
             id: v4(),
             name: `index_${table.indices.length + 1}`,
             unique: true,
             tableId: table.id
         } as IndexInsertType);
-    }
+    }, [table])
 
-    const duplicate = async () => {
+    const duplicate = useCallback(async () => {
         setPopOverOpen(false)
         const clonedTable: TableType = cloneTable(table);
         await createTable(clonedTable)
         focusOnTable(clonedTable.id);
-    }
-
-
-
+    }, [table])
 
     return (
         <div className="group w-full flex h-12 gap-1 border-l-4 flex p-2 items-center border-l-[6px] border-default"

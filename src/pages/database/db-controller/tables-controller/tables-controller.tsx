@@ -64,11 +64,10 @@ const TablesController: React.FC = ({ }) => {
 
     useEffect(() => {
         if (focusedTableId) {
-
             setSelectedTable(new Set([focusedTableId]) as any);
+            setShowSqlPreview(false) ; 
             const accordionItem = document.getElementById(focusedTableId)
             if (accordionItem)
-
                 accordionItem?.scrollIntoView({
                     behavior: 'smooth', block: 'center'
                 })

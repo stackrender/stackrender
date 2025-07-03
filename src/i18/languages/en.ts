@@ -38,7 +38,7 @@ export const en = {
             foreign_key: "Foreign Key",
 
             source_table: "Source Table",
-            target_table: "Target Table",
+            referenced_table: "Referenced Table",
 
             select_table: "Select table",
             select_field: "Select field",
@@ -154,9 +154,11 @@ export const en = {
             clear: "Clear",
             view: "View",
             hide_controller: "Hide Controller",
-            zoom_on_scroll: "Zoom on scroll",
-            on: "On",
-            off: "Off",
+            show_controller : "Show Controller" , 
+            cardinality_style: "Cardinality style",
+            hidden: "Hidden",
+            numeric: "Numeric",
+            symbolic : "Symbolic" , 
             theme: "Theme",
             light: "Light",
             dark: "Dark",
@@ -185,8 +187,14 @@ export const en = {
             import_database: {
                 title: "Import your Database",
                 import: "Import",
-                import_options: "Would you like to import using :"
-            }
+                import_options: "Would you like to import using :" , 
+                import_error : "SQL Parsing Error" , 
+                import_error_description : "We couldn't import your SQL because it contains invalid syntax." , 
+                import_warning : "SQL Parsing Warning" , 
+                import_warning_description : "Some elements couldn't be processed due to unsupported or incomplete declarations." , 
+            } , 
+            export_sql : "Export SQL" , 
+            export_sql_header : "Export your database diagram in SQL Code"
         },
         clipboard: {
             copy: "Copy",

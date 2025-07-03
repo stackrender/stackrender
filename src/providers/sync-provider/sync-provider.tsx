@@ -10,14 +10,14 @@ import { PowerSyncSQLiteDatabase, wrapPowerSyncWithDrizzle } from '@powersync/dr
 
 export const powerSyncDb = new PowerSyncDatabase({
     database: {
-        dbFilename: 'stackrender.sqlite'
+        dbFilename: 'stackrender.sqlite',
     },
     schema: AppSchema,
 
 });
 
 export const db: PowerSyncSQLiteDatabase<typeof drizzleSchema> = wrapPowerSyncWithDrizzle(powerSyncDb, {
-    schema: drizzleSchema
+    schema: drizzleSchema,
 });
 
 const ConnectorContext = createContext<StackRenderConnector | null>(null);
@@ -33,17 +33,13 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
     const [connector] = useState(new StackRenderConnector());
 
     useEffect(() => {
-
-        powerSync.init();
-        powerSync.connect(connector);
-        
-        (async () => {
+        const setup = async () => {
+            await powerSync.init();
             await powerSync.execute("PRAGMA foreign_keys = ON;");
-        })();
+            powerSync.connect(connector);
+        };
+        setup();
     }, [powerSync, connector])
-
-
-
     return (
         <Suspense fallback={<CircularProgress />}>
             <PowerSyncContext.Provider value={powerSync}>

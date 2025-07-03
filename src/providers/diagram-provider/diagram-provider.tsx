@@ -4,6 +4,7 @@ import { useReactFlow } from "@xyflow/react";
 import { useNavigate } from "react-router-dom";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
 import { DiagramDataContext, DiagramOpsContext } from "./diagram-context";
+import { CardinalityStyle } from "@/lib/database";
 
 
 
@@ -16,6 +17,8 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     const [focusedTableId, setFocusedTableId] = useState<string | undefined>(undefined)
     const [focusedRelationshipId, setFocusedRelationshipId] = useState<string | undefined>(undefined)
     const [isConnectionInProgress, setIsConnectionInProgress] = useState<boolean>(false);
+    const [showController, setShowController] = useState<boolean>(true);
+    const [cardinalityStyle, setCardinalityStyle] = useState<CardinalityStyle>(CardinalityStyle.SYMBOLIC);
 
     const focusOnTable = useCallback((id: string, transition: boolean = false) => {
         navigate("/database/tables");
@@ -23,6 +26,8 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
         setNodes((nodes) =>
             nodes.map((node) => {
                 const selected: boolean = node.id === id;
+                
+                 
                 if (selected && transition) {
                     fitView({
                         duration: 500,
@@ -33,6 +38,10 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
                         }],
                     });
                 }
+
+                if (node.selected == selected)
+                    return node;
+
                 return {
                     ...node,
                     selected,
@@ -46,11 +55,12 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     const focusOnRelationship = useCallback((id: string, transition: boolean = false, withNavigate: boolean = true) => {
         if (withNavigate)
             navigate("/database/relationships");
-        
+
         setFocusedRelationshipId(id);
 
         setEdges((edges) =>
             edges.map((edge) => {
+                 
                 const selected: boolean = edge.id === id;
 
                 if (selected && transition) {
@@ -65,6 +75,8 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
                         }]
                     });
                 }
+                if (edge.selected == selected)
+                    return edge
                 return {
                     ...edge,
                     selected
@@ -86,8 +98,13 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
         focusOnRelationship,
         setIsConnectionInProgress,
         isConnectionInProgress,
+        showController,
+        setShowController,
+        cardinalityStyle,
+        setCardinalityStyle
 
-    }), [focusOnTable, focusOnRelationship, setIsConnectionInProgress, isConnectionInProgress])
+    }), [focusOnTable, focusOnRelationship, setIsConnectionInProgress, isConnectionInProgress, showController, setShowController, cardinalityStyle,
+        setCardinalityStyle])
     return (
         <DiagramDataContext.Provider
             value={contextDatatValue}

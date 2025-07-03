@@ -49,13 +49,13 @@ const ConnectionStatus: React.FC = () => {
 
     useEffect(() => {
         if (syncStatus.downloadProgress?.downloadedOperations && syncStatus.downloadProgress?.totalOperations) {
+ 
             const progress: number = Math.round(syncStatus.downloadProgress.downloadedOperations / syncStatus.downloadProgress.totalOperations * 100);
             if (progress <= 100) {
                 setDownloadProgress(progress);
-
             }
             if (downloadProgress == 100 && !clearProgressHandler.current) {
-
+         
                 clearProgressHandler.current = setTimeout(() => {
                     setDownloadProgress(undefined);
                     clearProgressHandler.current = undefined;

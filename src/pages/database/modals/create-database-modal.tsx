@@ -81,7 +81,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
                             placeholder={t("modals.db_name")}
                             className="h-8 w-full focus-visible:ring-0 shadow-none "
                             classNames={{
-                                inputWrapper: "dark:bg-default border-divider group-hover:border-primary ",
+                                inputWrapper: "dark:bg-default border-divider group-hover:border-primary group-data-[focus=true]:border-primary",
                             }}
                         />
                     </div>
@@ -106,16 +106,14 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
                         <Button
                             variant="bordered"
                             size="sm"
-                            className="w-full text-font border-divider"
+                            className="w-full text-font/90 border-1 border-divider"
                         >
-                            <SquareMenu className="size-4" /> Check examples
-
+                            <SquareMenu className="size-4 text-icon" /> Check examples
                         </Button>
                         <Button
                             variant="bordered"
                             size="sm"
-                            className="w-full text-font border-divider"
-
+                            className="w-full text-font/90 border-1 border-divider"
                         >
                             <span className="underline">
                                 Empty Diagram

@@ -11,6 +11,7 @@ import { useDatabaseOperations } from "@/providers/database-provider/database-pr
 import Autocomplete from "@/components/auto-complete/auto-complete";
 import ToggleButton from "@/components/toggle/toggle";
 import FieldSetting from "./field-setting";
+import { DataType } from "@/lib/schemas/data-type-schema";
 interface Props {
     field: FieldType
 }
@@ -22,7 +23,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
     const [fieldName, setFieldName] = useState<string>(field.name);
 
     const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
-    const { grouped_data_types } = useDatabaseOperations();
+    const { grouped_data_types, data_types } = useDatabaseOperations();
     const { editField } = useDatabaseOperations();
 
     const [selectedType, setSelectedType] = useState<string | undefined>(field.typeId as string | undefined);
@@ -50,13 +51,18 @@ const FieldItem: React.FC<Props> = ({ field }) => {
         } as FieldType);
     }
     const updateFieldType = (key: Key | null) => {
-     
+ 
+        const dataType: DataType | undefined = data_types.find((dataTypes: DataType) => dataTypes.id == key);
+        if (!dataType)
+            return;
+
         if (key != null) {
             editField({
                 id: field.id,
                 typeId: key
             } as FieldType);
             setSelectedType(key as string | undefined);
+
         }
     }
 

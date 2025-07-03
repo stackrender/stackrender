@@ -71,9 +71,7 @@ const CreateRelationshipModal: React.FC<CreateRelationshipModalProps> = ({ onRel
 
 
     const addRelationship = useCallback(() => {
-
         const id: string = v4();
-
         createRelationship({
             ...relationship,
             id,
@@ -109,7 +107,7 @@ const CreateRelationshipModal: React.FC<CreateRelationshipModalProps> = ({ onRel
                 <div className="space-y-2">
                     <label className="font-medium flex text-font/90 flex items-center gap-1 text-sm">
                         <FileMinus2 className="size-4" />
-                        {t("db_controller.target_table")}
+                        {t("db_controller.referenced_table")}
                     </label>
 
                     <Autocomplete

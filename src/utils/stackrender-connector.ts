@@ -52,9 +52,9 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
     }
 
     async uploadData(database: AbstractPowerSyncDatabase): Promise<void> {
-
+        
         const transaction = await database.getNextCrudTransaction();
-
+         
         if (!transaction) {
             return;
         }
@@ -64,6 +64,7 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
         }
 
         try {
+ 
             let batch: any[] = [];
             for (let operation of transaction.crud) {
     
@@ -102,7 +103,7 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
  
             localStorage.setItem("last_upload_at", new Date().toISOString());
             window.dispatchEvent(new StorageEvent("storage", { key: "lastUploadAt"  }));
-
+    
         } catch (ex: any) {
             console.debug(ex);
             throw ex;

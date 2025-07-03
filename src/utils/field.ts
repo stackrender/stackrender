@@ -1,4 +1,9 @@
-import { FieldType } from "@/lib/schemas/field-schema";
+import { fields, FieldType } from "@/lib/schemas/field-schema";
+import { field_indices } from "@/lib/schemas/field_index-schema";
+import { relationships } from "@/lib/schemas/relationship-schema";
+import { QueryResult } from "@powersync/web";
+import { eq, ExtractTablesWithRelations, inArray, or } from "drizzle-orm";
+import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
 import { v4 } from "uuid";
 
 
@@ -14,6 +19,7 @@ export const getNextSequence = (fields: FieldType[]): number => {
     });
     return maxSequenceItem.sequence + 1;
 }
+
 
 
 

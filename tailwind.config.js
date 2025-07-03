@@ -6,8 +6,8 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-   "./node_modules/@heroui/theme/dist/components/(button|code|dropdown|input|kbd|link|navbar|snippet|toggle|popover|ripple|spinner|menu|divider|form|modal|toast).js",
-    
+    "./node_modules/@heroui/theme/dist/components/(button|code|dropdown|input|kbd|link|navbar|snippet|toggle|popover|ripple|spinner|menu|divider|form|modal|toast).js",
+
   ],
   darkMode: "class",
 
@@ -32,8 +32,31 @@ export default {
             100: "#1c2026"
           },
 
-          danger: {
-            DEFAULT: "#F92814"
+             danger: {
+            DEFAULT: "#F92814",
+            50: '#fff1f0',
+            100: '#ffe0dd',
+            200: '#fcb8b1',
+            300: '#f78c81',
+            400: '#f46156',
+            500: '#F92814', // base
+            600: '#d01711',
+            700: '#a2120d',
+            800: '#760d09',
+            900: '#4a0805'
+          },
+          warning: {
+            DEFAULT: "#ffb400",
+            50: '#fffbea',
+            100: '#fff3c4',
+            200: '#ffe88a',
+            300: '#ffdc4f',
+            400: '#ffd01b',
+            500: '#ffb400', // base
+            600: '#cc9000',
+            700: '#a17100',
+            800: '#755200',
+            900: '#4a3400'
           },
           font: {
             DEFAULT: "#cecfd2"
@@ -41,7 +64,7 @@ export default {
           content1: {
             DEFAULT: "#20252c"
           },
- 
+
           default: {
             50: '#f2f3f5',
             100: '#d6d7db',
@@ -88,7 +111,30 @@ export default {
 
         colors: {
           danger: {
-            DEFAULT: "#F92814"
+            DEFAULT: "#F92814",
+            50: '#fff1f0',
+            100: '#ffe0dd',
+            200: '#fcb8b1',
+            300: '#f78c81',
+            400: '#f46156',
+            500: '#F92814', // base
+            600: '#d01711',
+            700: '#a2120d',
+            800: '#760d09',
+            900: '#4a0805'
+          },
+          warning: {
+            DEFAULT: "#ffb400",
+            50: '#fffbea',
+            100: '#fff3c4',
+            200: '#ffe88a',
+            300: '#ffdc4f',
+            400: '#ffd01b',
+            500: '#ffb400', // base
+            600: '#cc9000',
+            700: '#a17100',
+            800: '#755200',
+            900: '#4a3400'
           },
           font: {
             DEFAULT: "#333639"

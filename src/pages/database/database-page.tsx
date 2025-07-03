@@ -43,16 +43,14 @@ import { useModal } from "@/providers/modal-provider/modal-provider";
 import { Modals } from "@/providers/modal-provider/modal-contxet";
 import { Loading } from "@/components/modal/loading-modal";
 import { usePowerSync, usePowerSyncStatus } from "@powersync/react";
+import { CardinalityStyle } from "@/lib/database";
+import debounce from 'lodash.debounce';
 
 
 
 const DatabasePage: React.FC = () => {
     const { open } = useModal();
     const syncStatus = usePowerSync();
-
-    
-
-
 
     const { t } = useTranslation();
     const { resolvedTheme } = useTheme();
@@ -66,7 +64,7 @@ const DatabasePage: React.FC = () => {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
     // Diagram-related state (e.g. connection in progress)
-    const { setIsConnectionInProgress } = useDiagramOps();
+    const { setIsConnectionInProgress, cardinalityStyle, setCardinalityStyle } = useDiagramOps();
 
     // Destructure tables and relationships from database
     const { tables, relationships } = database || { tables: [], relationships: [] };
@@ -78,11 +76,11 @@ const DatabasePage: React.FC = () => {
     const nodeTypes = useMemo(() => ({ table: Table }), []);
     const edgeTypes = useMemo(() => ({ 'relationship-edge': Relationship }), []);
 
-    useEffect(() => { 
+    useEffect(() => {
 
         if (isLoading || isFetching || !(syncStatus.currentStatus as any).options.hasSynced)
             return;
-      
+
         // no database selected , open (open database) Modal  
         if (!database && databases?.length > 0) {
             open(Modals.OPEN_DATABASE, {
@@ -95,13 +93,9 @@ const DatabasePage: React.FC = () => {
             open(Modals.CREATE_DATABASE, {
                 closable: false
             });
-        } 
-    }, [database?.id, isLoading, isFetching , (syncStatus.currentStatus as any).options.hasSynced])
+        }
+    }, [database?.id, isLoading, isFetching, (syncStatus.currentStatus as any).options.hasSynced])
 
-
-
-    
-    
     useEffect(() => {
         if (isSwitchingDatabase) {
             setNodes([]);
@@ -121,7 +115,6 @@ const DatabasePage: React.FC = () => {
         const sourceField: FieldType = getField(connection.source, sourceId as string) as FieldType;
         const targetField: FieldType = getField(connection.target, targetId) as FieldType;
 
-
         const { sourceTableId, targetTableId, sourceFieldId, targetFieldId } = getRelationshipSourceAndTarget(connection.source, sourceField, connection.target, targetField);
 
         // Check if both fields have the same type (valid relationship)
@@ -135,8 +128,6 @@ const DatabasePage: React.FC = () => {
 
             } as RelationshipInsertType);
 
-            // Add edge to the diagram
-            //setEdges((eds) => addEdge(connection, eds));
         } else {
             // Show error toast if invalid relationship
             addToast({
@@ -158,10 +149,11 @@ const DatabasePage: React.FC = () => {
         ) as NodePositionChange[];
 
         const nodeRemoveChanges: NodeRemoveChange[] = changes.filter((change: NodeChange) => change.type == "remove");
-
         // Save new positions to the database
+
         if (nodePositionChanges.length > 0)
-            await updateTablePositions(nodePositionChanges.map((change: NodePositionChange) => ({
+
+            updateTablePositions(nodePositionChanges.map((change: NodePositionChange) => ({
                 id: change.id,
                 posX: change.position?.x,
                 posY: change.position?.y
@@ -177,7 +169,6 @@ const DatabasePage: React.FC = () => {
     // Called when edges (relationships) change
     const handleEdgeChanges: OnEdgesChange<any> = useCallback((changes: EdgeChange<any>[]) => {
         const edgeRemoveChanges: EdgeRemoveChange[] = changes.filter((change: EdgeChange) => change.type == "remove") as EdgeRemoveChange[];
-
         // Delete relationships from database
         if (edgeRemoveChanges.length > 0) {
             deleteMultiRelationships(edgeRemoveChanges.map((change: EdgeRemoveChange) => change.id));
@@ -215,7 +206,6 @@ const DatabasePage: React.FC = () => {
     const { isOverlapping, puls } = useOverlappingTables(tables);
 
 
-    
     return (
 
         <div className="w-full h-screen flex  relative overflow-hidden">
@@ -239,8 +229,8 @@ const DatabasePage: React.FC = () => {
                         onConnect={onConnect}
                         defaultEdgeOptions={{
                             type: 'relationship-edge',
+                            animated: false
                         }}
-
                         panOnDrag={true}
                         zoomOnScroll={true}
                         nodeTypes={nodeTypes}
@@ -249,6 +239,7 @@ const DatabasePage: React.FC = () => {
                         minZoom={0.10}
                         onConnectStart={onConnectStart}
                         onConnectEnd={onConnectEnd}
+
                     >
                         <Controls
                             position="bottom-center"
@@ -300,29 +291,32 @@ const DatabasePage: React.FC = () => {
                 </div>
 
             }
-            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-                <defs>
-                    <CardinalityMarker type="numeric" cardinality="one" direction="start" />
-                    <CardinalityMarker type="numeric" cardinality="one" direction="start" selected />
+            {
+                (cardinalityStyle != CardinalityStyle.HIDDEN) &&
+                <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+                    <defs>
+                        <CardinalityMarker style={cardinalityStyle} cardinality="one" direction="start" />
+                        <CardinalityMarker style={cardinalityStyle} cardinality="one" direction="start" selected />
 
-                    <CardinalityMarker type="numeric" cardinality="one" direction="end" />
-                    <CardinalityMarker type="numeric" cardinality="one" direction="end" selected />
+                        <CardinalityMarker style={cardinalityStyle} cardinality="one" direction="end" />
+                        <CardinalityMarker style={cardinalityStyle} cardinality="one" direction="end" selected />
 
-                    <CardinalityMarker type="numeric" cardinality="many" direction="start" />
-                    <CardinalityMarker type="numeric" cardinality="many" direction="start" selected />
+                        <CardinalityMarker style={cardinalityStyle} cardinality="many" direction="start" />
+                        <CardinalityMarker style={cardinalityStyle} cardinality="many" direction="start" selected />
 
-                    <CardinalityMarker type="numeric" cardinality="many" direction="end" />
-                    <CardinalityMarker type="numeric" cardinality="many" direction="end" selected />
+                        <CardinalityMarker style={cardinalityStyle} cardinality="many" direction="end" />
+                        <CardinalityMarker style={cardinalityStyle} cardinality="many" direction="end" selected />
 
-                </defs>
-            </svg>
+                    </defs>
+                </svg>
+            }
         </div>
 
     )
 }
 
 
-export default DatabasePage; 
+export default DatabasePage;
 
 
 

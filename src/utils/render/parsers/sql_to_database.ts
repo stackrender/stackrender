@@ -15,7 +15,8 @@ import { DatabaseInsertType } from "@/lib/schemas/database-schema";
 
 export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: DatabaseDialect) => {
     const parser = new Parser();
-
+    let errors : Error[] = [] ; 
+    
     const createTableStatements: string[] = [];
     const alterTableStatements: string[] = [];
     const createIndexStatements: string[] = [];
@@ -61,8 +62,8 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                 if (Array.isArray(instructionAst) && instructionAst.length > 0) {
                     postgresTypes.push(instructionAst[0]);
                 }
-            } catch (error) {
-                continue;
+            } catch (error ) {
+                errors.push(error as Error);
             }
         }
 
@@ -85,7 +86,8 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                     }
                 }
             } catch (error) {
-                continue;
+               
+                errors.push(error as Error);
 
             }
         }
@@ -96,7 +98,8 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                     indices.push(postgresAstToIndex(instructionAst[0], tables));
                 }
             } catch (error) {
-                continue;
+             
+                errors.push(error as Error);
             }
         }
         for (const alterTable of alterTableStatements) {
@@ -107,6 +110,8 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                     relationships = relationships.concat(extractedRelationships);
                 }
             } catch (error) {
+                
+                errors.push(error as Error);
                 if ((error as any).relationships && (error as any).relationships.length > 0)
                     relationships = relationships.concat((error as any).relationships);
             }
@@ -129,13 +134,10 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
 
                 if (Array.isArray(instructionAst) && instructionAst.length > 0) {
                     instructionAst = instructionAst[0];
-                }
-                console.log (instructionAst)
+                } 
                 if (instructionAst) {
                     const table: TableInsertType = astToTable(instructionAst, data_types);
-
                     tables.push(table);
-
                     const tableForeignKeyConstraints = (instructionAst as any).create_definitions.filter((definition: any) => definition.constraint_type == "FOREIGN KEY");
                     const tableReferenceDefinitions = (instructionAst as any).create_definitions.filter((definition: any) => definition.resource == "column" && definition.reference_definition);
 
@@ -153,16 +155,16 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
 
 
             } catch (error) {
-                console.log(error)
+              
+                errors.push(error as Error);
                 continue;
             }
         }
-
         for (const foreignKeyConstraint of foreignKeyConstraints) {
             try {
                 relationships.push(astToRelationship(tables, foreignKeyConstraint) as RelationshipInsertType);
-            } catch (error) {
-                console.log(error);
+            } catch (error) {    
+                errors.push(error as Error);
                 continue;
             }
         }
@@ -170,7 +172,7 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
             try {
                 relationships.push(astToRelationship(tables, undefined, referenceDefinition) as RelationshipInsertType);
             } catch (error) {
-                console.log(error);
+                errors.push(error as Error);
                 continue;
             }
         }
@@ -190,6 +192,7 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                 }
             } catch (error) {
 
+                errors.push(error as Error);
                 if ((error as any).relationships && (error as any).relationships.length > 0)
                     relationships = relationships.concat((error as any).relationships);
 
@@ -208,13 +211,17 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                 indices.push(astToIndex(instructionAst, tables));
 
             } catch (error) {
+                
+                errors.push(error as Error);
                 continue;
             }
         }
     }
+    if ( tables.length == 0 ) 
+        throw Error ("Error while Parsing")
 
 
-    return { tables, relationships, indices };
+    return { tables, relationships, indices , errors };
 
 }
 

@@ -1,3 +1,4 @@
+import { CardinalityStyle } from "@/lib/database";
 import { cn } from "@heroui/react";
 import React from "react";
 
@@ -6,12 +7,12 @@ export interface CardinalityMarkerProps {
     selected?: boolean,
     direction?: "start" | "end",
     cardinality: "one" | "many",
-    type?: "symbole" | "numeric"
+    style?: CardinalityStyle
 }
 
 
 
-const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false, cardinality, direction = "start", type = "symbole" }) => {
+const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false, cardinality, direction = "start", style = CardinalityStyle.SYMBOLIC }) => {
 
     const id = `${cardinality}_${direction}${selected ? "_selected" : ""}`;
     const renderMarker = () => {
@@ -37,7 +38,7 @@ const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false,
     }
 
     
-    if (type == "symbole")
+    if (style == CardinalityStyle.SYMBOLIC)
         return (
             <>
                 <marker
@@ -63,22 +64,22 @@ const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false,
                 </marker>
             </>
         )
-    else if (type == "numeric") {
+    else if (style == CardinalityStyle.NUMERIC) {
         return (
             <marker
                 id={id}
                 viewBox="0 0 24 24"
                 markerWidth="24"
                 markerHeight="24"
-                refX={direction == "start" ? "4" : "20"}
+                refX={direction == "start" ? "2" : "22"}
                 refY="12"
                 orient="auto"
             >
                 <circle
                     cx="12"
                     cy="12"
-                    r="6"
-                    stroke-width="1"
+                    r="8"
+                    strokeWidth="1"
                     className={
                         cn("dark:fill-default fill-default",
                             selected ? " stroke-primary fill-background dark:fill-primary-900" : " stroke-default-600 dark:stroke-default-400"
@@ -88,11 +89,11 @@ const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false,
                 <text
                     x="12"
                     y="13"
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                    font-size="7"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontSize="8"
                     className={
-                        cn("fill-font/90 dark:fill-font/90" , 
+                        cn("fill-font/90 dark:fill-font/90 font-semibold" , 
                             selected ? "fill-primary dark:fill-primary" : "" , 
                         )
                     }

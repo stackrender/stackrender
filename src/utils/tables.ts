@@ -9,6 +9,7 @@ import { v4 } from "uuid";
 import { getTimestamp } from "./utils";
 import { SortableTable } from "@/lib/table";
 
+
 const elk = new ELK();
 
 const adjustTablesPositions = async (
@@ -27,12 +28,12 @@ const adjustTablesPositions = async (
             'elk.algorithm': 'layered',
             'elk.layered.spacing.nodeNodeBetweenLayers': '100',
             'elk.spacing.nodeNode': '80',
-        
+
         },
         children: nodes.map((node) => ({
             id: node.id,
             width: node.measured?.width ?? 224,
-            height: node.measured?.height ?? 150,
+            height: node.measured?.height ?? ((node.data?.table as TableType)?.fields?.length * 32 + 36),
         })),
         edges: relationships.map((rel) => ({
             id: `${rel.sourceTableId}->${rel.targetTableId}`,
@@ -193,6 +194,10 @@ function orderTables(tables: SortableTable[]): string[] {
 
     return sortedOrder;
 }
+
+
+
+
 
 
 export {

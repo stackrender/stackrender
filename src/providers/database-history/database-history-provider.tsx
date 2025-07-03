@@ -12,19 +12,28 @@ interface Props { children: React.ReactNode };
 const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
 
     const udpateDbFlag = useRef(false);
-    const { database } = useDatabase() as { database: DatabaseType };
-    const { executeDbDiffOps } = useDatabaseOperations();
+    const { database , isLoading , isFetching } = useDatabase() ;
+    const { executeDbDiffOps  } = useDatabaseOperations();
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
-    const [datatbaseState, { set, undo: undoChanges, redo: redoChanges, canUndo, canRedo }] = useUndo<DatabaseType>(database);
+    const [datatbaseState, { set, undo: undoChanges, redo: redoChanges, canUndo, canRedo, reset }] = useUndo<DatabaseType>(database as DatabaseType);
 
     useEffect(() => {
-        if (datatbaseState.present && database) {
+        if (database)
+            reset(database);
+    }, [database?.id]);
+
+    useEffect(() => {
+        if (database && datatbaseState.present && !isLoading && !isFetching) {
             udpateDbFlag.current = false;
-            const presentHash: string = hash(datatbaseState.present, { algorithm: 'sha1' });
+            
+            const presentHash: string | undefined = hash(datatbaseState.present, { algorithm: 'sha1' });
             const databaseHash: string = hash(database, { algorithm: 'sha1' });
-            if (presentHash != databaseHash)
+
+            if (presentHash != databaseHash) { 
+    
                 set(database);
+            }
         }
     }, [database]);
 
@@ -50,13 +59,14 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
             return;
         }
 
-        if ( ! database || !datatbaseState.present ) 
-            return ; 
+        if (!database || !datatbaseState.present)
+            return;
         const normalizedDatabase = normalizeDatabase(database);
 
         const normalizedPresent = normalizeDatabase(datatbaseState.present);
         const differences = compare(normalizedDatabase, normalizedPresent);
 
+        //console.log ( differences )
 
         if (differences && differences.length > 0) {
             setIsProcessing(true);
@@ -65,11 +75,13 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
 
             (async () => {
                 try {
+          //          console.log ( operations) ; 
                     await executeDbDiffOps(operations)
                     setIsProcessing(false);
                 }
                 catch (error) {
-                    set(database);
+                    console.log ( error ) ; 
+                   /// set(database);
                     setIsProcessing(false);
                 }
             })()

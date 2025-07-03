@@ -24,7 +24,7 @@ export type DBDiffOperation =
     | { type: 'DELETE_INDEX'; tableId: string; indexId: string }
     | { type: 'UPDATE_INDEX'; tableId: string; indexId: string; changes: Partial<IndexType> }
     | { type: 'UPDATE_FIELD_INDICES'; tableId: string; indexId: string; create: FieldIndexType[]; delete: string[] }
-
+    | { type: "UPDATE_NUM_TABLES", value: number };
 
 /**
  * Convert a list of low-level JSON patch operations into higher-level database diff operations
@@ -58,6 +58,8 @@ export function mapDiffToDBDiffOperation(patch: any[]): DBDiffOperation[] {
             operations.push({ type: "RENAME_DATABASE", chnages: { name: op.value } as DatabaseInsertType })
         }
 
+        if (op.op == "replace" && parts[0] == "numOfTables")
+            operations.push({ type: "UPDATE_NUM_TABLES", value: op.value })
         // Handle table-related changes
         else if (parts[0] == "tables") {
             const tableId = parts[1];
@@ -209,8 +211,6 @@ export function mapDiffToDBDiffOperation(patch: any[]): DBDiffOperation[] {
         }
     }
 
-
-
     // Index creates
     for (const [tableId, indices] of Object.entries(indexCreates)) {
         for (const index of indices) {
@@ -303,3 +303,6 @@ export function normalizeDatabase(db: DatabaseType): any {
         )
     };
 }
+
+
+

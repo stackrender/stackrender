@@ -57,9 +57,10 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
     }, [table])
 
 
-
+    
     const fields: React.ReactNode[] = useMemo(() => {
         return table.fields.map((field: FieldType) => {
+            
             const highlight: boolean = highlightedEdges.find((edge: any) =>
                 (edge.data?.relationship as RelationshipType).sourceFieldId == field.id ||
                 (edge.data?.relationship as RelationshipType).targetFieldId == field.id) != null;
@@ -78,6 +79,7 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
         setShowMore((previousShowMore) => !previousShowMore);
     }, []);
  
+    
 
     return (
         <Card className={cn(
@@ -183,21 +185,16 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                 </div>
             )}
         </Card>
-
-
     )
 };
 
-export default React.memo(Table , (previousState: any, newState: any) => {
+
  
-    
+export default React.memo(Table , (previousState: any, newState: any) => {
+    // compare the previous state to the new one just to prevent re-rendering when we drag a table 
     const previousStateHash: string = hash(previousState.data);
     const newStateHash: string = hash(newState.data);
     return previousStateHash == newStateHash && previousState.selected == newState.selected;
 });
 
-/*
-, 
-
-
-*/
+ 

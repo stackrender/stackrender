@@ -85,3 +85,11 @@ export const MARIADB_DUMP_EXAMPLE = "mariadb-dump -u root -p --no-data example_d
 
 export const SQLITE_DUMP_INSRUCTION = "sqlite3 [daabase_path] .schema > [output_file.sql]";
 export const SQLITE_DUMP_EXAMPLE = "sqlite3 example_db.sqlite .schema > example_db.sql";
+
+
+export enum CardinalityStyle {
+    HIDDEN = "HIDDEN" , 
+    NUMERIC = "NUMERIC" , 
+    SYMBOLIC = "SYMBOLIC"
+}
+

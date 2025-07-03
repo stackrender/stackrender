@@ -87,7 +87,8 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
             id: field.id,
             note: note,
         } as FieldInsertType)
-    }, [field])
+    }, [field , note]) ; 
+
     const toggleUnqiue = useCallback((value: boolean) => {
         editField({
             id: field.id,
@@ -569,7 +570,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                     base: "max-w-xs",
                     input: "resize-y min-h-[60px] max-h-[180px]",
                     inputWrapper: "bg-default border-divider dark:bg-background-100 group-hover:border-primary group-data-[focus=true]:border-primary",
-                    label: "text-font/90 group-data-[focus=true]:text-font/70"
+                    label: "text-font/90 group-data-[focus=true]:text-font/70 group-data-[filled-within=true]:text-font/70 "
                 }} />
             <hr className="border-divider" />
             <Button

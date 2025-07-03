@@ -1,3 +1,4 @@
+import { CardinalityStyle } from "@/lib/database";
 import { createContext, Dispatch  } from "react";
 
 
@@ -10,7 +11,12 @@ interface DiagramOpsContextType {
     focusOnTable: (id: string, transition?: boolean) => void,
     focusOnRelationship: (id: string, transition?: boolean , withNavigate? : boolean) => void,
     setIsConnectionInProgress: Dispatch<boolean>,
-    isConnectionInProgress: boolean
+    isConnectionInProgress: boolean ,
+    showController : boolean  , 
+    setShowController : ( value : boolean ) => void ,  
+    cardinalityStyle : CardinalityStyle , 
+    setCardinalityStyle : (style : CardinalityStyle) => void  
+
 
 }
 

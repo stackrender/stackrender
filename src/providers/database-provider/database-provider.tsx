@@ -5,7 +5,7 @@ import { TableInsertType, tables, TableType } from "@/lib/schemas/table-schema";
 import { useQuery } from "@powersync/react";
 import { toCompilableQuery } from "@powersync/drizzle-driver";
 import { asc, count, desc, eq, inArray, or } from "drizzle-orm";
-import { QueryResult, Transaction } from "@powersync/web";
+import { QueryResult } from "@powersync/web";
 import { FieldInsertType, fields, FieldType } from "@/lib/schemas/field-schema";
 import { RelationshipInsertType, relationships } from "@/lib/schemas/relationship-schema";
 import DatabaseHistoryProvider from "../database-history/database-history-provider";
@@ -16,7 +16,7 @@ import { IndexInsertType, indices } from "@/lib/schemas/index-schema";
 import { field_indices, FieldIndexInsertType } from "@/lib/schemas/field_index-schema";
 import { v4 } from "uuid";
 import { DataType } from "@/lib/schemas/data-type-schema";
-import { Modifiers } from "@/lib/field";
+import { deleteFieldsWithCascade, deleteTablesWithCascade } from "@/utils/cascade";
 
 
 
@@ -47,6 +47,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                                     type: true
                                 }
                             },
+
                             indices: {
                                 orderBy: asc(indices.createdAt),
                                 with: {
@@ -55,6 +56,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                             }
                         }
                     },
+
                     relationships: {
                         with: {
                             sourceTable: true,
@@ -66,7 +68,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                     }
                 }
             })
-        )
+        ), [], { runQueryOnce: false },
     );
 
 
@@ -83,6 +85,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         database = database[0] as any;
     else
         database = undefined as any;
+
 
     // Fetch all data types 
     let { data: data_types, isLoading: loadingDataTypes, isFetching: fetchingDatatypes } = useQuery(toCompilableQuery(
@@ -149,11 +152,13 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                         table.fields.map((field: FieldInsertType) => ({ ...field, tableId: table.id }))
                     );
                 }
-            })
+            });
+
+
         } else {
             throw Error("No Database selected");
         }
-    }, [db, currentDatabaseId]);
+    }, [db, currentDatabaseId, database]);
 
     const editTable = useCallback(async (table: TableInsertType): Promise<QueryResult> => {
         return await db.update(tables).set(table).where(eq(tables.id, table.id));
@@ -162,9 +167,9 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     const deleteTable = useCallback(async (id: string): Promise<void> => {
         if (currentDatabaseId) {
             await db.transaction(async (tx) => {
-                await tx.delete(tables).where(eq(tables.id, id));
-                await updateDbNumTables(currentDatabaseId, tx)
-            })
+                await deleteFieldsWithCascade([id], tx);
+                await updateDbNumTables(currentDatabaseId, tx);
+            });
         } else {
             throw Error("No Database selected");
         }
@@ -174,9 +179,9 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     const deleteMultiTables = useCallback(async (ids: string[]): Promise<void> => {
         if (currentDatabaseId) {
             await db.transaction(async (tx) => {
-                await tx.delete(tables).where(inArray(tables.id, ids));;
-                await updateDbNumTables(currentDatabaseId, tx)
-            })
+                await deleteTablesWithCascade(ids, tx);
+                await updateDbNumTables(currentDatabaseId, tx);
+            });
         } else {
             throw Error("No Database selected");
         }
@@ -195,8 +200,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     // Delete field and its related relationships
     const deleteField = useCallback(async (id: string): Promise<void> => {
         return await db.transaction(async (tx) => {
-            await tx.delete(relationships).where(or(eq(relationships.sourceFieldId, id), eq(relationships.targetFieldId, id)));
-            await tx.delete(fields).where(eq(fields.id, id));
+            await deleteFieldsWithCascade([id], tx);
         })
     }, [db]);
 
@@ -271,85 +275,131 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [db]);
 
     // Update table positions (for UI layout)
-    const updateTablePositions = useCallback(async (tableList: TableInsertType[]): Promise<void> => {
+    const updateTablePositions = useCallback(async (tableList: TableInsertType[]): Promise<any> => {
         return await db.transaction(async (tx) => {
+            let operations: Promise<any>[] = [];
             for (const table of tableList) {
-                await tx.update(tables).set({
+                operations.push(tx.update(tables).set({
                     posX: (table as any).posX,
                     posY: (table as any).posY
-                }).where(eq(tables.id, (table as any).id))
+                }).where(eq(tables.id, (table as any).id)))
             }
+            return await Promise.all(operations);
         })
     }, [db]);
 
     // Apply a list of diff operations to sync database
-    const executeDbDiffOps = useCallback(async (operations: DBDiffOperation[]) => {
+    const executeDbDiffOps = useCallback(async (diffOperations: DBDiffOperation[]) => {
         try {
             await db.transaction(async (tx) => {
-                for (const operation of operations) {
+                let operations: Promise<any>[] = [];
+
+                for (const operation of diffOperations) {
 
                     if (operation.type == "RENAME_DATABASE") {
-                        currentDatabaseId && await tx.update(databaseModel).set({
-                            name: operation.chnages.name
-                        }).where(eq(databaseModel.id, currentDatabaseId));
+                        if (currentDatabaseId)
+                            operations.push(tx.update(databaseModel).set({
+                                name: operation.chnages.name
+                            }).where(eq(databaseModel.id, currentDatabaseId)));
+                    }
+                    else if (operation.type == "UPDATE_NUM_TABLES") {
+                        console.log("update number of tables with ", operation.value);
+                        if (currentDatabaseId)
+                            operations.push(
+                                tx.update(databaseModel).set({
+                                    numOfTables: operation.value
+                                }).where(eq(databaseModel.id, currentDatabaseId))
+                            )
                     }
 
                     else if (operation.type == "CREATE_TABLE") {
-                        await tx.insert(tables).values(operation.table);
-                        currentDatabaseId && await updateDbNumTables(currentDatabaseId, tx);
-                        if (operation.table.fields && Object.values(operation.table.fields).length > 0)
-                            await tx.insert(fields).values(Object.values(operation.table.fields));
+                        operations.push(tx.insert(tables).values(operation.table));
+
+                        if (operation.table.fields && Object.values(operation.table.fields).length > 0) {
+                            operations.push(
+                                tx.insert(fields).values(Object.values(operation.table.fields))
+                            );
+                        }
 
                     } else if (operation.type === "UPDATE_TABLE") {
-                        await tx.update(tables).set(operation.changes).where(eq(tables.id, operation.tableId));
+                        operations.push(
+                            tx.update(tables).set(operation.changes).where(eq(tables.id, operation.tableId))
+                        )
 
                     } else if (operation.type === "DELETE_TABLE") {
+                        operations.push(
+                            deleteTablesWithCascade([operation.tableId], tx)
+                        );
 
-                        await tx.delete(tables).where(eq(tables.id, operation.tableId));
-                        currentDatabaseId && await updateDbNumTables(currentDatabaseId, tx);
 
                     } else if (operation.type === "CREATE_FIELD") {
-                        await tx.insert(fields).values(operation.field);
+                        operations.push(
+                            tx.insert(fields).values(operation.field)
+                        );
 
                     } else if (operation.type === "DELETE_FIELD") {
-                        await tx.delete(relationships).where(or(eq(relationships.sourceFieldId, operation.fieldId), eq(relationships.targetFieldId, operation.fieldId)));
-                        await tx.delete(fields).where(eq(fields.id, operation.fieldId));
+                        operations.push(
+                            deleteFieldsWithCascade([operation.fieldId], tx)
+                        )
 
                     } else if (operation.type === "UPDATE_FIELD") {
-                        await tx.update(fields).set(operation.changes).where(eq(fields.id, operation.fieldId));
+                        operations.push(
+                            tx.update(fields).set(operation.changes).where(eq(fields.id, operation.fieldId))
+                        );
 
                     } else if (operation.type === "CREATE_RELATIONSHIP") {
-                        await tx.insert(relationships).values(operation.relationship);
+                        operations.push(
+                            tx.insert(relationships).values(operation.relationship)
+                        );
 
                     } else if (operation.type === "DELETE_RELATIONSHIP") {
-                        await tx.delete(relationships).where(eq(relationships.id, operation.relationshipId));
+                        operations.push(
+                            tx.delete(relationships).where(eq(relationships.id, operation.relationshipId))
+                        );
 
                     } else if (operation.type === "UPDATE_RELATIONSHIP") {
-                        await tx.update(relationships).set(operation.changes).where(eq(relationships.id, operation.relationshipId));
+                        operations.push(
+                            tx.update(relationships).set(operation.changes).where(eq(relationships.id, operation.relationshipId))
+                        );
                     }
                     else if (operation.type == "CREATE_INDEX") {
-                        await tx.insert(indices).values(operation.index);
+                        operations.push(
+                            tx.insert(indices).values(operation.index)
+                        );
                         if (operation.index.fieldIndices && Object.values(operation.index.fieldIndices).length > 0)
-                            await tx.insert(field_indices).values(Object.values(operation.index.fieldIndices));
-
+                            operations.push(
+                                tx.insert(field_indices).values(Object.values(operation.index.fieldIndices))
+                            );
                     }
                     else if (operation.type == "DELETE_INDEX") {
-                        await tx.delete(indices).where(eq(indices.id, operation.indexId));
+                        operations.push(
+                            tx.delete(indices).where(eq(indices.id, operation.indexId))
+                        );
                     }
                     else if (operation.type == "UPDATE_INDEX") {
-                        await tx.update(indices).set(operation.changes).where(eq(indices.id, operation.indexId));
+                        operations.push(
+                            tx.update(indices).set(operation.changes).where(eq(indices.id, operation.indexId))
+                        );
 
                     } else if (operation.type == "UPDATE_FIELD_INDICES") {
                         if (operation.delete.length > 0) {
-                            await tx.delete(field_indices).where(inArray(field_indices.id, operation.delete))
+                            operations.push(
+                                tx.delete(field_indices).where(inArray(field_indices.id, operation.delete))
+                            )
                         }
                         if (operation.create.length > 0) {
-                            await tx.insert(field_indices).values(operation.create);
+                            operations.push(
+                                tx.insert(field_indices).values(operation.create)
+                            );
                         }
                     }
                 }
+
+                return await Promise.all(operations);
+
             })
         } catch (error) {
+            console.log(error);
             throw error
         }
     }, [db, currentDatabaseId]);
@@ -361,45 +411,49 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     const importDatabase = useCallback(async (importedTables: TableInsertType[], importedRelationships: RelationshipInsertType[], importedIndices: IndexInsertType[]) => {
         if (currentDatabaseId) {
             return await db.transaction(async (tx) => {
+                let operations: Promise<any>[] = [];
                 for (const table of importedTables) {
-                    await tx.insert(tables).values({
+
+                    operations.push(tx.insert(tables).values({
                         ...table,
                         databaseId: currentDatabaseId,
                         createdAt: table.createdAt || getTimestamp()
-                    } as TableInsertType);
-                    await updateDbNumTables(currentDatabaseId, tx);
+                    } as TableInsertType));
+
                     if (table.fields) {
-                        await tx.insert(fields).values(
-                            table.fields.map((field: FieldInsertType) => ({ ...field, tableId: table.id }))
+                        operations.push(
+                            tx.insert(fields).values(
+                                table.fields.map((field: FieldInsertType) => ({ ...field, tableId: table.id }))
+                            )
                         );
                     }
                 }
-
                 for (const relationship of importedRelationships) {
-                    await tx.insert(relationships).values({
+                    operations.push(tx.insert(relationships).values({
                         ...relationship,
                         databaseId: currentDatabaseId,
                         createdAt: relationship.createdAt || getTimestamp()
-                    });
+                    }));
                 }
 
                 for (const index of importedIndices) {
-                    await tx.insert(indices).values({
+                    operations.push(tx.insert(indices).values({
                         ...index,
                         createdAt: index.createdAt ? index.createdAt : getTimestamp()
-                    });
-
+                    }));
                     if (index.fieldIndices) {
-                        await tx.insert(field_indices).values(
+                        operations.push(tx.insert(field_indices).values(
                             index.fieldIndices.map((fieldIndex: FieldIndexInsertType) => ({ ...fieldIndex, indexId: index.id }))
-                        )
+                        ))
                     }
                 }
+                await Promise.all(operations);
+                await updateDbNumTables(currentDatabaseId, tx)
             });
         } else {
             throw Error("no database selected")
         }
-    }, [currentDatabaseId])
+    }, [db, currentDatabaseId])
 
     const databaseOpsValue = useMemo(() => ({
         isSwitchingDatabase,
@@ -457,11 +511,8 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         getInteger,
         grouped_data_types
     ]);
-
-
     return (
         <DatabaseDataContext.Provider value={{
-
             database: database as unknown as DatabaseType,
             currentDatabaseId,
             databases: databases as DatabaseType[],
@@ -471,23 +522,9 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             getField,
         }}>
             <DatabaseOperationsContext.Provider value={databaseOpsValue}>
-                {
-                    /*                    !database && !isLoading &&
-                    <>
-                        {children}
-                    </>
-                }
-                {
-                    database && !isLoading && !isSwitchingDatabase &&
-                    <DatabaseHistoryProvider>
-                        {children}
-                    </DatabaseHistoryProvider>*/
-                }
-                {
-                    <DatabaseHistoryProvider>
-                        {children}
-                    </DatabaseHistoryProvider>
-                }
+                <DatabaseHistoryProvider>
+                    {children}
+                </DatabaseHistoryProvider>
             </DatabaseOperationsContext.Provider>
         </DatabaseDataContext.Provider>
     )

@@ -39,8 +39,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
 
     const handleAction = async (onClose: () => void) => {
         setIsLoading(true)
-        actionHandler && await actionHandler();
-        setIsLoading(false);
+        try {
+            actionHandler && await actionHandler();
+        } catch (error) {
+            setIsLoading(false);
+        } finally  {
+            setIsLoading(false);
+
+        }
     }
     return (
         <HeroUiModal
@@ -53,7 +59,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
 
             classNames={{
                 base: "dark:bg-background-100",
-                closeButton: cn("dark:bg-background-100 dark:hover:bg-background rounded-md" , !closable ? "hidden" : "")
+                closeButton: cn("dark:bg-background-100 dark:hover:bg-background rounded-md", !closable ? "hidden" : "")
             }}
 
         >
@@ -84,12 +90,15 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
                                                 {t("modals.close")}
                                             </Button>
                                         }
-                                        { 
+                                        {
                                             !closable && <div></div>
                                         }
-                                        <Button color="primary" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
-                                            {actionName}
-                                        </Button>
+                                        {
+                                            actionHandler &&
+                                            <Button color="primary" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
+                                                {actionName}
+                                            </Button>
+                                        }
                                     </>
                                 }
                                 {
@@ -101,12 +110,16 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onOpenChange, className, backdrop
                                                 {t("modals.close")}
                                             </Button>
                                         }
-                                        { 
+                                        {
                                             !closable && <div></div>
                                         }
-                                        <Button color="danger" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
-                                            {actionName}
-                                        </Button>
+                                        {
+                                            actionHandler &&
+
+                                            <Button color="danger" onPress={() => handleAction(onClose)} size="sm" isDisabled={isDisabled || isLoading} isLoading={isLoading}>
+                                                {actionName}
+                                            </Button>
+                                        }
                                     </>
 
                                 }

@@ -22,9 +22,7 @@ interface DatabaseDataContextType {
     isFetching : boolean , 
     isSwitchingDatabase: boolean,
     getField: (tableId: string, id: string) => FieldType | undefined,
-    
-
-
+ 
 }
 
 
@@ -42,7 +40,7 @@ interface DatabaseOperationsContextType {
     createTable: (table: TableInsertType) => Promise<void>,
     editTable: (table: TableInsertType) => Promise<QueryResult>,
     deleteTable: (id: string) => Promise<void>,
-    updateTablePositions: (tables: TableInsertType[]) => Promise<void>,
+    updateTablePositions: (tables: TableInsertType[]  ) => Promise<void>,
     deleteMultiTables: (ids: string[]) => Promise<void>
     // field operations
     createField: (field: FieldInsertType) => Promise<QueryResult>,
@@ -64,7 +62,7 @@ interface DatabaseOperationsContextType {
     executeDbDiffOps: (operations: DBDiffOperation[]) => void,
     
     // insert databse tables , relationships , indices in one operation 
-    importDatabase : (tables  : TableInsertType[] , relationships : RelationshipInsertType[] , indices : IndexInsertType[]) => Promise<void> ; 
+    importDatabase : (tables  : TableInsertType[] , relationships : RelationshipInsertType[] , indices : IndexInsertType[]) => Promise<any> ; 
      
 }
 

@@ -123,37 +123,37 @@ const Field: React.FC<Props> = (props) => {
                     </Button>
                 </>
             }
-
-            <div className={
-                cn(
-                    "absolute w-full left-0 ",
-                    !showHandles ? "invisible" : "visible"
-                )} >
-                <Handle
-                    type="source"
-                    position={Position.Left}
-                    id={LEFT_PREFIX + field.id}
-                    className="w-4 h-4 border-4 bg-primary dark:border-background-50"
-                />
-                <Handle
-                    type="source"
-                    position={Position.Right}
-                    className="w-4 h-4 border-4 bg-primary dark:border-background-50"
-                    id={RIGHT_PREFIX + field.id}
-                />
-            </div>
             {
+
                 <div className={
                     cn(
                         "absolute w-full left-0 ",
-                        !isConnectionInProgress ? "invisible" : "visible"
+                        !showHandles ? "invisible" : "visible"
                     )} >
+                    <Handle
+                        type="source"
+                        position={Position.Left}
+                        id={LEFT_PREFIX + field.id}
+                        className="w-4 h-4 border-4 bg-primary dark:border-background-50"
+                    />
+                    <Handle
+                        type="source"
+                        position={Position.Right}
+                        className="w-4 h-4 border-4 bg-primary dark:border-background-50"
+                        id={RIGHT_PREFIX + field.id}
+                    />
+                </div>
+            }
+            {
+                <div className={
+                    cn(
+                        "absolute w-full left-0  h-full ",
+                        !isConnectionInProgress ? "invisible" : "visible"
+                    )}>
                     <Handle
                         id={`${TARGET_PREFIX}${field.id}`}
                         className={
-                            true
-                                ? '!absolute !left-0 !top-0 !h-full !w-full !transform-none !rounded-none !border-none !opacity-0'
-                                : `!invisible`
+                            'absolute left-0 top-0 h-full w-full transform-none rounded-none border-none opacity-0'
                         }
                         position={Position.Left}
                         type="target"

@@ -70,7 +70,7 @@ const RelationshipAccordionBody: React.FC<RelationshipAccordionBodyProps> = ({ r
                 <div className="w-full space-y-1">
                     <label className="font-medium flex text-font/90 flex items-center gap-1 text-sm ">
                         <FileMinus2 className="size-4" />
-                        {t("    .target_table")}
+                        {t("db_controller.referenced_table")}
 
                     </label>
 

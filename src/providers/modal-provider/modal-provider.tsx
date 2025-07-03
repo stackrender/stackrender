@@ -8,6 +8,7 @@ import { CreateDatabaseModal } from "@/pages/database/modals/create-database-mod
 import OpenDatabaseModal from "@/pages/database/modals/open-database-modal";
 import DeleteDatabaseModal from "@/pages/database/modals/delete-database-modal";
 import ImportDatabaseModal from "@/pages/database/modals/import-database";
+import ExportSqlModal from "@/pages/database/modals/export-sql-modal";
 
 
 interface Props { children: React.ReactNode }
@@ -57,7 +58,10 @@ export const ModalProvider: React.FC<Props> = ({ children }) => {
                     <DeleteDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
                     ||
                     (currentModal.modal == Modals.IMPORT_DATABASE ) &&
-                    <ImportDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
+                    <ImportDatabaseModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} /> 
+                     ||
+                    (currentModal.modal == Modals.EXPORT_SQL ) &&
+                    <ExportSqlModal {...currentModal.props} onOpenChange={onOpenChange} isOpen={isOpen} />
                 ) : undefined
 
 }
