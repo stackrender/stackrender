@@ -16,8 +16,6 @@ const ConnectionStatus: React.FC = () => {
     const clearProgressHandler: any = useRef(undefined);
     const { t } = useTranslation(); 
 
-
-
     const [lastUploadAt, setLastUploadAt] = useState<Date | undefined>(() => {
         const last_upload_at = localStorage.getItem("last_upload_at");
         if (last_upload_at)
@@ -46,6 +44,7 @@ const ConnectionStatus: React.FC = () => {
         });
         return () => l?.();
     }, [powerSync]);
+
 
     useEffect(() => {
         if (syncStatus.downloadProgress?.downloadedOperations && syncStatus.downloadProgress?.totalOperations) {
@@ -93,7 +92,7 @@ const ConnectionStatus: React.FC = () => {
         <div className="flex items-center ">
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <div className="border-1  flex gap-2 p-2 px-3 rounded-lg text-xs relative overflow-hidden  border-divider dark:border-font/10">
+                    <div className="border-1  flex gap-2 p-2 px-3 rounded-sm text-xs relative overflow-hidden  border-divider dark:border-font/10">
                         <span className={cn("flex gap-2 font-semibold", syncStatus.connected ? "text-success" : "text-danger")}>
                             {
                                 syncStatus.connected ?
@@ -117,9 +116,9 @@ const ConnectionStatus: React.FC = () => {
 
                                     <Progress
                                         classNames={{
-                                            base: "max-w-md absolute bottom-[-2px] left-0 w-full ",
+                                            base: "max-w-md absolute bottom-[-2px] left-0 w-full rounded-sm",
                                             track: " bg-transparent",
-                                            indicator: "bg-gradient-to-r from-secondary-200 to-primary ",
+                                            indicator: "bg-gradient-to-r from-secondary-100 to-primary ",
                                         }}
                                         radius="sm"
                                         aria-label="upload progress"
@@ -130,7 +129,7 @@ const ConnectionStatus: React.FC = () => {
 
                                 </>
                                 :
-                                <span className="text-font/70  truncate font-semibold" >
+                                <span className="text-font/90  truncate font-semibold" >
                                     {t("connection_status.saved")} {deltaUploadTime}
                                 </span>
 

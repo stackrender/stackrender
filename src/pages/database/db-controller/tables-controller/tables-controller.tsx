@@ -11,6 +11,7 @@ import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { useReactFlow } from "@xyflow/react";
 import SqlPreview from "../sql-preview";
+import EmptyList from "@/components/empty-list/empty-list";
 
 
 const PADDING_X = 40;
@@ -19,19 +20,19 @@ const PADDING_Y = 80;
 
 const TablesController: React.FC = ({ }) => {
 
-    const { database } = useDatabase();
+    const { database  , isSyncing } = useDatabase();
     const { createTable, getInteger } = useDatabaseOperations();
     const { getViewport } = useReactFlow();
     const { tables: allTables } = database || { tables: [] };
     const [tables, setTables] = useState<TableType[]>(allTables);
-
     const { t } = useTranslation();
     const [selectedTable, setSelectedTable] = useState(new Set([]));
     const [showSqlPreview, setShowSqlPreview] = useState<boolean>(false);
     const { focusedTableId } = useDiagram();
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
     const accordionRef = useRef<HTMLDivElement>(null);
-
+    
+    
     useEffect(() => searchTables(), [allTables]);
 
     const addNewTable = useCallback(async () => {
@@ -65,7 +66,7 @@ const TablesController: React.FC = ({ }) => {
     useEffect(() => {
         if (focusedTableId) {
             setSelectedTable(new Set([focusedTableId]) as any);
-            setShowSqlPreview(false) ; 
+            setShowSqlPreview(false);
             const accordionItem = document.getElementById(focusedTableId)
             if (accordionItem)
                 accordionItem?.scrollIntoView({
@@ -145,7 +146,7 @@ const TablesController: React.FC = ({ }) => {
                 </Button>
             </div>
             {
-                !showSqlPreview &&
+                allTables.length > 0 && !showSqlPreview &&
                 <div className=" flex-1 overflow-auto">
                     <Accordion
                         hideIndicator
@@ -177,13 +178,19 @@ const TablesController: React.FC = ({ }) => {
                 </div>
             }
             {
-                showSqlPreview &&
+                allTables.length > 0 && showSqlPreview &&
                 <div className=" flex-1 overflow-auto ">
                     <SqlPreview
                         tableFilterIds={tableFilterIds}
                     />
-
                 </div>
+            }
+            {
+                 !isSyncing && allTables.length == 0 &&
+                <EmptyList
+                    title={t("db_controller.empty_list.no_tables")}
+                    description={t("db_controller.empty_list.no_tables_description")}
+                />
             }
         </div>
     )

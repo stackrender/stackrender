@@ -7,6 +7,8 @@ import { DiagramDataContext, DiagramOpsContext } from "./diagram-context";
 import { CardinalityStyle } from "@/lib/database";
 
 
+const CONTROLLER_VISIBILITY_KEY = "is_controller_open";
+const CARDINALITY_STYLE_KEY = "cardinality_style";
 
 interface Props { children: React.ReactNode }
 
@@ -17,8 +19,20 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     const [focusedTableId, setFocusedTableId] = useState<string | undefined>(undefined)
     const [focusedRelationshipId, setFocusedRelationshipId] = useState<string | undefined>(undefined)
     const [isConnectionInProgress, setIsConnectionInProgress] = useState<boolean>(false);
-    const [showController, setShowController] = useState<boolean>(true);
-    const [cardinalityStyle, setCardinalityStyle] = useState<CardinalityStyle>(CardinalityStyle.SYMBOLIC);
+    
+    const [showController, setShowController] = useState<boolean>(() => {
+        const value: string | null = localStorage.getItem(CONTROLLER_VISIBILITY_KEY) ; 
+        if (value)
+            return JSON.parse(value);
+        return true;
+    });
+    const [cardinalityStyle, setCardinalityStyle] = useState<CardinalityStyle>(() => {
+        const value: string | null = localStorage.getItem(CARDINALITY_STYLE_KEY);
+    
+        if (value)
+            return value as CardinalityStyle;
+        return CardinalityStyle.SYMBOLIC;
+    });
 
     const focusOnTable = useCallback((id: string, transition: boolean = false) => {
         navigate("/database/tables");
@@ -26,8 +40,8 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
         setNodes((nodes) =>
             nodes.map((node) => {
                 const selected: boolean = node.id === id;
-                
-                 
+
+
                 if (selected && transition) {
                     fitView({
                         duration: 500,
@@ -60,7 +74,7 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
 
         setEdges((edges) =>
             edges.map((edge) => {
-                 
+
                 const selected: boolean = edge.id === id;
 
                 if (selected && transition) {
@@ -87,6 +101,16 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     }, [setFocusedRelationshipId]);
 
 
+    const changeCardinalityStyle = useCallback((style : CardinalityStyle) => {
+        localStorage.setItem(CARDINALITY_STYLE_KEY , style) ; 
+        setCardinalityStyle( style) ; 
+    } , []) ; 
+
+    const openController = useCallback((isOpen : boolean) => {
+        localStorage.setItem( CONTROLLER_VISIBILITY_KEY ,   JSON.stringify(isOpen) ) ; 
+        setShowController(isOpen) ; 
+    } , [])
+
     const contextDatatValue = useMemo(() => ({
         focusedTableId,
         focusedRelationshipId,
@@ -99,9 +123,9 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
         setIsConnectionInProgress,
         isConnectionInProgress,
         showController,
-        setShowController,
         cardinalityStyle,
-        setCardinalityStyle
+        changeCardinalityStyle , 
+        openController
 
     }), [focusOnTable, focusOnRelationship, setIsConnectionInProgress, isConnectionInProgress, showController, setShowController, cardinalityStyle,
         setCardinalityStyle])

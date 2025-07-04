@@ -279,7 +279,10 @@ export function normalizeDatabase(db: DatabaseType): any {
                 {
                     ...table,
                     fields: Object.fromEntries(
-                        table.fields.map(field => [field.id, field])
+                        table.fields.map(field => [field.id, {
+                            ...field , 
+                            type : undefined 
+                        }])
                     ),
                     indices: Object.fromEntries(
                         table.indices.map(index => [index.id, {

@@ -43,6 +43,13 @@ export const en = {
             select_table: "Select table",
             select_field: "Select field",
 
+            empty_list : {
+                no_tables : "No Tables" , 
+                no_tables_description  : "Create a Table to get started." , 
+
+                no_relationships : "No Relationships" , 
+                no_relationships_description : "Create relationships to connect two tables" 
+            } , 
 
             cardinality: {
                 name: "Cardinality",
@@ -99,12 +106,8 @@ export const en = {
             index_setting: "Index Setting",
             table_actions: "Table Actions",
             actions: "Actions",
-
-
             delete_index: "Delete Index",
             index_name: "Index name",
-
-
             create_relationship: "Create Relationship",
             relationship_error: "To create a relationship, the primary key and foreign key must be of the same type.",
 

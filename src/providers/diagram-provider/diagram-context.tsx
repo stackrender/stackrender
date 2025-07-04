@@ -1,5 +1,5 @@
 import { CardinalityStyle } from "@/lib/database";
-import { createContext, Dispatch  } from "react";
+import { createContext, Dispatch } from "react";
 
 
 interface DiagramDataContextType {
@@ -9,14 +9,13 @@ interface DiagramDataContextType {
 
 interface DiagramOpsContextType {
     focusOnTable: (id: string, transition?: boolean) => void,
-    focusOnRelationship: (id: string, transition?: boolean , withNavigate? : boolean) => void,
+    focusOnRelationship: (id: string, transition?: boolean, withNavigate?: boolean) => void,
     setIsConnectionInProgress: Dispatch<boolean>,
-    isConnectionInProgress: boolean ,
-    showController : boolean  , 
-    setShowController : ( value : boolean ) => void ,  
-    cardinalityStyle : CardinalityStyle , 
-    setCardinalityStyle : (style : CardinalityStyle) => void  
-
+    isConnectionInProgress: boolean,
+    showController: boolean,
+    openController: (value: boolean) => void,
+    cardinalityStyle: CardinalityStyle,
+    changeCardinalityStyle: (style: CardinalityStyle) => void
 
 }
 

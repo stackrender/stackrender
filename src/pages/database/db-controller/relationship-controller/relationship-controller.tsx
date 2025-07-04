@@ -6,14 +6,16 @@ import { useTranslation } from "react-i18next";
 import RelationshipAccordionHeader from "./relationship-accordion-item/relationship-accordion-header";
 import RelationshipAccordionBody from "./relationship-accordion-item/relationship-accordion-body";
 
-import CreateRelationshipForm from "../../modals/create-relationship-modal";
-import { RelationshipInsertType, RelationshipType } from "@/lib/schemas/relationship-schema";
-import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
+
+import { RelationshipType } from "@/lib/schemas/relationship-schema";
+import { useDatabase } from "@/providers/database-provider/database-provider";
 
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { useModal } from "@/providers/modal-provider/modal-provider";
 import { Modals } from "@/providers/modal-provider/modal-contxet";
 import { getDefaultRelationshipName } from "@/utils/relationship";
+import EmptyList from "@/components/empty-list/empty-list";
+
 
 
 
@@ -25,7 +27,7 @@ const RelationshipController: React.FC = ({ }) => {
 
 
     const { open } = useModal();
-    const { database } = useDatabase();
+    const { database, isSyncing } = useDatabase();
     const { relationships: allRelationships } = database || { relationships: [] };
     const [relationships, setRelationships] = useState<RelationshipType[]>(allRelationships);
 
@@ -49,7 +51,7 @@ const RelationshipController: React.FC = ({ }) => {
 
     const onOpen = useCallback(() => {
         open(Modals.CREATE_RELATIONSHIP, {
-            onRlationshipCreated: (id: string) => setSelectedRelationship(new Set([id]) as any)  
+            onRlationshipCreated: (id: string) => setSelectedRelationship(new Set([id]) as any)
         })
     }, [])
 
@@ -130,37 +132,48 @@ const RelationshipController: React.FC = ({ }) => {
                 >{t("db_controller.add_relationship")}
                 </Button>
             </div>
-            <div className=" flex-1 overflow-auto">
+            {
+                allRelationships.length > 0 &&
+                <div className=" flex-1 overflow-auto">
+                    <Accordion
+                        hideIndicator
 
-                <Accordion
-                    hideIndicator
-
-                    isCompact
-                    selectedKeys={selectedRelationship}
-                    onSelectionChange={setSelectedRelationship as any}
-                >
-                    {relationships.map((relationship: RelationshipType) => (
-                        <AccordionItem
-                            key={relationship.id}
-                            id={relationship.id}
-                            aria-label={relationship.id}
-                            classNames={{
-                                trigger: "w-full hover:bg-default transition-all duration-200 h-12  dark:hover:bg-background",
+                        isCompact
+                        selectedKeys={selectedRelationship}
+                        onSelectionChange={setSelectedRelationship as any}
+                    >
+                        {relationships.map((relationship: RelationshipType) => (
+                            <AccordionItem
+                                key={relationship.id}
+                                id={relationship.id}
+                                aria-label={relationship.id}
+                                classNames={{
+                                    trigger: "w-full hover:bg-default transition-all duration-200 h-12  dark:hover:bg-background",
 
 
-                                base: "rounded-md p-0 overflow-hidden",
-                            }}
-                            subtitle={
-                                <RelationshipAccordionHeader
-                                    isOpen={selectedRelationshipId == relationship.id}
-                                    relationship={relationship} />
-                            }
-                        >
-                            <RelationshipAccordionBody relationship={relationship} />
-                        </AccordionItem>
-                    ))}
-                </Accordion>
-            </div>
+                                    base: "rounded-md p-0 overflow-hidden",
+                                }}
+                                subtitle={
+                                    <RelationshipAccordionHeader
+                                        isOpen={selectedRelationshipId == relationship.id}
+                                        relationship={relationship} />
+                                }
+                            >
+                                <RelationshipAccordionBody relationship={relationship} />
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                </div>
+            }
+
+
+            {
+                !isSyncing && allRelationships.length == 0 &&
+                <EmptyList
+                    title={t("db_controller.empty_list.no_relationships")}
+                    description={t("db_controller.empty_list.no_relationships_description")}
+                />
+            }
 
         </div>
     )

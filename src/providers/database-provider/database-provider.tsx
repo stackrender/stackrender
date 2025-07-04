@@ -2,7 +2,7 @@ import { DatabaseDataContext, DatabaseOperationsContext } from "./database-conte
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { db } from "../sync-provider/sync-provider";
 import { TableInsertType, tables, TableType } from "@/lib/schemas/table-schema";
-import { useQuery } from "@powersync/react";
+import { usePowerSync, useQuery } from "@powersync/react";
 import { toCompilableQuery } from "@powersync/drizzle-driver";
 import { asc, count, desc, eq, inArray, or } from "drizzle-orm";
 import { QueryResult } from "@powersync/web";
@@ -23,7 +23,7 @@ import { deleteFieldsWithCascade, deleteTablesWithCascade } from "@/utils/cascad
 interface Props { children: React.ReactNode }
 
 const DatabaseProvider: React.FC<Props> = ({ children }) => {
-
+    const syncStatus = usePowerSync(); 
     const [currentDatabaseId, setCurrentDatabaseId] = useState<string | undefined>(localStorage.getItem("database_id") as string | undefined);
     // Fetch all databases
     const { data: databases, isLoading: loadingDatabases, isFetching: fetchingDatabases } = useQuery(toCompilableQuery(
@@ -101,7 +101,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;
     const isFetching: boolean = fetchingDatabase || fetchingDatatypes || fetchingDatabases;
 
-
+    const isSyncing : boolean = isLoading ||isFetching || !(syncStatus.currentStatus as any).options.hasSynced ; 
 
     const isSwitchingDatabase: boolean = useMemo(() => {
         return fetchingDatabase && currentDatabaseId != (database as any)?.id
@@ -136,7 +136,6 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         }).where(eq(databaseModel.id, databaseId))
     }, []);
 
-
     // CRUD operations for Tables
     const createTable = useCallback(async (table: TableInsertType): Promise<void> => {
         if (currentDatabaseId) {
@@ -153,8 +152,6 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                     );
                 }
             });
-
-
         } else {
             throw Error("No Database selected");
         }
@@ -302,8 +299,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                                 name: operation.chnages.name
                             }).where(eq(databaseModel.id, currentDatabaseId)));
                     }
-                    else if (operation.type == "UPDATE_NUM_TABLES") {
-                        console.log("update number of tables with ", operation.value);
+                    else if (operation.type == "UPDATE_NUM_TABLES") { 
                         if (currentDatabaseId)
                             operations.push(
                                 tx.update(databaseModel).set({
@@ -394,12 +390,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                         }
                     }
                 }
-
                 return await Promise.all(operations);
-
             })
         } catch (error) {
-            console.log(error);
+         
             throw error
         }
     }, [db, currentDatabaseId]);
@@ -520,6 +514,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             isSwitchingDatabase,
             isFetching,
             getField,
+            isSyncing
         }}>
             <DatabaseOperationsContext.Provider value={databaseOpsValue}>
                 <DatabaseHistoryProvider>

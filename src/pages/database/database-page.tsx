@@ -55,7 +55,7 @@ const DatabasePage: React.FC = () => {
     const { t } = useTranslation();
     const { resolvedTheme } = useTheme();
     // Extract database state and operations
-    const { database, getField, databases, isSwitchingDatabase, isLoading, isFetching } = useDatabase();
+    const { database, getField, databases, isSwitchingDatabase, isLoading, isFetching, isSyncing } = useDatabase();
 
     const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabaseOperations();
 
@@ -64,7 +64,7 @@ const DatabasePage: React.FC = () => {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
     // Diagram-related state (e.g. connection in progress)
-    const { setIsConnectionInProgress, cardinalityStyle, setCardinalityStyle } = useDiagramOps();
+    const { setIsConnectionInProgress, cardinalityStyle } = useDiagramOps();
 
     // Destructure tables and relationships from database
     const { tables, relationships } = database || { tables: [], relationships: [] };
@@ -78,7 +78,7 @@ const DatabasePage: React.FC = () => {
 
     useEffect(() => {
 
-        if (isLoading || isFetching || !(syncStatus.currentStatus as any).options.hasSynced)
+        if (isSyncing)
             return;
 
         // no database selected , open (open database) Modal  
@@ -94,7 +94,7 @@ const DatabasePage: React.FC = () => {
                 closable: false
             });
         }
-    }, [database?.id, isLoading, isFetching, (syncStatus.currentStatus as any).options.hasSynced])
+    }, [database?.id, isSyncing])
 
     useEffect(() => {
         if (isSwitchingDatabase) {
@@ -254,11 +254,15 @@ const DatabasePage: React.FC = () => {
                         </Controls >
                         <MiniMap
                             nodeStrokeWidth={4}
-                            className="dark:bg-content1 bg-background border-1 border-default-200 dark:border-divider rounded-md"
+                            className="dark:bg-content1 bg-background border-1 border-default-200 dark:border-divider rounded-md "
                             maskStrokeColor={resolvedTheme == "dark" ? "#272c35" : "#e9edf1"}
                             maskColor={resolvedTheme == "dark" ? "#20252c99" : "#f2f4f733"}
                             maskStrokeWidth={1}
                             nodeClassName={"fill-default-300 dark:fill-font/30"}
+                            style={{
+                                width: 164,
+                                height: 128
+                            }}
 
                         />
                         <Background className="dark:bg-background-100 " />

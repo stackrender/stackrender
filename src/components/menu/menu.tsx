@@ -21,7 +21,7 @@ const Menu: React.FC = ({ }) => {
     const { canRedo, canUndo, undo, redo } = useDatabaseHistory();
     const { deleteMultiTables } = useDatabaseOperations();
     const { database } = useDatabase();
-    const { setShowController, showController, cardinalityStyle, setCardinalityStyle } = useDiagramOps();
+    const { openController, showController, cardinalityStyle, changeCardinalityStyle } = useDiagramOps();
 
     const menu: MenuDropdownProps[] = useMemo(() => [
         {
@@ -94,21 +94,21 @@ const Menu: React.FC = ({ }) => {
                             id: "menu.symbolic",
                             selected: cardinalityStyle == CardinalityStyle.SYMBOLIC,
                             title: t("menu.symbolic"), clickHandler: () => {
-                                setCardinalityStyle(CardinalityStyle.SYMBOLIC)
+                                changeCardinalityStyle(CardinalityStyle.SYMBOLIC)
                             }
                         },
                         {
                             id: "menu.numeric",
                             selected: cardinalityStyle == CardinalityStyle.NUMERIC,
                             title: t("menu.numeric"), clickHandler: () => {
-                                setCardinalityStyle(CardinalityStyle.NUMERIC)
+                                changeCardinalityStyle(CardinalityStyle.NUMERIC)
                             }
                         },
                         {
                             id: "menu.hidden",
                             selected: cardinalityStyle == CardinalityStyle.HIDDEN,
                             title: t("menu.hidden"), clickHandler: () => {
-                                setCardinalityStyle(CardinalityStyle.HIDDEN)
+                                changeCardinalityStyle(CardinalityStyle.HIDDEN)
                             }
                         },
 
@@ -117,7 +117,7 @@ const Menu: React.FC = ({ }) => {
                 {
                     id: "menu.controller_visibility",
                     title: showController ? t("menu.hide_controller") : t("menu.show_controller"), shortcut: "Ctnl + B", divide: true, clickHandler: () => {
-                        setShowController(!showController)
+                        openController(!showController)
                     }
                 },
 
@@ -151,7 +151,7 @@ const Menu: React.FC = ({ }) => {
                 { id: "menu.join_discord", title: t("menu.join_discord") },
             ],
         },
-    ], [t, canRedo, canUndo, undo, redo, deleteMultiTables, database, showController, setShowController, cardinalityStyle, setCardinalityStyle, resolvedTheme]);
+    ], [t, canRedo, canUndo, undo, redo, deleteMultiTables, database, showController, openController ,changeCardinalityStyle , cardinalityStyle,  resolvedTheme]);
 
     return <div className="gap-1 flex">
         {

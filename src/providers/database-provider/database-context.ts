@@ -20,6 +20,7 @@ interface DatabaseDataContextType {
     databases: DatabaseType[],
     isLoading: boolean,
     isFetching : boolean , 
+    isSyncing : boolean , 
     isSwitchingDatabase: boolean,
     getField: (tableId: string, id: string) => FieldType | undefined,
  
