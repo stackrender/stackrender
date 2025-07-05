@@ -108,6 +108,7 @@ const cloneTable = (table: TableType): TableType => {
 
 
 function orderTables(tables: SortableTable[]): string[] {
+ 
     // Build adjacency list and in-degree count
     const graph = new Map();
     const inDegree = new Map();
@@ -149,6 +150,8 @@ function orderTables(tables: SortableTable[]): string[] {
         });
     }
 
+    
+ 
     // If not all tables are processed, a cycle exists
     if (sortedOrder.length !== tables.length) {
         const visited = new Set<string>();
@@ -184,6 +187,7 @@ function orderTables(tables: SortableTable[]): string[] {
             }
         }
 
+        
         throw {
             success: false,
             message: "Cycle detected",

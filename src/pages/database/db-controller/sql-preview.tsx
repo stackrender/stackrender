@@ -15,12 +15,30 @@ import { useTranslation } from "react-i18next";
 import Clipboard from "@/components/clipboard/clipboard";
 import { TableType } from "@/lib/schemas/table-schema";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
+import { Parser } from "node-sql-parser";
 
 
 interface SqlPreviewProps {
     tableFilterIds?: string[]
 }
 
+
+
+const sqlExample : string = `
+CREATE TABLE projects (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    project_id INT,
+
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE RESTRICT
+);
+
+`
 
 const SqlPreview: React.FC<SqlPreviewProps> = ({ tableFilterIds }) => {
 
@@ -42,6 +60,13 @@ const SqlPreview: React.FC<SqlPreviewProps> = ({ tableFilterIds }) => {
     const { t } = useTranslation();
 
     useEffect(() => {
+        
+        const parser = new Parser() ; 
+        const ast = parser.astify(sqlExample , {
+            database : "MySql"
+        }) ; 
+
+        console.log (ast)
         if (circularDependency)
             addToast({
                 title: t("db_controller.circular_dependency.title"),

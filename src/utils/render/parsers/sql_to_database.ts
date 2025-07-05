@@ -1,4 +1,4 @@
-import { DataTypes, Modifiers, TimeDefaultValues } from "@/lib/field";
+import { DataTypes, ForeignKeyActions, Modifiers, TimeDefaultValues } from "@/lib/field";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { FieldInsertType, FieldType } from "@/lib/schemas/field-schema";
 import { TableInsertType } from "@/lib/schemas/table-schema";
@@ -15,8 +15,8 @@ import { DatabaseInsertType } from "@/lib/schemas/database-schema";
 
 export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: DatabaseDialect) => {
     const parser = new Parser();
-    let errors : Error[] = [] ; 
-    
+    let errors: Error[] = [];
+
     const createTableStatements: string[] = [];
     const alterTableStatements: string[] = [];
     const createIndexStatements: string[] = [];
@@ -59,10 +59,11 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
         for (const postgresType of createPostgresTypesStatements) {
             try {
                 const instructionAst = parse(postgresType);
+
                 if (Array.isArray(instructionAst) && instructionAst.length > 0) {
                     postgresTypes.push(instructionAst[0]);
                 }
-            } catch (error ) {
+            } catch (error) {
                 errors.push(error as Error);
             }
         }
@@ -71,22 +72,52 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
         for (const createTable of createTableStatements) {
             try {
                 const instructionAst = parse(createTable);
+
                 if (Array.isArray(instructionAst) && instructionAst.length > 0) {
                     const table: TableInsertType = postgresAstToTable(instructionAst[0], data_types, postgresTypes);
                     tables.push(table);
+
+                    for (const column of (instructionAst[0] as any).columns)
+                        if (column.constraints?.length > 0) {
+                            let referenceColumn: any | undefined = column.constraints.find((contraint: any) => contraint.type == "reference")
+
+                            if (!referenceColumn)
+                                continue
+
+                            referenceColumn = {
+                                ...referenceColumn, localColumns: [
+                                    { name: column.name.name }
+                                ]
+                            }
+                            
+                            const relationshipAst: any = foreignKeyConstraintToAlterTableAst([referenceColumn], table);
+                           
+                            try {
+                                const newRelationships = postgresAstToRelationship(relationshipAst, tables);
+                                relationships = relationships.concat(newRelationships);
+
+                            } catch (error) {
+                                errors.push(error as Error);
+                                if ((error as any).relationships && (error as any).relationships.length > 0)
+                                    relationships = relationships.concat((error as any).relationships);
+                            }
+                        }
+
                     if ((instructionAst[0] as any).constraints && (instructionAst[0] as any).constraints.length > 0) {
+                    
                         const relationshipAst: any = foreignKeyConstraintToAlterTableAst((instructionAst[0] as any).constraints, table)
                         try {
                             const newRelationships = postgresAstToRelationship(relationshipAst, tables);
                             relationships = relationships.concat(newRelationships);
                         } catch (error) {
+                            errors.push(error as Error);
                             if ((error as any).relationships && (error as any).relationships.length > 0)
                                 relationships = relationships.concat((error as any).relationships);
                         }
                     }
                 }
             } catch (error) {
-               
+
                 errors.push(error as Error);
 
             }
@@ -98,7 +129,6 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                     indices.push(postgresAstToIndex(instructionAst[0], tables));
                 }
             } catch (error) {
-             
                 errors.push(error as Error);
             }
         }
@@ -110,8 +140,8 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                     relationships = relationships.concat(extractedRelationships);
                 }
             } catch (error) {
-                
-                errors.push(error as Error);
+
+
                 if ((error as any).relationships && (error as any).relationships.length > 0)
                     relationships = relationships.concat((error as any).relationships);
             }
@@ -124,38 +154,35 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
 
             try {
 
-                if (dialect == DatabaseDialect.SQLITE) 
+                if (dialect == DatabaseDialect.SQLITE)
                     createTable = createTable.replace(/\btext\s*\(\s*\d+\s*\)/gi, 'TEXT');
-                
- 
+
+
                 let instructionAst = parser.astify(createTable, {
                     database: dialect == DatabaseDialect.MARIADB ? getDatabaseByDialect(DatabaseDialect.MYSQL).name : getDatabaseByDialect(dialect).name
                 });
 
                 if (Array.isArray(instructionAst) && instructionAst.length > 0) {
                     instructionAst = instructionAst[0];
-                } 
+                }
                 if (instructionAst) {
                     const table: TableInsertType = astToTable(instructionAst, data_types);
                     tables.push(table);
+
                     const tableForeignKeyConstraints = (instructionAst as any).create_definitions.filter((definition: any) => definition.constraint_type == "FOREIGN KEY");
                     const tableReferenceDefinitions = (instructionAst as any).create_definitions.filter((definition: any) => definition.resource == "column" && definition.reference_definition);
-
 
                     foreignKeyConstraints = foreignKeyConstraints.concat(
                         tableForeignKeyConstraints.map((constraint: any) => ({ ...constraint, table: (instructionAst as any).table }))
                     )
-
                     referenceDefinitions = referenceDefinitions.concat(
                         tableReferenceDefinitions.map((constraint: any) => ({ ...constraint, table: (instructionAst as any).table }))
                     )
-
-
                 }
 
 
             } catch (error) {
-              
+
                 errors.push(error as Error);
                 continue;
             }
@@ -163,7 +190,7 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
         for (const foreignKeyConstraint of foreignKeyConstraints) {
             try {
                 relationships.push(astToRelationship(tables, foreignKeyConstraint) as RelationshipInsertType);
-            } catch (error) {    
+            } catch (error) {
                 errors.push(error as Error);
                 continue;
             }
@@ -192,7 +219,7 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                 }
             } catch (error) {
 
-                errors.push(error as Error);
+
                 if ((error as any).relationships && (error as any).relationships.length > 0)
                     relationships = relationships.concat((error as any).relationships);
 
@@ -211,23 +238,35 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                 indices.push(astToIndex(instructionAst, tables));
 
             } catch (error) {
-                
+
                 errors.push(error as Error);
                 continue;
             }
         }
     }
-    if ( tables.length == 0 ) 
-        throw Error ("Error while Parsing")
+    if (tables.length == 0)
+        throw Error("Error while Parsing")
 
 
-    return { tables, relationships, indices , errors };
+    return { tables, relationships, indices, errors };
 
 }
 
 
 
-
+const astToForiegnKeyAction = (ast: string): ForeignKeyActions => {
+    switch (ast) {
+        case "cascade":
+            return ForeignKeyActions.CASCADE;
+        case "set null":
+            return ForeignKeyActions.SET_NULL;
+        case 'restrict':
+            return ForeignKeyActions.RESTRICT;
+        case "set default":
+            return ForeignKeyActions.SET_DEFAULT;
+    }
+    return ForeignKeyActions.NO_ACTION
+}
 
 export const astToRelationship = (tables: TableInsertType[], constraintAst?: any, columnAst?: any, alterTableAst?: any): RelationshipInsertType | RelationshipInsertType[] => {
 
@@ -236,8 +275,14 @@ export const astToRelationship = (tables: TableInsertType[], constraintAst?: any
     let sourceField: FieldInsertType | undefined;
     let targetTable: TableInsertType | undefined;
 
-
     let relationships: RelationshipInsertType[] = [];
+
+
+    let onDelete: ForeignKeyActions | undefined;
+    let onUpdate: ForeignKeyActions | undefined;
+    let on_action: any | undefined;
+
+
 
     if (constraintAst) {
 
@@ -245,26 +290,58 @@ export const astToRelationship = (tables: TableInsertType[], constraintAst?: any
         targetField = targetTable?.fields?.find((field: FieldInsertType) => field.name == constraintAst.definition?.[0].column);
         sourceTable = tables.find((table: TableInsertType) => table.name == constraintAst.reference_definition?.table?.[0].table);
         sourceField = sourceTable?.fields?.find((field: FieldInsertType) => field.name == constraintAst.reference_definition?.definition?.[0].column);
+        on_action = constraintAst.reference_definition.on_action;
 
     }
 
     if (columnAst) {
 
+
         targetTable = tables.find((table: TableInsertType) => table.name == columnAst.table?.[0].table);
         targetField = targetTable?.fields?.find((field: FieldInsertType) => field.name == columnAst.column?.column);
         sourceTable = tables.find((table: TableInsertType) => table.name == columnAst.reference_definition?.table?.[0].table);
         sourceField = sourceTable?.fields?.find((field: FieldInsertType) => field.name == columnAst.reference_definition?.definition?.[0].column);
+        on_action = columnAst.reference_definition.on_action;
+    }
+
+
+
+    if (on_action) {
+        const onDeleteAst: any | undefined = on_action.find((action: any) => action.type == "on delete");
+        const onUpdateAst: any | undefined = on_action.find((action: any) => action.type == "on update");
+
+        if (onDeleteAst)
+            onDelete = astToForiegnKeyAction(onDeleteAst.value.value);
+        if (onUpdateAst)
+            onUpdate = astToForiegnKeyAction(onUpdateAst.value.value);
     }
 
     if (alterTableAst) {
+
         const expressions = alterTableAst.expr;
         const foreignKeyExpressions = expressions.filter((expression: any) => expression.resource == "constraint" && expression.create_definitions?.constraint_type == "FOREIGN KEY")
-        targetTable = tables.find((table: TableInsertType) => table.name == alterTableAst.table?.[0].table);
+        targetTable = tables.find((table: TableInsertType) => table.name == alterTableAst.table);
+
+
         for (const expression of foreignKeyExpressions) {
 
             const targetField: FieldInsertType | undefined = targetTable?.fields?.find((field: FieldInsertType) => field.name == expression.create_definitions?.definition?.[0].column);
             const sourceTable: TableInsertType | undefined = tables.find((table: TableInsertType) => table.name == expression.create_definitions?.reference_definition?.table?.[0].table)
             const sourceField: FieldInsertType | undefined = sourceTable?.fields?.find((field: FieldInsertType) => field.name == expression.create_definitions?.reference_definition?.definition?.[0].column);
+
+            const on_action: any | undefined = expression.create_definitions?.reference_definition?.on_action;
+    
+            let onDelete: ForeignKeyActions | undefined;
+            let onUpdate: ForeignKeyActions | undefined;
+            if (on_action) {
+                const onDeleteAst: any | undefined = on_action.find((action: any) => action.type == "on delete");
+                const onUpdateAst: any | undefined = on_action.find((action: any) => action.type == "on update");
+
+                if (onDeleteAst)
+                    onDelete = astToForiegnKeyAction(onDeleteAst.value.value);
+                if (onUpdateAst)
+                    onUpdate = astToForiegnKeyAction(onUpdateAst.value.value);
+            }
 
 
             if (!targetField || !sourceField || !sourceTable)
@@ -276,7 +353,9 @@ export const astToRelationship = (tables: TableInsertType[], constraintAst?: any
                 targetFieldId: targetField.id,
                 sourceTableId: sourceTable.id,
                 sourceFieldId: sourceField.id,
-                cardinality: targetField.unique ? Cardinality.one_to_one : Cardinality.one_to_many
+                cardinality: targetField.unique ? Cardinality.one_to_one : Cardinality.one_to_many,
+                onDelete,
+                onUpdate
             } as RelationshipInsertType)
         }
 
@@ -300,7 +379,9 @@ export const astToRelationship = (tables: TableInsertType[], constraintAst?: any
         targetFieldId: targetField.id,
         sourceTableId: sourceTable.id,
         sourceFieldId: sourceField.id,
-        cardinality: targetField.unique ? Cardinality.one_to_one : Cardinality.one_to_many
+        cardinality: targetField.unique ? Cardinality.one_to_one : Cardinality.one_to_many,
+        onDelete,
+        onUpdate
     } as RelationshipInsertType;
 
 }
@@ -370,19 +451,22 @@ export const astToField = (ast: any, data_types: DataType[], sequence: number): 
         ast.default_val?.value?.name?.name[0].value == "CURRENT_TIMESTAMP")
         defaultValue = TimeDefaultValues.NOW;
 
+    const isPrimary: boolean = ast.primary_key == "primary key";
+    const nullable: boolean = ast.nullable?.value ? ast.nullable?.value != "not null" : !isPrimary;
+
     return {
         id: v4(),
         name: ast.column.column,
         defaultValue,
         typeId: dataType?.id,
-        nullable: ast.nullable?.value != "not null",
+        nullable,
         unique: ast.unique == "unique",
         maxLength,
         precision,
         scale,
         sequence,
         autoIncrement: ast.auto_increment == "auto_increment",
-        isPrimary: ast.primary_key == "primary key",
+        isPrimary,
         values,
         charset,
         collate,
@@ -457,15 +541,13 @@ export const postgresAstToField = (ast: any, data_types: DataType[], sequence: n
         precision = length;
 
     let defaultValue: string | undefined;
-    let nullable: boolean = true;;
+    let nullable: boolean = true;
 
     const constraints: any[] | undefined = ast.constraints;
     if (constraints && constraints.length > 0) {
 
-        const nullableConstraints: any | undefined = constraints.find((c: any) => c.type == "not null");
-        if (nullableConstraints)
-            nullable = false;
 
+        const nullableConstraints: any | undefined = constraints.find((c: any) => c.type == "not null");
         const defaultValueConstraints: any | undefined = constraints.find((c: any) => c.type == "default");
         if (defaultValueConstraints) {
             if (defaultValueConstraints.default.type == "keyword" && defaultValueConstraints.default.keyword == "current_timestamp")
@@ -483,7 +565,12 @@ export const postgresAstToField = (ast: any, data_types: DataType[], sequence: n
         if (primryKeyConstraints)
             primaryKey = true;
 
+        if (nullableConstraints || primaryKey)
+            nullable = false;
+
     }
+
+
 
     return {
         id: v4(),
@@ -519,12 +606,18 @@ export const postgresAstToRelationship = (ast: any, tables: TableInsertType[]): 
 
     for (const foreignKeyConstraint of foreignKeyConstraints) {
 
+        
         const sourceTable: TableInsertType | undefined = tables.find((table: TableInsertType) => table.name == foreignKeyConstraint.foreignTable.name);
 
         const targetField: FieldInsertType | undefined = targetTable.fields?.find((field: FieldInsertType) => field.name == foreignKeyConstraint.localColumns[0]?.name)
 
         const sourceField: FieldInsertType | undefined = sourceTable?.fields?.find((field: FieldInsertType) => field.name == foreignKeyConstraint.foreignColumns[0]?.name)
 
+        const onDelete = foreignKeyConstraint.onDelete ? astToForiegnKeyAction( foreignKeyConstraint.onDelete) : undefined ; 
+        const onUpdate = foreignKeyConstraint.onUpdate ? astToForiegnKeyAction( foreignKeyConstraint.onUpdate) : undefined ; 
+        
+        
+        
         if (!sourceField || !targetField || !sourceTable)
             continue;
 
@@ -534,7 +627,8 @@ export const postgresAstToRelationship = (ast: any, tables: TableInsertType[]): 
             targetTableId: targetTable.id,
             sourceFieldId: sourceField.id,
             targetFieldId: targetField.id,
-            cardinality: targetField.unique ? Cardinality.one_to_one : Cardinality.one_to_many
+            cardinality: targetField.unique ? Cardinality.one_to_one : Cardinality.one_to_many , 
+            onDelete , onUpdate
         } as RelationshipInsertType)
     }
 
@@ -570,7 +664,9 @@ const foreignKeyConstraintToAlterTableAst = (constraints: any[], table: TableIns
                 {
                     name: constraint.foreignColumns?.[0].name
                 }
-            ]
+            ], 
+            onDelete : constraint.onDelete  , 
+            onUpdate : constraint.onUpdate  , 
         }
     }))
 

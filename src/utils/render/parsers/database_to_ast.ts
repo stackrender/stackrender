@@ -1,7 +1,7 @@
 
 
 import { DatabaseDialect } from "@/lib/database";
-import { DataTypes, Modifiers, MYSQL_MAX_VAR_LENGTH, TimeDefaultValues } from "@/lib/field";
+import { DataTypes, ForeignKeyActions, Modifiers, MYSQL_MAX_VAR_LENGTH, TimeDefaultValues } from "@/lib/field";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import { FieldType } from "@/lib/schemas/field-schema";
@@ -22,7 +22,8 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
     let renderableTables: RenderableTable[] = database.tables.map((table: TableType) => toRenderableTable(table, database));
     let sortableTables: SortableTable[] = renderableTables.map((table: RenderableTable) => toSortableTable(table));
     try {
-        const sortedTablesIds: string[] = orderTables(sortableTables)
+        const sortedTablesIds: string[] = orderTables(sortableTables);
+
         const sortedTables: TableType[] = sortedTablesIds.map((id: string) =>
             renderableTables.find((table: TableType) => table.id == id) as TableType
         );
@@ -48,6 +49,7 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
                     }, table));
         };
     } catch (error) {
+
         throw error;
 
     }
@@ -299,6 +301,23 @@ export const PotgresEnumToAst = (field: FieldType) => {
 }
 
 
+const foreignKeyActionToAst = (action: ForeignKeyActions): string | null => {
+    switch (action) {
+        case ForeignKeyActions.CASCADE:
+            return "cascade";
+
+        case ForeignKeyActions.SET_NULL:
+            return "set null";
+
+        case ForeignKeyActions.RESTRICT:
+            return "restrict";
+
+        case ForeignKeyActions.SET_DEFAULT:
+            return "set default";
+
+    }
+    return null;
+}
 
 
 
@@ -317,7 +336,34 @@ export const relationshipToAst = (relationship: RelationshipType) => {
         targetTable = relationship.sourceTable;
     }
 
+    let on_action: any[] = [];
 
+    if (relationship.onDelete) {
+        const value: string | null = foreignKeyActionToAst(relationship.onDelete as ForeignKeyActions);
+     
+        if (value)
+            on_action.push({
+                type: "on delete",
+                value: {
+                    type: "origin",
+                    value
+                }
+            })
+    }
+
+
+    if (relationship.onUpdate) {
+        const value: string | null = foreignKeyActionToAst(relationship.onUpdate as ForeignKeyActions);
+        if (value)
+            on_action.push({
+                type: "on update",
+                value: {
+                    type: "origin",
+                    value
+                }
+            })
+    }
+ 
     return {
         constraint: null,
         definition: [
@@ -342,7 +388,7 @@ export const relationshipToAst = (relationship: RelationshipType) => {
                 }
             ],
             keyword: "references",
-            on_action: []
+            on_action 
         }
     }
 

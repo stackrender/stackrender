@@ -35,9 +35,27 @@ export const relationships = sqliteTable('relationships', {
             'many_to_one',
             'many_to_many',
         ],
-    })
-        .notNull()
-        .default('one_to_many'),
+    }).notNull().default('one_to_many'),
+
+    onDelete: text('onDelete', {
+        enum: [
+            "no_action",
+            "cascade",
+            "set_null",
+            "set_default",
+            "restrict",
+        ],
+    }).default('no_action'),
+
+    onUpdate: text('onUpdate', {
+        enum: [
+            "no_action",
+            "cascade",
+            "set_null",
+            "set_default",
+            "restrict",
+        ],
+    }).default('no_action'),
 
 
 

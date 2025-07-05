@@ -42,12 +42,12 @@ import { getRelationshipSourceAndTarget } from "@/utils/relationship";
 import { useModal } from "@/providers/modal-provider/modal-provider";
 import { Modals } from "@/providers/modal-provider/modal-contxet";
 import { Loading } from "@/components/modal/loading-modal";
-import { usePowerSync, usePowerSyncStatus } from "@powersync/react";
+import { usePowerSync  } from "@powersync/react";
 import { CardinalityStyle } from "@/lib/database";
-import debounce from 'lodash.debounce';
 
 
 
+ 
 const DatabasePage: React.FC = () => {
     const { open } = useModal();
     const syncStatus = usePowerSync();
@@ -205,7 +205,6 @@ const DatabasePage: React.FC = () => {
     useHighlightedEdges(nodes, relationships, edges);
     const { isOverlapping, puls } = useOverlappingTables(tables);
 
-
     return (
 
         <div className="w-full h-screen flex  relative overflow-hidden">
@@ -321,6 +320,7 @@ const DatabasePage: React.FC = () => {
 
 
 export default DatabasePage;
+
 
 
 

@@ -9,7 +9,7 @@ export enum Modifiers {
   CHARSET = "charset",
   COLLATE = "collate",
   VALUES = "values",
-  NO_DEFAULT = "no_default" , 
+  NO_DEFAULT = "no_default",
   NO_UNIQUE = "no_unique"
 }
 
@@ -77,8 +77,6 @@ export enum SQLiteCollation {
   RTrim = 'RTRIM',
 }
 
-
-
 export enum DataTypes {
   INTEGER = "integer",
   NUMERIC = "numeric",
@@ -87,16 +85,25 @@ export enum DataTypes {
   TEXT = "text",
   BINARY = "binary",
   JSON = "JSON",
-  GEOMETRY = "geometry", 
+  GEOMETRY = "geometry",
   ENUM = "enum"
 }
 
 
 export enum TimeDefaultValues {
   NO_VALUE = "no_value",
-  CUSTOM = "custom" , 
-  NOW = "now" 
+  CUSTOM = "custom",
+  NOW = "now"
 }
 
 
-export const MYSQL_MAX_VAR_LENGTH = 255  ; 
+export enum ForeignKeyActions {
+  NO_ACTION = "no_action",
+  CASCADE = "cascade",
+  SET_NULL = "set_null",
+  SET_DEFAULT = "set_default",
+  RESTRICT = "restrict",
+
+}
+
+export const MYSQL_MAX_VAR_LENGTH = 255; 

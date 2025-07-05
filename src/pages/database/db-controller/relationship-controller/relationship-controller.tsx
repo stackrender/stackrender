@@ -74,11 +74,12 @@ const RelationshipController: React.FC = ({ }) => {
 
     const selectedRelationshipId = selectedRelationship.values().next().value;
 
-
     const collapseAll = useCallback(() => {
         setSelectedRelationship(new Set([]));
     }, [])
 
+    
+ 
     return (
         <div className="w-full h-full flex flex-col gap-2">
             <div className="flex items-center justify-between gap-4 py-1">

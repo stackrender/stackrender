@@ -59,6 +59,18 @@ export const en = {
                 many_to_many: "Many to Many",
 
             },
+            foreign_key_actions : { 
+                title : "Foreign key Actions" , 
+                on_delete : "On Delete" , 
+                on_update : "On Update" , 
+                actions : { 
+                    no_action : "No Action" , 
+                    cascade : "Cascade" , 
+                    set_null : "Set Null" , 
+                    set_default : "Set Default" , 
+                    restrict : "Restrict"
+                }
+            } , 
             field_settings: {
                 title: "Field Setting",
                 unique: "Unique",

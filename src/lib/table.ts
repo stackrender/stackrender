@@ -15,12 +15,12 @@ export interface RenderableTable extends TableType {
 
 
 export const toSortableTable = (table: RenderableTable): SortableTable => {
-
+ 
     return {
         tableId: table.id,
-        relationships: table.foreignRelationships.filter(
+        relationships: Array.from(new Set(  table.foreignRelationships.filter(
             (relationship : RelationshipType) => !(relationship.targetTable.id == relationship.sourceTable.id && relationship.sourceTable.id == table.id) 
-        ).map((relationship: RelationshipType) => relationship.sourceTable.id)
+        ).map((relationship: RelationshipType) => relationship.sourceTable.id))) 
     }
 }
 

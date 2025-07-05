@@ -36,6 +36,7 @@ export const useRenderSql = (database: DatabaseType) => {
             );
             setCircularDependency(undefined);
         } catch (error) {
+            console.log (error)
 
             if ((error as CircularDependencyError)?.cycle)
                 setCircularDependency((previousError) => {

@@ -138,6 +138,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
     const validateSql = useCallback((code: string) => {
         try {
             const parsedDatabase = SqlToDatabase(code, data_types, database?.dialect as DatabaseDialect);
+            console.log ( parsedDatabase) ; 
             setParsedDatabase(parsedDatabase);
             setError(false);
 
