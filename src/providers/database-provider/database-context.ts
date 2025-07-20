@@ -19,8 +19,8 @@ interface DatabaseDataContextType {
     currentDatabaseId: string | undefined,
     databases: DatabaseType[],
     isLoading: boolean,
-    isFetching : boolean , 
-    isSyncing : boolean , 
+   
+     
     isSwitchingDatabase: boolean,
     getField: (tableId: string, id: string) => FieldType | undefined,
  
@@ -52,7 +52,7 @@ interface DatabaseOperationsContextType {
     // index operations
     createIndex: (index: IndexInsertType) => Promise<QueryResult>,
     editIndex: (index: IndexInsertType) => Promise<QueryResult>,
-    deleteIndex: (id: string) => Promise<QueryResult>,
+    deleteIndex: (id: string) => Promise<void>,
     editFieldIndices: (indexId: string, fieldIds: string[]) => Promise<void>,
     // relationship operations
     createRelationship: (relationship: RelationshipInsertType) => Promise<QueryResult>,

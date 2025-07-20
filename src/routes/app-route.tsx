@@ -1,11 +1,13 @@
 
-import {  Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import useDashboardRoutes from './dashboard-route';
-const useAppRoutes = () => {  
+import NotFoundPage from '@/pages/not-found/not-found-page';
+const useAppRoutes = () => {
   const dashboardRoutes = useDashboardRoutes();
   return (
     <Routes>
       {dashboardRoutes}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

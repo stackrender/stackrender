@@ -21,6 +21,7 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
 
     let renderableTables: RenderableTable[] = database.tables.map((table: TableType) => toRenderableTable(table, database));
     let sortableTables: SortableTable[] = renderableTables.map((table: RenderableTable) => toSortableTable(table));
+
     try {
         const sortedTablesIds: string[] = orderTables(sortableTables);
 
@@ -32,8 +33,10 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
             if (database.dialect == DatabaseDialect.POSTGRES) {
                 postgresEnums = table.fields.filter((field: FieldType) => field.type?.name == "enum");
                 if (postgresEnums.length > 0) {
-                    for (const postgresEnum of postgresEnums)
+                    for (const postgresEnum of postgresEnums) {
+                        (postgresEnum as any).table = table;
                         dbAst.push(PotgresEnumToAst(postgresEnum));
+                    }
                 }
             }
 
@@ -41,17 +44,16 @@ export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) =>
 
             if (table.indices && table.indices.length > 0)
                 for (const index of table.indices)
-                    dbAst.push(IndexToAst({
-                        ...index,
-                        fields: index.fieldIndices.map((fieldIndex: FieldIndexType) =>
-                            table.fields.find((field: FieldType) => field.id == fieldIndex.fieldId)
-                        ) as FieldType[],
-                    }, table));
+                    if (index.fieldIndices?.length > 0)
+                        dbAst.push(IndexToAst({
+                            ...index,
+                            fields: index.fieldIndices.map((fieldIndex: FieldIndexType) =>
+                                table.fields.find((field: FieldType) => field.id == fieldIndex.fieldId)
+                            ) as FieldType[],
+                        }, table));
         };
     } catch (error) {
-
         throw error;
-
     }
     return dbAst;
 }
@@ -78,19 +80,16 @@ export const TableToAst = (table: TableType, data_types: DataType[], isPostgresD
         ...foreignKeysConstraints
     ];
 
-    const filed_definitions = table.fields.map((field: FieldType) => {
+    const filed_definitions = table.fields.filter((field: FieldType) => field.type).map((field: FieldType) => {
         const isPostgresEnum: boolean = isPostgresDialect && field.type.name == "enum";
 
         return FieldToAst({
             ...field,
             type: !(isPostgresEnum) ?
                 data_types.find((dataType: DataType) => dataType.id == field.typeId) as DataType :
-                { name: `${field.name.toLowerCase()}_enum` } as DataType,
+                { name: `${table.name}_${field.name.toLowerCase()}_enum` } as DataType,
         }, multiPrimaryKeys, !isPostgresEnum)
     })
-
-
-
 
     return {
         keyword: "table",
@@ -286,7 +285,7 @@ export const PotgresEnumToAst = (field: FieldType) => {
         resource: "enum",
         name: {
             schema: null,
-            name: `${field.name.toLowerCase()}_enum`
+            name: `${(field as any).table.name}_${field.name.toLowerCase()}_enum`
         },
         keyword: "type",
         create_definitions: {
@@ -340,7 +339,7 @@ export const relationshipToAst = (relationship: RelationshipType) => {
 
     if (relationship.onDelete) {
         const value: string | null = foreignKeyActionToAst(relationship.onDelete as ForeignKeyActions);
-     
+
         if (value)
             on_action.push({
                 type: "on delete",
@@ -363,7 +362,7 @@ export const relationshipToAst = (relationship: RelationshipType) => {
                 }
             })
     }
- 
+
     return {
         constraint: null,
         definition: [
@@ -388,7 +387,7 @@ export const relationshipToAst = (relationship: RelationshipType) => {
                 }
             ],
             keyword: "references",
-            on_action 
+            on_action
         }
     }
 

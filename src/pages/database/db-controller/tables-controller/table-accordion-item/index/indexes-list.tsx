@@ -35,9 +35,8 @@ const IndexesList: React.FC<IndexesListProps> = ({ indices, fields, tableId }) =
     return (
         <div className="w-full flex-col space-y-2">
             {
-                indices.map((index: IndexType) => <IndexItem index={index} fields={fields} />)
+                indices.map((index: IndexType) => <IndexItem index={index} fields={fields} key={index.id}/>)
             }
-
             <Button
                 variant="flat"
                 radius="sm"

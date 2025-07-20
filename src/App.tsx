@@ -10,6 +10,7 @@ import DiagramProvider from "./providers/diagram-provider/diagram-provider";
 
 import { ToastProvider } from "@heroui/react";
 import { ModalProvider } from "./providers/modal-provider/modal-provider";
+import DatabaseHotkeysProvider from "./providers/database-hotkeys/database-hotkeys-provider";
 
 
 
@@ -26,7 +27,9 @@ function App() {
 
               <TooltipProvider delayDuration={0}>
                 <ModalProvider>
-                  {appRoutes}
+                  <DatabaseHotkeysProvider>
+                    {appRoutes}
+                  </DatabaseHotkeysProvider>
                 </ModalProvider>
               </TooltipProvider>
 

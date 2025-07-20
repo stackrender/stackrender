@@ -16,24 +16,25 @@ import { IndexInsertType, indices } from "@/lib/schemas/index-schema";
 import { field_indices, FieldIndexInsertType } from "@/lib/schemas/field_index-schema";
 import { v4 } from "uuid";
 import { DataType } from "@/lib/schemas/data-type-schema";
-import { deleteFieldsWithCascade, deleteTablesWithCascade } from "@/utils/cascade";
+import { deleteFieldsWithCascade, deleteIndicesWithCascade, deleteTablesWithCascade } from "@/utils/cascade";
+import DatabaseHotkeysProvider from "../database-hotkeys/database-hotkeys-provider";
 
 
 
 interface Props { children: React.ReactNode }
 
 const DatabaseProvider: React.FC<Props> = ({ children }) => {
-    const syncStatus = usePowerSync(); 
+    
     const [currentDatabaseId, setCurrentDatabaseId] = useState<string | undefined>(localStorage.getItem("database_id") as string | undefined);
     // Fetch all databases
-    const { data: databases, isLoading: loadingDatabases, isFetching: fetchingDatabases } = useQuery(toCompilableQuery(
+    const { data: databases, isLoading: loadingDatabases } = useQuery(toCompilableQuery(
         db.query.databases.findMany({
             orderBy: desc(databaseModel.createdAt)
         })
     ));
 
     // Fetch the current database with nested tables, fields, and relationships
-    let { data: database, isLoading: loadingCurrentDatabase, isFetching: fetchingDatabase } = useQuery(
+    let { data: database, isLoading: loadingCurrentDatabase  } = useQuery(
         toCompilableQuery(
             db.query.databases.findMany({
                 where: (databases, { eq }) => eq(databases.id, currentDatabaseId as string),
@@ -86,9 +87,8 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     else
         database = undefined as any;
 
-
     // Fetch all data types 
-    let { data: data_types, isLoading: loadingDataTypes, isFetching: fetchingDatatypes } = useQuery(toCompilableQuery(
+    let { data: data_types, isLoading: loadingDataTypes  } = useQuery(toCompilableQuery(
         db.query.data_types.findMany({
             where: (data_types, { eq }) => eq(data_types.dialect, (database as any)?.dialect)
         })
@@ -99,13 +99,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [data_types]);
 
     const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;
-    const isFetching: boolean = fetchingDatabase || fetchingDatatypes || fetchingDatabases;
-
-    const isSyncing : boolean = isLoading ||isFetching || !(syncStatus.currentStatus as any).options.hasSynced ; 
-
+    
     const isSwitchingDatabase: boolean = useMemo(() => {
-        return fetchingDatabase && currentDatabaseId != (database as any)?.id
-    }, [currentDatabaseId, database, fetchingDatabase]);
+        return isLoading && currentDatabaseId != (database as any)?.id
+    }, [currentDatabaseId, database, isLoading]);
 
     // CRUD for database 
     const createDatabase = useCallback(async (database: DatabaseInsertType): Promise<QueryResult> => {
@@ -164,7 +161,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     const deleteTable = useCallback(async (id: string): Promise<void> => {
         if (currentDatabaseId) {
             await db.transaction(async (tx) => {
-                await deleteFieldsWithCascade([id], tx);
+                await deleteTablesWithCascade([id], tx);
                 await updateDbNumTables(currentDatabaseId, tx);
             });
         } else {
@@ -228,8 +225,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [db]);
 
 
-    const deleteIndex = useCallback(async (id: string): Promise<QueryResult> => {
-        return await db.delete(indices).where(eq(indices.id, id))
+    const deleteIndex = useCallback(async (id: string): Promise<void> => {
+        return db.transaction(async (tx) => {
+            await deleteIndicesWithCascade([id], tx)
+        })
     }, [db])
 
     const editIndex = useCallback(async (index: IndexInsertType): Promise<QueryResult> => {
@@ -299,7 +298,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                                 name: operation.chnages.name
                             }).where(eq(databaseModel.id, currentDatabaseId)));
                     }
-                    else if (operation.type == "UPDATE_NUM_TABLES") { 
+                    else if (operation.type == "UPDATE_NUM_TABLES") {
                         if (currentDatabaseId)
                             operations.push(
                                 tx.update(databaseModel).set({
@@ -369,7 +368,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                     }
                     else if (operation.type == "DELETE_INDEX") {
                         operations.push(
-                            tx.delete(indices).where(eq(indices.id, operation.indexId))
+                            deleteIndicesWithCascade([operation.indexId  ] , tx) 
                         );
                     }
                     else if (operation.type == "UPDATE_INDEX") {
@@ -393,7 +392,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                 return await Promise.all(operations);
             })
         } catch (error) {
-         
+
             throw error
         }
     }, [db, currentDatabaseId]);
@@ -512,13 +511,15 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             databases: databases as DatabaseType[],
             isLoading,
             isSwitchingDatabase,
-            isFetching,
+          
             getField,
-            isSyncing
+             
         }}>
             <DatabaseOperationsContext.Provider value={databaseOpsValue}>
                 <DatabaseHistoryProvider>
+
                     {children}
+
                 </DatabaseHistoryProvider>
             </DatabaseOperationsContext.Provider>
         </DatabaseDataContext.Provider>

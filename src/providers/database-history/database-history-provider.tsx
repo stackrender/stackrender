@@ -12,7 +12,7 @@ interface Props { children: React.ReactNode };
 const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
 
     const udpateDbFlag = useRef(false);
-    const { database, isLoading, isFetching } = useDatabase();
+    const { database, isLoading  } = useDatabase();
     const { executeDbDiffOps } = useDatabaseOperations();
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
@@ -24,7 +24,7 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
     }, [database?.id]);
 
     useEffect(() => {
-        if (database && datatbaseState.present && !isLoading && !isFetching) {
+        if (database && datatbaseState.present && !isLoading ) {
             udpateDbFlag.current = false;
 
             const presentHash: string | undefined = hash(datatbaseState.present, { algorithm: 'sha1' });
@@ -39,18 +39,18 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
 
 
     const undo = useCallback(() => {
-        if (!isProcessing && !isLoading && !isFetching) {
+        if (!isProcessing && !isLoading ) {
             udpateDbFlag.current = true;
             undoChanges();
         }
-    }, [undoChanges, udpateDbFlag, isProcessing , isLoading , isFetching]);
+    }, [undoChanges, udpateDbFlag, isProcessing , isLoading ]);
 
     const redo = useCallback(() => {
-        if (!isProcessing && !isLoading && !isFetching) {
+        if (!isProcessing && !isLoading ) {
             udpateDbFlag.current = true;
             redoChanges();
         }
-    }, [redoChanges, udpateDbFlag, isProcessing, isLoading , isFetching]);
+    }, [redoChanges, udpateDbFlag, isProcessing, isLoading]);
 
     useEffect(() => {
 

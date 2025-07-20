@@ -146,9 +146,11 @@ const Menu: React.FC = ({ }) => {
             id: "menu.help",
             title: t("menu.help"),
             children: [
-
-                { id: "menu.show_docs", title: t("menu.show_docs") },
-                { id: "menu.join_discord", title: t("menu.join_discord") },
+                { id: "menu.join_discord", title: t("menu.join_discord") , 
+                    clickHandler : () => { 
+                        window.open("https://discord.gg/DsN8RcPR6Y", "_blank")
+                    }
+                 },
             ],
         },
     ], [t, canRedo, canUndo, undo, redo, deleteMultiTables, database, showController, openController ,changeCardinalityStyle , cardinalityStyle,  resolvedTheme]);

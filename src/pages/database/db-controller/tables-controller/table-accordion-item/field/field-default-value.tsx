@@ -83,6 +83,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
             multiSelect: field.type?.type == DataTypes.ENUM && field.type?.name == "set"
         }
     }, [field]);
+    
     const [selectedValues, setSelectedValues] = useState<string[]>(() => {
         if (!field.defaultValue)
             return []
@@ -98,7 +99,6 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
         if (field.values && field.values.length > 0) {
             try {
                 const jsonValues: string[] = JSON.parse(field.values);
-
                 setValues(jsonValues);
             } catch (error) {
                 setValues([]);

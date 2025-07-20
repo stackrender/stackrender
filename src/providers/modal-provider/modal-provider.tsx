@@ -23,7 +23,7 @@ export const ModalProvider: React.FC<Props> = ({ children }) => {
     const [currentModal, setCurrentModal] = useState<CurrentModalProps | undefined>(undefined);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const open = useCallback((modal: Modals, props?: any) => {
-
+ 
         setCurrentModal({
             modal,
             props

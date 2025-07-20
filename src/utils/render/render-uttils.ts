@@ -86,10 +86,10 @@ export function fixSQLiteColumnOrder(sql: string): string {
   const lines = sql.split('\n');
   let currentColumn = '';
   const result: string[] = [];
-  
+
   for (const line of lines) {
     const trimmed = line.trim();
-    
+
     if (isTableStructureLine(trimmed)) {
       if (currentColumn) {
         result.push(processSQLiteIntegerColumn(currentColumn));
@@ -98,7 +98,7 @@ export function fixSQLiteColumnOrder(sql: string): string {
       result.push(line);
       continue;
     }
-    
+
     if (trimmed.endsWith(',')) {
       currentColumn += ' ' + trimmed.slice(0, -1);
       result.push(processSQLiteIntegerColumn(currentColumn) + ',');
@@ -107,7 +107,7 @@ export function fixSQLiteColumnOrder(sql: string): string {
       currentColumn += ' ' + trimmed;
     }
   }
-  
+
   if (currentColumn) result.push(processSQLiteIntegerColumn(currentColumn));
   return result.join('\n');
 }
@@ -123,7 +123,7 @@ function processSQLiteIntegerColumn(columnDef: string): string {
   const isPrimaryKey = rest.match(/\bPRIMARY\s+KEY\b/i);
   const isAutoIncrement = rest.match(/\bAUTOINCREMENT\b/i);
   const isNotNull = rest.match(/\bNOT\s+NULL\b/i);
-  
+
   if (!isPrimaryKey && !isAutoIncrement) {
     return columnDef; // Leave non-PK INTEGER columns unchanged
   }
@@ -138,7 +138,7 @@ function processSQLiteIntegerColumn(columnDef: string): string {
 
   // Reconstruct with SQLite's required order
   let reconstructed = `${colName} INTEGER`;
-  
+
   if (isPrimaryKey) reconstructed += ' PRIMARY KEY';
   if (isAutoIncrement) reconstructed += ' AUTOINCREMENT';
   if (isNotNull) reconstructed += ' NOT NULL';
@@ -148,7 +148,7 @@ function processSQLiteIntegerColumn(columnDef: string): string {
 }
 
 export interface CircularDependencyError {
-  cycle : string[] ; 
-  success : boolean ; 
-  message : string ; 
+  cycle: string[];
+  success: boolean;
+  message: string;
 }

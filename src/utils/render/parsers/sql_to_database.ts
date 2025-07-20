@@ -9,8 +9,6 @@ import { DatabaseDialect, getDatabaseByDialect } from "@/lib/database";
 import { randomColor } from "@/lib/colors";
 import { Cardinality, RelationshipInsertType } from "@/lib/schemas/relationship-schema";
 import { IndexInsertType } from "@/lib/schemas/index-schema";
-import { relationshipToAst } from "./database_to_ast";
-import { DatabaseInsertType } from "@/lib/schemas/database-schema";
 
 
 export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: DatabaseDialect) => {
@@ -89,9 +87,9 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                                     { name: column.name.name }
                                 ]
                             }
-                            
+
                             const relationshipAst: any = foreignKeyConstraintToAlterTableAst([referenceColumn], table);
-                           
+
                             try {
                                 const newRelationships = postgresAstToRelationship(relationshipAst, tables);
                                 relationships = relationships.concat(newRelationships);
@@ -104,7 +102,7 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                         }
 
                     if ((instructionAst[0] as any).constraints && (instructionAst[0] as any).constraints.length > 0) {
-                    
+
                         const relationshipAst: any = foreignKeyConstraintToAlterTableAst((instructionAst[0] as any).constraints, table)
                         try {
                             const newRelationships = postgresAstToRelationship(relationshipAst, tables);
@@ -206,15 +204,16 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
 
         for (const alterTable of alterTableStatements) {
             try {
-                const instructionAst = parser.astify(alterTable, {
+                let instructionAst: any = parser.astify(alterTable, {
                     database: getDatabaseByDialect(dialect).name
                 });
+
                 if (instructionAst) {
                     const extractedRelationships: RelationshipInsertType[] = astToRelationship(tables, undefined, undefined, {
-                        ...instructionAst,
-                        table: (instructionAst as any).table?.[0].table
+                        ...instructionAst[0],
+                        table: instructionAst[0].table?.[0].table
                     }) as RelationshipInsertType[];
-
+                 
                     relationships = relationships.concat(extractedRelationships)
                 }
             } catch (error) {
@@ -330,7 +329,7 @@ export const astToRelationship = (tables: TableInsertType[], constraintAst?: any
             const sourceField: FieldInsertType | undefined = sourceTable?.fields?.find((field: FieldInsertType) => field.name == expression.create_definitions?.reference_definition?.definition?.[0].column);
 
             const on_action: any | undefined = expression.create_definitions?.reference_definition?.on_action;
-    
+
             let onDelete: ForeignKeyActions | undefined;
             let onUpdate: ForeignKeyActions | undefined;
             if (on_action) {
@@ -515,6 +514,7 @@ export const postgresAstToField = (ast: any, data_types: DataType[], sequence: n
         });
         autoIncrement = true;
     }
+
     const modifiers: string[] = dataType?.modifiers ? JSON.parse(dataType.modifiers) : [];
 
     let length: number | undefined;
@@ -546,12 +546,17 @@ export const postgresAstToField = (ast: any, data_types: DataType[], sequence: n
     const constraints: any[] | undefined = ast.constraints;
     if (constraints && constraints.length > 0) {
 
-
         const nullableConstraints: any | undefined = constraints.find((c: any) => c.type == "not null");
         const defaultValueConstraints: any | undefined = constraints.find((c: any) => c.type == "default");
+
         if (defaultValueConstraints) {
+            console.log(defaultValueConstraints.default)
             if (defaultValueConstraints.default.type == "keyword" && defaultValueConstraints.default.keyword == "current_timestamp")
                 defaultValue = TimeDefaultValues.NOW;
+
+            else if (defaultValueConstraints.default.type == "call" && defaultValueConstraints.default.function?.name == "now")
+                defaultValue = TimeDefaultValues.NOW;
+
             else if (defaultValueConstraints.default.type == "cast" && defaultValueConstraints.default.operand)
                 defaultValue = String(defaultValueConstraints.default.operand.value)
             else
@@ -589,10 +594,7 @@ export const postgresAstToField = (ast: any, data_types: DataType[], sequence: n
     } as FieldInsertType;
 }
 
-
-
 export const postgresAstToRelationship = (ast: any, tables: TableInsertType[]): RelationshipInsertType[] => {
-
 
     const relationships: RelationshipInsertType[] = [];
     const changes = ast.changes;
@@ -606,18 +608,13 @@ export const postgresAstToRelationship = (ast: any, tables: TableInsertType[]): 
 
     for (const foreignKeyConstraint of foreignKeyConstraints) {
 
-        
         const sourceTable: TableInsertType | undefined = tables.find((table: TableInsertType) => table.name == foreignKeyConstraint.foreignTable.name);
-
         const targetField: FieldInsertType | undefined = targetTable.fields?.find((field: FieldInsertType) => field.name == foreignKeyConstraint.localColumns[0]?.name)
-
         const sourceField: FieldInsertType | undefined = sourceTable?.fields?.find((field: FieldInsertType) => field.name == foreignKeyConstraint.foreignColumns[0]?.name)
 
-        const onDelete = foreignKeyConstraint.onDelete ? astToForiegnKeyAction( foreignKeyConstraint.onDelete) : undefined ; 
-        const onUpdate = foreignKeyConstraint.onUpdate ? astToForiegnKeyAction( foreignKeyConstraint.onUpdate) : undefined ; 
-        
-        
-        
+        const onDelete = foreignKeyConstraint.onDelete ? astToForiegnKeyAction(foreignKeyConstraint.onDelete) : undefined;
+        const onUpdate = foreignKeyConstraint.onUpdate ? astToForiegnKeyAction(foreignKeyConstraint.onUpdate) : undefined;
+
         if (!sourceField || !targetField || !sourceTable)
             continue;
 
@@ -627,11 +624,10 @@ export const postgresAstToRelationship = (ast: any, tables: TableInsertType[]): 
             targetTableId: targetTable.id,
             sourceFieldId: sourceField.id,
             targetFieldId: targetField.id,
-            cardinality: targetField.unique ? Cardinality.one_to_one : Cardinality.one_to_many , 
-            onDelete , onUpdate
+            cardinality: targetField.unique ? Cardinality.one_to_one : Cardinality.one_to_many,
+            onDelete, onUpdate
         } as RelationshipInsertType)
     }
-
 
     if (relationships.length == foreignKeyConstraints.length)
         return relationships;
@@ -641,8 +637,6 @@ export const postgresAstToRelationship = (ast: any, tables: TableInsertType[]): 
             message: "Failed to Extract all relationships",
             relationships
         } as any)
-
-
 }
 
 
@@ -664,9 +658,9 @@ const foreignKeyConstraintToAlterTableAst = (constraints: any[], table: TableIns
                 {
                     name: constraint.foreignColumns?.[0].name
                 }
-            ], 
-            onDelete : constraint.onDelete  , 
-            onUpdate : constraint.onUpdate  , 
+            ],
+            onDelete: constraint.onDelete,
+            onUpdate: constraint.onUpdate,
         }
     }))
 
@@ -677,7 +671,6 @@ const foreignKeyConstraintToAlterTableAst = (constraints: any[], table: TableIns
             name: table.name
         },
         changes
-
     }
 }
 
@@ -688,11 +681,8 @@ export const astToIndex = (ast: any, tables: TableInsertType[]): IndexInsertType
         throw Error("table not found");
 
     const fieldNames: string[] = ast.index_columns.map((column: any) => column.column);
-
-
     const fieldIds: string[] | undefined = table.fields?.filter((field: FieldInsertType) => fieldNames.includes(field.name))
         .map((field: FieldInsertType) => field.id);
-
 
     return {
         id: v4(),

@@ -15,9 +15,9 @@ import { v4 } from "uuid";
 
 export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
     const { t } = useTranslation();
-    const { isOpen, onOpenChange } = props ; 
-    
-   
+    const { isOpen, onOpenChange } = props;
+
+
     const [isValid, setIsValid] = useState<boolean>(false);
     const [selectedDbType, setSelectedDbType] = useState<string[]>([DBTypes[0].dialect]);
     const [dbName, setDbName] = useState<string>("db_example");
@@ -54,6 +54,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
 
     return (
         <Modal
+            {...props}
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             title={t("modals.pick_database")}

@@ -32,7 +32,6 @@ const TablesController: React.FC = ({ }) => {
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
     const accordionRef = useRef<HTMLDivElement>(null);
     
-    
     useEffect(() => searchTables(), [allTables]);
 
     const addNewTable = useCallback(async () => {
@@ -53,7 +52,6 @@ const TablesController: React.FC = ({ }) => {
                 id: v4(),
                 name: "id",
                 isPrimary: true,
-                unique: true,
                 typeId: getInteger()?.id,
                 autoIncrement: true,
 

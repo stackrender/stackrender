@@ -29,7 +29,6 @@ const Navbar: React.FC<Props> = ({ }) => {
                     <div className=" w-full h-full flex items-center justify-center">
                         {database && <RenameDatabase database={database} />}
                     </div>
-                
                     <ConnectionStatus />
                 </div>
             </div>

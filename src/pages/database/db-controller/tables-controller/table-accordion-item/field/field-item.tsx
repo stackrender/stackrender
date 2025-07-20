@@ -51,11 +51,11 @@ const FieldItem: React.FC<Props> = ({ field }) => {
         } as FieldType);
     }
     const updateFieldType = (key: Key | null) => {
- 
+      
         const dataType: DataType | undefined = data_types.find((dataTypes: DataType) => dataTypes.id == key);
         if (!dataType)
             return;
-
+      
         if (key != null) {
             editField({
                 id: field.id,

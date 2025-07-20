@@ -10,6 +10,7 @@ import { format } from 'sql-formatter';
 import { DatabaseDialect, getDatabaseByDialect } from "@/lib/database";
 import { CircularDependencyError, fixCharsetPlacement, fixSQLiteColumnOrder } from "@/utils/render/render-uttils";
 import { areArraysEqual } from "@/utils/utils";
+import { decomposeManyToMany } from "@/utils/relationship";
 
 const parser = new Parser();
 
@@ -17,13 +18,19 @@ const parser = new Parser();
 export const useRenderSql = (database: DatabaseType) => {
     const [sql, setSql] = useState<string>("");
     const { data_types } = useDatabaseOperations();
-    const [circularDependency, setCircularDependency] = useState<CircularDependencyError | undefined>(undefined)
+    const [circularDependency, setCircularDependency] = useState<CircularDependencyError | undefined>(undefined) ; 
+
     useEffect(() => {
         try {
-            const dbAst: any = DatabaseToAst(database, data_types);
+
+            const decomposedDatabase = decomposeManyToMany(database) ;
+            
+            const dbAst: any = DatabaseToAst(decomposedDatabase, data_types);
+            
             let sql: string = parser.sqlify(dbAst, {
                 database: getDatabaseByDialect(database.dialect).name
             });
+            
             if (database.dialect != DatabaseDialect.SQLITE)
                 sql = fixCharsetPlacement(format(sql, { language: "sql" }));
             else
@@ -49,7 +56,7 @@ export const useRenderSql = (database: DatabaseType) => {
                 })
 
         }
-    }, [database]);
+    }, [database , data_types]);
 
     return { sql, circularDependency };
 

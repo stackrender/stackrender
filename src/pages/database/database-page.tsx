@@ -42,20 +42,19 @@ import { getRelationshipSourceAndTarget } from "@/utils/relationship";
 import { useModal } from "@/providers/modal-provider/modal-provider";
 import { Modals } from "@/providers/modal-provider/modal-contxet";
 import { Loading } from "@/components/modal/loading-modal";
-import { usePowerSync  } from "@powersync/react";
+import { usePowerSync } from "@powersync/react";
 import { CardinalityStyle } from "@/lib/database";
 
 
 
- 
 const DatabasePage: React.FC = () => {
     const { open } = useModal();
-    const syncStatus = usePowerSync();
 
+    
     const { t } = useTranslation();
     const { resolvedTheme } = useTheme();
     // Extract database state and operations
-    const { database, getField, databases, isSwitchingDatabase, isLoading, isFetching, isSyncing } = useDatabase();
+    const { database, getField, databases, isSwitchingDatabase, isLoading, currentDatabaseId } = useDatabase();
 
     const { updateTablePositions, deleteMultiTables, deleteMultiRelationships, createRelationship } = useDatabaseOperations();
 
@@ -77,38 +76,36 @@ const DatabasePage: React.FC = () => {
     const edgeTypes = useMemo(() => ({ 'relationship-edge': Relationship }), []);
 
     useEffect(() => {
-
-        if (isSyncing)
+        if (isLoading)
             return;
-
         // no database selected , open (open database) Modal  
         if (!database && databases?.length > 0) {
+        
             open(Modals.OPEN_DATABASE, {
                 closable: false
             })
         }
-        else if (databases.length == 0) {
+        else if (databases.length == 0) { 
             // there is no databases in the first place to select from , 
             // we have to create a new one . 
             open(Modals.CREATE_DATABASE, {
                 closable: false
             });
-        }
-    }, [database?.id, isSyncing])
-
-    useEffect(() => {
-        if (isSwitchingDatabase) {
-            setNodes([]);
-            setEdges([]);
         } else {
             fitView({
                 duration: 500
             });
         }
-    }, [isSwitchingDatabase])
+    }, [database?.id, isLoading])
+
+    useEffect(() => {
+        setNodes([]);
+        setEdges([]);
+    }, [currentDatabaseId])
 
     // Called when a connection is made between fields
     const onConnect = useCallback(async (connection: Connection) => {
+
         const sourceId: string | undefined = (connection.sourceHandle as string).split("_").pop();
         const targetId: string = (connection.targetHandle as string).replace(TARGET_PREFIX, "");
 
@@ -125,7 +122,6 @@ const DatabasePage: React.FC = () => {
                 targetTableId,
                 sourceFieldId,
                 targetFieldId,
-
             } as RelationshipInsertType);
 
         } else {
@@ -150,9 +146,7 @@ const DatabasePage: React.FC = () => {
 
         const nodeRemoveChanges: NodeRemoveChange[] = changes.filter((change: NodeChange) => change.type == "remove");
         // Save new positions to the database
-
         if (nodePositionChanges.length > 0)
-
             updateTablePositions(nodePositionChanges.map((change: NodePositionChange) => ({
                 id: change.id,
                 posX: change.position?.x,
@@ -205,11 +199,12 @@ const DatabasePage: React.FC = () => {
     useHighlightedEdges(nodes, relationships, edges);
     const { isOverlapping, puls } = useOverlappingTables(tables);
 
+
     return (
 
         <div className="w-full h-screen flex  relative overflow-hidden">
             {
-                (isSwitchingDatabase || isLoading || !(syncStatus.currentStatus as any).options.hasSynced) && <Loading />
+                (isSwitchingDatabase || isLoading) && <Loading />
             }
             <div className="flex max-w-full">
                 <DBController />

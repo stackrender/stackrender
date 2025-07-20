@@ -4,10 +4,8 @@ import { Button, cn, Divider, Navbar } from "@heroui/react";
 import { useOnViewportChange, useReactFlow } from "@xyflow/react";
 
 import { LayoutGrid, Redo, Scan, Undo, ZoomIn, ZoomOut } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
-
 
 interface DbControlButtons {
     adjustPositions: () => void,
@@ -16,8 +14,8 @@ interface DbControlButtons {
 const ZOOM_DURATION = 100
 
 const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions }) => {
-    const { zoomIn, zoomOut, fitView , getZoom} = useReactFlow();
-    console.log ()
+    const { zoomIn, zoomOut, fitView, getZoom } = useReactFlow();
+
     const [zoom, setZoom] = useState<string>(
         `${Math.round(getZoom() * 100)}%`
     );
@@ -53,7 +51,12 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
             maxZoom: 1,
         })
     }, []);
- 
+
+
+
+  
+
+
     return (
         <Navbar className="flex  rounded-md border-1 border-default-200 bg-background dark:bg-transparent bg-default dark:border-divider " isBlurred
             classNames={{
