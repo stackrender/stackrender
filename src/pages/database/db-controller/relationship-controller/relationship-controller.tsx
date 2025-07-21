@@ -27,7 +27,7 @@ const RelationshipController: React.FC = ({ }) => {
 
 
     const { open } = useModal();
-    const { database, isSyncing } = useDatabase();
+    const { database ,isLoading } = useDatabase();
     const { relationships: allRelationships } = database || { relationships: [] };
     const [relationships, setRelationships] = useState<RelationshipType[]>(allRelationships);
 
@@ -169,7 +169,7 @@ const RelationshipController: React.FC = ({ }) => {
 
 
             {
-                !isSyncing && allRelationships.length == 0 &&
+                !isLoading && allRelationships.length == 0 &&
                 <EmptyList
                     title={t("db_controller.empty_list.no_relationships")}
                     description={t("db_controller.empty_list.no_relationships_description")}

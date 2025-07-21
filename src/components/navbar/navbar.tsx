@@ -1,20 +1,13 @@
-
-
 import { useDatabase } from "@/providers/database-provider/database-provider";
 import Menu from "../menu/menu";
-import ConnectionStatus from "./connection-status";
 import RenameDatabase from "./rename-database";
-
-interface Props {
-
-}
+import LanguagesDropdown from "./languages-dropdown";
 
 
-const Navbar: React.FC<Props> = ({ }) => {
+
+const Navbar: React.FC = ({ }) => {
     const { database } = useDatabase();
-
     return (
-
         <nav className="h-12 fixed z-50 bg-background w-full flex  items-center p-4 border-b  border-divider ">
             <img
                 src={`/stackrender.png`}
@@ -23,13 +16,20 @@ const Navbar: React.FC<Props> = ({ }) => {
             />
             <h3 className="font-semibold ml-2 text-slate-900 text-sm dark:text-white">StackRender</h3>
             <div className="ml-4  w-full">
-                <div className="flex w-full justify-between items-center">
+                <div className="flex w-full justify-between items-center gap-2">
 
                     <Menu />
                     <div className=" w-full h-full flex items-center justify-center">
                         {database && <RenameDatabase database={database} />}
                     </div>
-                    <ConnectionStatus />
+                    <a className="gh-button text-font font-medium bg-background text-xs p-4 px-2 pr-2.5   flex justif-center items-center"
+                        target="_blank"
+                        href="https://github.com/KarimTamani/stackrender">
+                        <span className="gh-button__icon"></span>
+                     
+                    </a>
+
+                    <LanguagesDropdown/>
                 </div>
             </div>
         </nav>

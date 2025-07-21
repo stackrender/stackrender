@@ -14,6 +14,7 @@ export const en = {
         },
         navbar: {
             rename_db: "Rename database",
+            search : "Search"
         },
         db_controller: {
             filter: "Filter",
