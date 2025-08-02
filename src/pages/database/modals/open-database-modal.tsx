@@ -61,10 +61,10 @@ const OpenDatabaseModal: React.FC<ModalProps> = (props) => {
                 }}
             >
                 <TableHeader className="rounded-sm">
-                    <TableColumn>Dialect</TableColumn>
-                    <TableColumn>Name</TableColumn>
-                    <TableColumn>Created at</TableColumn>
-                    <TableColumn>Tables</TableColumn>
+                    <TableColumn>{t("modals.open_database_table.dialect")}</TableColumn>
+                    <TableColumn>{t("modals.open_database_table.name")}</TableColumn>
+                    <TableColumn>{t("modals.open_database_table.created_at")}</TableColumn>
+                    <TableColumn>{t("modals.open_database_table.tables")}</TableColumn>
                 </TableHeader>
                 <TableBody>
                     {

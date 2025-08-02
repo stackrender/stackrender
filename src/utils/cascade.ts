@@ -76,18 +76,12 @@ export const deleteTablesWithCascade = async (
             inArray(relationships.targetFieldId, fieldIds)
         )),
 
-        // Delete field-index links for those fields
-        tx.delete(field_indices).where(inArray(field_indices.fieldId, fieldIds)),
-
         // Delete all fields in the table
         tx.delete(fields).where(inArray(fields.id, fieldIds)),
-
-        // Delete field-index links for indices
-        tx.delete(field_indices).where(inArray(field_indices.indexId, indicesIds)),
-
+        // Delete field-index links for those fields
+        tx.delete(field_indices).where(inArray(field_indices.fieldId, fieldIds)),
         // Delete all indices belonging to the table
         tx.delete(indices).where(inArray(indices.id, indicesIds)),
-
         // Finally, delete the table(s) themselves
         tx.delete(tables).where(inArray(tables.id, ids)),
     ]);

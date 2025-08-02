@@ -192,7 +192,7 @@ export const pt = {
       delete_database: "Excluir Banco de Dados",
       delete_database_content: "Esta ação é irreversível e removerá o diagrama permanentemente.",
       delete: "Excluir",
-
+      empty_diagram: "Diagrama vazio",
       import_database: {
         title: "Importar seu Banco de Dados",
         import: "Importar",
@@ -201,6 +201,12 @@ export const pt = {
         import_error_description: "Não foi possível importar seu SQL porque contém sintaxe inválida.",
         import_warning: "Aviso de Análise SQL",
         import_warning_description: "Alguns elementos não puderam ser processados devido a declarações não suportadas ou incompletas."
+      },
+      open_database_table: {
+        dialect: "Dialeto",
+        name: "Nome",
+        created_at: "Criado em",
+        tables: "Tabelas"
       },
       export_sql: "Exportar SQL",
       export_sql_header: "Exporte seu diagrama de banco de dados em código SQL"

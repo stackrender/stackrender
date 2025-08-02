@@ -183,6 +183,7 @@ export const ru = {
       delete_database: "Удалить базу данных",
       delete_database_content: "Это действие необратимо и навсегда удалит диаграмму.",
       delete: "Удалить",
+      empty_diagram: "Пустая диаграмма",
       import_database: {
         title: "Импортируйте вашу базу данных",
         import: "Импорт",
@@ -191,6 +192,12 @@ export const ru = {
         import_error_description: "Не удалось импортировать SQL, так как он содержит недопустимый синтаксис.",
         import_warning: "Предупреждение разбора SQL",
         import_warning_description: "Некоторые элементы не были обработаны из-за неподдерживаемых или неполных объявлений."
+      },
+      open_database_table: {
+        dialect: "Диалект",
+        name: "Имя",
+        created_at: "Создано",
+        tables: "Таблицы"
       },
       export_sql: "Экспорт SQL",
       export_sql_header: "Экспортируйте диаграмму базы данных в виде SQL-кода"

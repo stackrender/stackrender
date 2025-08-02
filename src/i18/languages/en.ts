@@ -14,7 +14,7 @@ export const en = {
         },
         navbar: {
             rename_db: "Rename database",
-            search : "Search"
+            search: "Search"
         },
         db_controller: {
             filter: "Filter",
@@ -44,13 +44,13 @@ export const en = {
             select_table: "Select table",
             select_field: "Select field",
 
-            empty_list : {
-                no_tables : "No Tables" , 
-                no_tables_description  : "Create a Table to get started." , 
+            empty_list: {
+                no_tables: "No Tables",
+                no_tables_description: "Create a Table to get started.",
 
-                no_relationships : "No Relationships" , 
-                no_relationships_description : "Create relationships to connect two tables" 
-            } , 
+                no_relationships: "No Relationships",
+                no_relationships_description: "Create relationships to connect two tables"
+            },
 
             cardinality: {
                 name: "Cardinality",
@@ -60,18 +60,18 @@ export const en = {
                 many_to_many: "Many to Many",
 
             },
-            foreign_key_actions : { 
-                title : "Foreign key Actions" , 
-                on_delete : "On Delete" , 
-                on_update : "On Update" , 
-                actions : { 
-                    no_action : "No Action" , 
-                    cascade : "Cascade" , 
-                    set_null : "Set Null" , 
-                    set_default : "Set Default" , 
-                    restrict : "Restrict"
+            foreign_key_actions: {
+                title: "Foreign key Actions",
+                on_delete: "On Delete",
+                on_update: "On Update",
+                actions: {
+                    no_action: "No Action",
+                    cascade: "Cascade",
+                    set_null: "Set Null",
+                    set_default: "Set Default",
+                    restrict: "Restrict"
                 }
-            } , 
+            },
             field_settings: {
                 title: "Field Setting",
                 unique: "Unique",
@@ -170,11 +170,11 @@ export const en = {
             clear: "Clear",
             view: "View",
             hide_controller: "Hide Controller",
-            show_controller : "Show Controller" , 
+            show_controller: "Show Controller",
             cardinality_style: "Cardinality style",
             hidden: "Hidden",
             numeric: "Numeric",
-            symbolic : "Symbolic" , 
+            symbolic: "Symbolic",
             theme: "Theme",
             light: "Light",
             dark: "Dark",
@@ -199,34 +199,40 @@ export const en = {
             delete_database: "Delete Database",
             delete_database_content: "This action is irreversible and will permanently remove the diagram.",
             delete: "Delete",
-
+            empty_diagram: "Empty diagram",
             import_database: {
                 title: "Import your Database",
                 import: "Import",
-                import_options: "Would you like to import using :" , 
-                import_error : "SQL Parsing Error" , 
-                import_error_description : "We couldn't import your SQL because it contains invalid syntax." , 
-                import_warning : "SQL Parsing Warning" , 
-                import_warning_description : "Some elements couldn't be processed due to unsupported or incomplete declarations." , 
-            } , 
-            export_sql : "Export SQL" , 
-            export_sql_header : "Export your database diagram in SQL Code"
+                import_options: "Would you like to import using :",
+                import_error: "SQL Parsing Error",
+                import_error_description: "We couldn't import your SQL because it contains invalid syntax.",
+                import_warning: "SQL Parsing Warning",
+                import_warning_description: "Some elements couldn't be processed due to unsupported or incomplete declarations.",
+            },
+            open_database_table: {
+                dialect: "Dialect",
+                name: "Name",
+                created_at: "Created at",
+                tables: "Tables"
+            },
+            export_sql: "Export SQL",
+            export_sql_header: "Export your database diagram in SQL Code"
         },
         clipboard: {
             copy: "Copy",
             copied: "Copied"
         },
 
-        connection_status : {
-            online: "Online" , 
-            offline : "Offline" , 
-            saving : "Saving" , 
-            saved : "Saved"  , 
-            last_synced : "Last synced" , 
-            min_ago : "min ago" , 
-            hour_ago : "hour ago" , 
-            just_now : "Just now"
-        }, 
+        connection_status: {
+            online: "Online",
+            offline: "Offline",
+            saving: "Saving",
+            saved: "Saved",
+            last_synced: "Last synced",
+            min_ago: "min ago",
+            hour_ago: "hour ago",
+            just_now: "Just now"
+        },
         import: {
             instructions: "Instructions",
             install: "Install",

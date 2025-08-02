@@ -184,6 +184,7 @@ export const fr = {
             delete_database: "Supprimer la base de données",
             delete_database_content: "Cette action est irréversible et supprimera définitivement le diagramme.",
             delete: "Supprimer",
+            empty_diagram: "Diagramme vide",
             import_database: {
                 title: "Importer votre base de données",
                 import: "Importer",
@@ -192,6 +193,12 @@ export const fr = {
                 import_error_description: "Nous n'avons pas pu importer votre SQL car il contient une syntaxe invalide.",
                 import_warning: "Avertissement d’analyse SQL",
                 import_warning_description: "Certains éléments n'ont pas pu être traités à cause de déclarations non prises en charge ou incomplètes."
+            },
+            open_database_table: {
+                dialect: "Dialecte",
+                name: "Nom",
+                created_at: "Créé le",
+                tables: "Tables"
             },
             export_sql: "Exporter en SQL",
             export_sql_header: "Exporter votre diagramme de base de données en code SQL"

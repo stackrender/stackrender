@@ -183,6 +183,7 @@ export const ar = {
       delete_database: "حذف قاعدة البيانات",
       delete_database_content: "هذا الإجراء لا يمكن التراجع عنه وسيمسح المخطط نهائيًا.",
       delete: "حذف",
+      empty_diagram: "مخطط فارغ",
       import_database: {
         title: "استيراد قاعدة البيانات",
         import: "استيراد",
@@ -192,6 +193,12 @@ export const ar = {
         import_warning: "تحذير تحليل SQL",
         import_warning_description: "بعض العناصر لم يتم معالجتها بسبب تصريحات غير مدعومة أو غير مكتملة."
       },
+      open_database_table: {
+        dialect: "اللهجة",
+        name: "الاسم",
+        created_at: "تاريخ الإنشاء",
+        tables: "الجداول"
+      } , 
       export_sql: "تصدير SQL",
       export_sql_header: "تصدير مخطط قاعدة البيانات على شكل كود SQL"
     },
@@ -248,7 +255,7 @@ export const ar = {
 }
 
 export const arLanguage: Language = {
-    name: 'Arabic',
-    nativeName: 'العربية',
-    code: 'ar',
+  name: 'Arabic',
+  nativeName: 'العربية',
+  code: 'ar',
 };

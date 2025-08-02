@@ -83,7 +83,7 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
 
     return (
         <Card className={cn(
-            "w-full h-full bg-background rounded-md ring-1 ring-default-600  overflow-visible dark:bg-background-50 dark:ring-divider",
+            "w-full h-full bg-background rounded-md   overflow-visible dark:bg-background-50 dark:ring-divider",
             selected
                 ? 'ring-2 ring-primary dark:ring-primary'
                 : '',
@@ -97,7 +97,7 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                 ? 'scale-110'
                 : '',
         )}
-            shadow="none"
+            shadow="sm"
         >
             <div className="px-[1px] ">
                 <div

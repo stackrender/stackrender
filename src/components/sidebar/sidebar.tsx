@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ }) => {
             href: "/database/relationships",
             isActive: location.pathname.endsWith("/database/relationships")
         },
-    ], [location])
+    ], [location , t])
 
     const bottomSidebarItems: SidebarItemProps[] = useMemo(() => [
         {

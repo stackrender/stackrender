@@ -213,7 +213,7 @@ export const SqlToDatabase = (sql: string, data_types: DataType[], dialect: Data
                         ...instructionAst[0],
                         table: instructionAst[0].table?.[0].table
                     }) as RelationshipInsertType[];
-                 
+
                     relationships = relationships.concat(extractedRelationships)
                 }
             } catch (error) {
@@ -642,7 +642,8 @@ export const postgresAstToRelationship = (ast: any, tables: TableInsertType[]): 
 
 const foreignKeyConstraintToAlterTableAst = (constraints: any[], table: TableInsertType) => {
 
-    const changes: any[] = constraints.map((constraint: any) => ({
+    const changes: any[] = constraints.filter((constraint: any) => constraint.type == "foreign key" || constraint.type == "reference").map((constraint: any) => ({
+
         type: "add constraint",
         constraint: {
             type: "foreign key",

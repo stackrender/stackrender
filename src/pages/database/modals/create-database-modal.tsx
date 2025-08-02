@@ -30,7 +30,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
             setSelectedDbType([selectedType]);
     }
 
-    const createNewDatabase = useCallback(async () => {
+    const createNewDatabase = useCallback(async (withImport: boolean = true) => {
         const databaseId: string = v4();
         return new Promise(async (res, rej) => {
             try {
@@ -40,7 +40,10 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
                     dialect: selectedDbType[0] as any
                 });
                 switchDatabase(databaseId);
-                open(Modals.IMPORT_DATABASE);
+                if (withImport)
+                    open(Modals.IMPORT_DATABASE);
+                else
+                    onOpenChange && onOpenChange(false);
                 res(databaseId);
             } catch (error) {
                 rej(error);
@@ -108,16 +111,10 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
                             variant="bordered"
                             size="sm"
                             className="w-full text-font/90 border-1 border-divider"
-                        >
-                            <SquareMenu className="size-4 text-icon" /> Check examples
-                        </Button>
-                        <Button
-                            variant="bordered"
-                            size="sm"
-                            className="w-full text-font/90 border-1 border-divider"
+                            onPressEnd={ () => createNewDatabase( false )}
                         >
                             <span className="underline">
-                                Empty Diagram
+                                     {t("modals.empty_diagram")}
                             </span>
                         </Button>
                     </div>

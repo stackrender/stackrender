@@ -24,7 +24,7 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
     }, [database?.id]);
 
     useEffect(() => {
-        if (database && datatbaseState.present && !isLoading ) {
+        if (database && datatbaseState.present && !isLoading && !isProcessing) {
             udpateDbFlag.current = false;
 
             const presentHash: string | undefined = hash(datatbaseState.present, { algorithm: 'sha1' });
@@ -75,12 +75,12 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
 
             (async () => {
                 try {
-                    console.log(operations);
+               
                     await executeDbDiffOps(operations)
                     setIsProcessing(false);
                 }
                 catch (error) {
-                    console.log(error);
+                
         
                     setIsProcessing(false);
                 }

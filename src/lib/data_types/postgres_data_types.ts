@@ -31,11 +31,15 @@ export const PostgresDataType: Partial<DataInsertType>[]  = [
     {
         id: '11f5ce77-a0c8-44b0-9fbb-4a4b65140997', name: 'timestamp', type: 'time', modifiers: ['precision'], synonyms: [
             'timestamp without time zone',
-            'timestamptz', // often mistaken but technically not equivalent
         ]
-    },  
+    },
+    {
+        id: "abf823e0-4f8e-4b37-beb1-3c73b8e8b7d1", name: "timestamptz", type: "time", modifiers: ["precision"], synonyms: [
+            "timestamp with time zone"
+        ]
+    },
     { id: 'bd95631d-c1c4-4cc2-a715-b613369ab097', name: 'date', type: 'time', },
-    { id: 'ea3b2c12-931e-4c88-bda5-07efa36ae178', name: 'time', type: 'time', modifiers: ['precision'], synonyms: ['time without time zone'] },
+    { id: 'ea3b2c12-931e-4c88-bda5-07efa36ae178', name: 'time', type: 'time', modifiers: ['precision']  },
 
 
     { id: '3763db96-0ad8-45ef-8510-83000e398263', name: 'boolean', type: 'boolean',  synonyms: ['bool'] },

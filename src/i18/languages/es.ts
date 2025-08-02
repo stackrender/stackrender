@@ -13,7 +13,7 @@ export const es = {
         },
         navbar: {
             rename_db: "Renombrar base de datos",
-            search : "Buscar"
+            search: "Buscar"
         },
         db_controller: {
             filter: "Filtrar",
@@ -43,13 +43,13 @@ export const es = {
             select_table: "Seleccionar tabla",
             select_field: "Seleccionar campo",
 
-            empty_list : {
-                no_tables : "Sin tablas" , 
-                no_tables_description  : "Crea una tabla para comenzar." , 
+            empty_list: {
+                no_tables: "Sin tablas",
+                no_tables_description: "Crea una tabla para comenzar.",
 
-                no_relationships : "Sin relaciones" , 
-                no_relationships_description : "Crea relaciones para conectar dos tablas" 
-            } , 
+                no_relationships: "Sin relaciones",
+                no_relationships_description: "Crea relaciones para conectar dos tablas"
+            },
 
             cardinality: {
                 name: "Cardinalidad",
@@ -59,18 +59,18 @@ export const es = {
                 many_to_many: "Muchos a muchos",
 
             },
-            foreign_key_actions : { 
-                title : "Acciones de clave foránea" , 
-                on_delete : "Al eliminar" , 
-                on_update : "Al actualizar" , 
-                actions : { 
-                    no_action : "Sin acción" , 
-                    cascade : "Cascada" , 
-                    set_null : "Establecer nulo" , 
-                    set_default : "Establecer valor predeterminado" , 
-                    restrict : "Restringir"
+            foreign_key_actions: {
+                title: "Acciones de clave foránea",
+                on_delete: "Al eliminar",
+                on_update: "Al actualizar",
+                actions: {
+                    no_action: "Sin acción",
+                    cascade: "Cascada",
+                    set_null: "Establecer nulo",
+                    set_default: "Establecer valor predeterminado",
+                    restrict: "Restringir"
                 }
-            } , 
+            },
             field_settings: {
                 title: "Configuración de campo",
                 unique: "Único",
@@ -169,11 +169,11 @@ export const es = {
             clear: "Limpiar",
             view: "Vista",
             hide_controller: "Ocultar controlador",
-            show_controller : "Mostrar controlador" , 
+            show_controller: "Mostrar controlador",
             cardinality_style: "Estilo de cardinalidad",
             hidden: "Oculto",
             numeric: "Numérico",
-            symbolic : "Simbólico" , 
+            symbolic: "Simbólico",
             theme: "Tema",
             light: "Claro",
             dark: "Oscuro",
@@ -198,34 +198,40 @@ export const es = {
             delete_database: "Eliminar base de datos",
             delete_database_content: "Esta acción es irreversible y eliminará permanentemente el diagrama.",
             delete: "Eliminar",
-
+            empty_diagram: "Diagrama vacío",
             import_database: {
                 title: "Importar tu base de datos",
                 import: "Importar",
-                import_options: "¿Te gustaría importar usando :" , 
-                import_error : "Error al analizar SQL" , 
-                import_error_description : "No pudimos importar tu SQL porque contiene sintaxis inválida." , 
-                import_warning : "Advertencia al analizar SQL" , 
-                import_warning_description : "Algunos elementos no pudieron ser procesados debido a declaraciones no compatibles o incompletas." , 
-            } , 
-            export_sql : "Exportar SQL" , 
-            export_sql_header : "Exporta tu diagrama de base de datos en código SQL"
+                import_options: "¿Te gustaría importar usando :",
+                import_error: "Error al analizar SQL",
+                import_error_description: "No pudimos importar tu SQL porque contiene sintaxis inválida.",
+                import_warning: "Advertencia al analizar SQL",
+                import_warning_description: "Algunos elementos no pudieron ser procesados debido a declaraciones no compatibles o incompletas.",
+            },
+            open_database_table: {
+                dialect: "Dialecto",
+                name: "Nombre",
+                created_at: "Creado el",
+                tables: "Tablas"
+            },
+            export_sql: "Exportar SQL",
+            export_sql_header: "Exporta tu diagrama de base de datos en código SQL"
         },
         clipboard: {
             copy: "Copiar",
             copied: "Copiado"
         },
 
-        connection_status : {
-            online: "En línea" , 
-            offline : "Sin conexión" , 
-            saving : "Guardando" , 
-            saved : "Guardado"  , 
-            last_synced : "Última sincronización" , 
-            min_ago : "min atrás" , 
-            hour_ago : "hace una hora" , 
-            just_now : "Justo ahora"
-        }, 
+        connection_status: {
+            online: "En línea",
+            offline: "Sin conexión",
+            saving: "Guardando",
+            saved: "Guardado",
+            last_synced: "Última sincronización",
+            min_ago: "min atrás",
+            hour_ago: "hace una hora",
+            just_now: "Justo ahora"
+        },
         import: {
             instructions: "Instrucciones",
             install: "Instalar",
@@ -271,7 +277,7 @@ export const es = {
 }
 
 export const esLanguage: Language = {
-  name: "Spanish",
-  nativeName: "Español",
-  code: "es",
+    name: "Spanish",
+    nativeName: "Español",
+    code: "es",
 };

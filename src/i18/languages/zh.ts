@@ -197,7 +197,7 @@ export const zh = {
       delete_database: "删除数据库",
       delete_database_content: "该操作不可撤销，将永久删除该图表。",
       delete: "删除",
-
+      empty_diagram: "空图表",
       import_database: {
         title: "导入数据库",
         import: "导入",
@@ -206,6 +206,12 @@ export const zh = {
         import_error_description: "我们无法导入您的 SQL，因为它包含无效语法。",
         import_warning: "SQL 解析警告",
         import_warning_description: "由于不支持或不完整的声明，某些元素无法处理。"
+      },
+      open_database_table: {
+        dialect: "方言",
+        name: "名称",
+        created_at: "创建于",
+        tables: "表"
       },
       export_sql: "导出 SQL",
       export_sql_header: "将您的数据库图导出为 SQL 代码"

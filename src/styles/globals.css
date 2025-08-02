@@ -226,7 +226,7 @@ html {
   height: 30px;
   font-weight: bold;
   font-size: 11px;
-  line-height: 14px; 
+  line-height: 14px;
   color: #333;
   text-decoration: none;
   text-shadow: 0 1px 0 #fff;
@@ -235,7 +235,7 @@ html {
   overflow: hidden;
   border-radius: 3px;
 
-  
+
   font-size: 16px;
   line-height: 22px;
   border-radius: 4px;
@@ -280,7 +280,7 @@ html {
   /* Makes dark content white */
 }
 
-.dark .gh-button:hover { 
+.dark .gh-button:hover {
   text-decoration: none;
   background-color: #80838d22 !important;
 
@@ -288,7 +288,133 @@ html {
 }
 
 .dark .gh-button:active {
-   background-color: #80838d22 !important;
+  background-color: #80838d22 !important;
 
-    background-image: none !important;
+  background-image: none !important;
+}
+
+
+/* base timing/easing */
+.animate-in {
+  animation-duration: 300ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+.animate-out {
+  animation-duration: 200ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* fades */
+@keyframes fade-in-0 {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.fade-in-0 {
+  animation-name: fade-in-0;
+}
+@keyframes fade-out-0 {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.fade-out-0 {
+  animation-name: fade-out-0;
+}
+
+/* zooms */
+@keyframes zoom-in-95 {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
   }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.zoom-in-95 {
+  animation-name: zoom-in-95;
+}
+@keyframes zoom-out-95 {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+.zoom-out-95 {
+  animation-name: zoom-out-95;
+}
+
+/* slide in slight offsets (2px) */
+@keyframes slide-in-from-top-2 {
+  from {
+    transform: translateY(-2px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+[data-side="bottom"] .slide-in-from-top-2,
+[data-side=bottom] .slide-in-from-top-2 {
+  /* unused directly; used via attribute selector below */
+}
+.slide-in-from-top-2 {
+  animation-name: slide-in-from-top-2;
+}
+
+@keyframes slide-in-from-right-2 {
+  from {
+    transform: translateX(2px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.slide-in-from-right-2 {
+  animation-name: slide-in-from-right-2;
+}
+
+@keyframes slide-in-from-left-2 {
+  from {
+    transform: translateX(-2px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.slide-in-from-left-2 {
+  animation-name: slide-in-from-left-2;
+}
+
+@keyframes slide-in-from-bottom-2 {
+  from {
+    transform: translateY(2px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.slide-in-from-bottom-2 {
+  animation-name: slide-in-from-bottom-2;
+}
+
+/* combine with state selectors (Radix uses data-state on the content) */
+[data-state="open"] {
+  /* open will pick up .animate-in + the relevant name classes */
+}
+[data-state="closed"] {
+  /* closed will use .animate-out variants like fade-out-0 and zoom-out-95 */
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .animate-out {
+    animation-duration: 0.01ms !important;
+  }
+}

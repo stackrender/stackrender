@@ -12,13 +12,13 @@ import { TableType } from "@/lib/schemas/table-schema";
 import { RenderableTable, SortableTable, toRenderableTable, toSortableTable } from "@/lib/table";
 import { getForeignRelationships } from "@/utils/relationship";
 import { orderTables } from "@/utils/tables";
+import _ from "lodash" ; 
 
-
-export const DatabaseToAst = (database: DatabaseType, data_types: DataType[]) => {
+export const DatabaseToAst = (db: DatabaseType, data_types: DataType[]) => {
     let dbAst: any = [];
     if (!data_types || data_types.length == 0)
         return dbAst;
-
+    const database = _.cloneDeep(db) ; 
     let renderableTables: RenderableTable[] = database.tables.map((table: TableType) => toRenderableTable(table, database));
     let sortableTables: SortableTable[] = renderableTables.map((table: RenderableTable) => toSortableTable(table));
 

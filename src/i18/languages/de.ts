@@ -183,6 +183,7 @@ export const de = {
       delete_database: "Datenbank löschen",
       delete_database_content: "Diese Aktion ist unwiderruflich und wird das Diagramm dauerhaft löschen.",
       delete: "Löschen",
+      empty_diagram: "Leeres Diagramm",
       import_database: {
         title: "Datenbank importieren",
         import: "Importieren",
@@ -192,6 +193,12 @@ export const de = {
         import_warning: "SQL-Parsing-Warnung",
         import_warning_description: "Einige Elemente konnten aufgrund nicht unterstützter oder unvollständiger Deklarationen nicht verarbeitet werden."
       },
+      open_database_table: {
+        dialect: "Dialekt",
+        name: "Name",
+        created_at: "Erstellt am",
+        tables: "Tabellen"
+      } , 
       export_sql: "SQL exportieren",
       export_sql_header: "Exportiere dein Datenbankdiagramm als SQL-Code"
     },

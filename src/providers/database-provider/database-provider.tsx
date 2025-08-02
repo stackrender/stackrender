@@ -315,6 +315,15 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                                 tx.insert(fields).values(Object.values(operation.table.fields))
                             );
                         }
+                           if (operation.table.indices && Object.values(operation.table.indices).length > 0) {
+                            const indexes = Object.values(operation.table.indices);
+                            for (const index of indexes) {
+                                operations.push(tx.insert(indices).values(index));
+                                if (index.fieldIndices && Object.values(index.fieldIndices).length > 0) {
+                                    operations.push(tx.insert(field_indices).values(Object.values(index.fieldIndices)));
+                                }
+                            }
+                        }
 
                     } else if (operation.type === "UPDATE_TABLE") {
                         operations.push(

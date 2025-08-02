@@ -193,7 +193,7 @@ export const hi = {
             delete_database: "डेटाबेस हटाएं",
             delete_database_content: "यह क्रिया अपरिवर्तनीय है और आरेख को स्थायी रूप से हटा देगी।",
             delete: "हटाएँ",
-
+            empty_diagram: "खाली आरेख",
             import_database: {
                 title: "अपना डेटाबेस आयात करें",
                 import: "आयात करें",
@@ -203,6 +203,12 @@ export const hi = {
                 import_warning: "SQL पार्सिंग चेतावनी",
                 import_warning_description: "कुछ तत्वों को समर्थन न होने या अधूरे घोषणाओं के कारण संसाधित नहीं किया जा सका।"
             },
+            open_database_table: {
+                dialect: "भाषा शैली",
+                name: "नाम",
+                created_at: "बनाया गया",
+                tables: "टेबल्स"
+            } , 
             export_sql: "SQL निर्यात करें",
             export_sql_header: "अपने डेटाबेस आरेख को SQL कोड में निर्यात करें"
         },
@@ -260,7 +266,7 @@ export const hi = {
 };
 
 export const hiLanguage: Language = {
-  name: "Hindi",
-  nativeName: "हिन्दी",
-  code: "hi",
+    name: "Hindi",
+    nativeName: "हिन्दी",
+    code: "hi",
 };
