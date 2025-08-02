@@ -292,7 +292,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                         <SelectItem key={TimeDefaultValues.NO_VALUE}>{t("db_controller.field_settings.time_default_value.no_value")}</SelectItem>
                         <SelectItem key={TimeDefaultValues.CUSTOM}>{t("db_controller.field_settings.time_default_value.custom")}</SelectItem>
                         {
-                            (field.type.name == "datetime" || field.type.name == "timestamp") ?
+                           (field.type.name == "datetime" || field.type.name?.includes("timestamp")) ?
                                 <SelectItem key={TimeDefaultValues.NOW}>{t("db_controller.field_settings.time_default_value.now")}</SelectItem> : null
                         }
                     </Select>
