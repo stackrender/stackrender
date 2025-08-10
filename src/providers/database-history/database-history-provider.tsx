@@ -24,7 +24,7 @@ const DatabaseHistoryProvider: React.FC<Props> = ({ children }) => {
     }, [database?.id]);
 
     useEffect(() => {
-        if (database && datatbaseState.present && !isLoading && !isProcessing) {
+        if (database && datatbaseState.present && !isLoading && !isProcessing &&  database?.id == datatbaseState.present?.id) {
             udpateDbFlag.current = false;
 
             const presentHash: string | undefined = hash(datatbaseState.present, { algorithm: 'sha1' });
