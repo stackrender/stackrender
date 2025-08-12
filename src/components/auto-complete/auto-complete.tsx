@@ -83,10 +83,10 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ items, label = "name", onSe
             {
                 items ? Object.keys(items).map((key: string) => (
                     <AutocompleteSection
+                        key={key.toUpperCase()}
                         classNames={{
                             heading: headingClasses,
                         }}
-                        
                         title={key.toUpperCase()}
                     >
                         {

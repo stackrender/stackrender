@@ -3,29 +3,35 @@ import React, { useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip/tooltip";
 import { useTranslation } from "react-i18next";
 import { Button, Divider, Image, Input } from "@heroui/react";
-import { DatabaseDialect,  getDatabaseByDialect } from "@/lib/database";
+import { DatabaseDialect, getDatabaseByDialect } from "@/lib/database";
 import { Save } from "lucide-react";
 import { DatabaseType } from "@/lib/schemas/database-schema";
 
 interface RenameDatabaseProps {
-    database : DatabaseType
+    database: DatabaseType
 }
 
-const RenameDatabase: React.FC<RenameDatabaseProps> = ({ database}) => {
-    
+const RenameDatabase: React.FC<RenameDatabaseProps> = ({ database }) => {
+
     const { editDatabase } = useDatabaseOperations();
     const [editMode, setEditMode] = useState<boolean>(false);
     const [dbName, setDbName] = useState<string>(database.name);
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    useEffect(() => { 
+    useEffect(() => {
         setDbName(database.name);
     }, [database.name])
 
     const saveDatabaseName = async () => {
         if (!dbName || dbName.trim().length == 0)
             return;
+
+        if (dbName.trim() == database.name) {
+            setEditMode(false)
+
+            return;
+        }
         setIsLoading(true);
 
         await editDatabase({
@@ -39,20 +45,21 @@ const RenameDatabase: React.FC<RenameDatabaseProps> = ({ database}) => {
         <div className="group">
             {
                 !editMode &&
-                <Tooltip>
-                    <TooltipTrigger asChild>
+                <Tooltip >
+                    <TooltipTrigger asChild >
                         <label
-                            className=" w-full text-editable truncate h-8   px-3 text-sm font-bold dark:text-white flex gap-4 items-center justify-center text-font hover:underline"
+                            className=" w-full max-w-[256px]  text-editable group-hover:bg-primary-100/5 truncate h-8 px-3 text-sm font-semibold dark:text-white flex gap-4 items-center justify-center text-font hover:underline rounded-small"
                             onDoubleClick={() => setEditMode(true)}
                         >
                             <Image
                                 src={getDatabaseByDialect(database.dialect as DatabaseDialect).small_logo}
                                 width={20}
-                                className="rounded-none "
+                                className="rounded-none shring-0 min-w-[20px]"
                             />
 
-                            {dbName}
-
+                            <span className="max-w-[164px] truncate">
+                                {dbName}
+                            </span>
                         </label>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -80,8 +87,8 @@ const RenameDatabase: React.FC<RenameDatabaseProps> = ({ database}) => {
                         autoFocus
                         className="h-8 w-full focus-visible:ring-0 shadow-none"
                         classNames={{
-                            inputWrapper: "rounded-sm  focus-visible:border-0 text-sm dark:bg-content1 bg-background group-data-[hover=true]:border-primary group-data-[focus=true]:border-primary border-primary  ",
-                            input: "font-semibold text-black dark:text-font"
+                            inputWrapper: "rounded-small max-w-[256px] focus-visible:border-0 text-sm dark:bg-content1 bg-background group-data-[hover=true]:border-primary group-data-[hover=true]:bg-primary-100/5 group-data-[focus=true]:border-primary border-primary  ",
+                            input: "font-medium text-font dark:text-font"
                         }}
                     />
                     <Button

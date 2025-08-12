@@ -418,3 +418,9 @@ html {
     animation-duration: 0.01ms !important;
   }
 }
+
+
+
+.main-linear-background {
+  background: linear-gradient(180deg, rgb(140 104 255 / 15%) -1.95%, rgb(131 92 255 / 0%) 20.34%), #ffffff00;
+}

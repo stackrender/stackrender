@@ -20,7 +20,7 @@ const PADDING_Y = 80;
 
 const TablesController: React.FC = ({ }) => {
 
-    const { database  , isSyncing } = useDatabase();
+    const { database } = useDatabase();
     const { createTable, getInteger } = useDatabaseOperations();
     const { getViewport } = useReactFlow();
     const { tables: allTables } = database || { tables: [] };
@@ -31,7 +31,7 @@ const TablesController: React.FC = ({ }) => {
     const { focusedTableId } = useDiagram();
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
     const accordionRef = useRef<HTMLDivElement>(null);
-    
+
     useEffect(() => searchTables(), [allTables]);
 
     const addNewTable = useCallback(async () => {
@@ -157,6 +157,7 @@ const TablesController: React.FC = ({ }) => {
                             <AccordionItem
                                 key={table.id}
                                 id={table.id}
+                                
                                 aria-label={table.name}
                                 classNames={{
                                     trigger: "w-full h-12 hover:bg-default transition-all duration-200 dark:hover:bg-background",
@@ -168,8 +169,11 @@ const TablesController: React.FC = ({ }) => {
                                         isOpen={selectedTableId == table.id}
                                         table={table}
                                     />
-                                }>
+                                }
+                                
+                                >
                                 <TableAccordionBody table={table} />
+                                
                             </AccordionItem>
                         ))}
                     </Accordion>
@@ -184,7 +188,7 @@ const TablesController: React.FC = ({ }) => {
                 </div>
             }
             {
-                 !isSyncing && allTables.length == 0 &&
+                allTables.length == 0 &&
                 <EmptyList
                     title={t("db_controller.empty_list.no_tables")}
                     description={t("db_controller.empty_list.no_tables_description")}

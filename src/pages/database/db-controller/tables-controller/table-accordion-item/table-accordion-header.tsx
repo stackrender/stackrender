@@ -137,8 +137,8 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
 
                 !editMode && <>
                     <div className="hidden shrink-0 flex-row group-hover:flex">
-
-
+ 
+                     
                         <Button
                             size="sm"
                             isIconOnly
@@ -157,10 +157,13 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                         >
                             <Focus className="size-4 " />
                         </Button>
+                      
+                    
                     </div>
 
                     <Popover placement="bottom" radius="sm" shadow="sm" showArrow isOpen={popOverOpen} onOpenChange={setPopOverOpen}>
                         <PopoverTrigger>
+
                             <Button
                                 size="sm"
                                 isIconOnly
@@ -168,7 +171,8 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                                 className="text-icon hover:bg-default hover:text-font/90"
                             >
                                 <EllipsisVertical className="size-4  " />
-                            </Button>
+                            </Button> 
+
                         </PopoverTrigger>
                         <PopoverContent className="w-[160px]" >
                             <div className="w-full flex flex-col gap-2 ">

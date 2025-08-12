@@ -6,12 +6,6 @@ import { AppSchema, drizzleSchema } from '@/lib/schemas/app-schema';
 import { StackRenderConnector } from '@/utils/stackrender-connector';
 import { CircularProgress } from '@heroui/react';
 import { PowerSyncSQLiteDatabase, wrapPowerSyncWithDrizzle } from '@powersync/drizzle-driver';
-import { data_types, DataInsertType } from '@/lib/schemas/data-type-schema';
-import { MysqlDataType } from '@/lib/data_types/mysql_data_types';
-import { PostgresDataType } from '@/lib/data_types/postgres_data_types';
-import { SqliteDataTypes } from '@/lib/data_types/sqlite_data_types';
-import { MariaDbDataType } from '@/lib/data_types/mariadb_data_types';
-import { DatabaseDialect } from '@/lib/database';
 import { seedDataTypes } from '@/lib/data_types/seed_datatypes';
 
 
@@ -26,6 +20,7 @@ export const powerSyncDb = new PowerSyncDatabase({
 export const db: PowerSyncSQLiteDatabase<typeof drizzleSchema> = wrapPowerSyncWithDrizzle(powerSyncDb, {
     schema: drizzleSchema,
 });
+
 const ConnectorContext = createContext<StackRenderConnector | null>(null);
 export const useConnector = () => useContext(ConnectorContext);
 

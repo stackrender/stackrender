@@ -1,29 +1,25 @@
 import Modal, { ModalProps } from "@/components/modal/modal";
 import { getDatabaseByDialect } from "@/lib/database";
 import { DatabaseType } from "@/lib/schemas/database-schema";
-
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
-
-import { Image, Pagination, Selection, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
-import { Key, useState } from "react";
+import { Image, Selection, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-
-
-
 
 
 const OpenDatabaseModal: React.FC<ModalProps> = (props) => {
     const { isOpen, onOpenChange } = props;
     const { t } = useTranslation();
     const { databases, currentDatabaseId } = useDatabase();
-    
+
     const { switchDatabase } = useDatabaseOperations();
     const [selectedDatabase, setSelectedDatabase] = useState<any | undefined>(
         (() => currentDatabaseId ? new Set([currentDatabaseId]) : undefined)
     );
 
     const openDatabase = () => {
-        switchDatabase(selectedDatabase.currentKey);
+        if (selectedDatabase.currentKey)
+            switchDatabase(selectedDatabase.currentKey);
         onOpenChange && onOpenChange(false);
     }
 
@@ -51,13 +47,13 @@ const OpenDatabaseModal: React.FC<ModalProps> = (props) => {
                 selectionMode="single"
                 selectedKeys={selectedDatabase}
                 onSelectionChange={onSelectionChange}
-         
+
                 classNames={{
                     wrapper: "shadow-sm border-1  border-divider dark:bg-background-100  rounded-sm",
                     th: "dark:bg-background font-bold   text-center rounded-sm",
                     tr: " hover:bg-default-100 h-10 dark:hover:bg-background rounded-lg cursor-pointer text-font/90 transition-colors duration-200 ",
                     base: "max-h-[520px] overflow-y-scroll ",
-                    td: "items-center text-center" , 
+                    td: "items-center text-center",
                 }}
             >
                 <TableHeader className="rounded-sm">
