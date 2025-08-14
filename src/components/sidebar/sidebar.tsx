@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ }) => {
         {
             title: "X",
             icon: <X className={sidebarItemClass}></X>,
-            href: "https://github.com/KarimTamani/stackrender",
+            href: "https://x.com/Iam_The_Dev",
             newTab : true , 
         },
         {
@@ -48,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ }) => {
         {
             title: "Github",
             icon: <Github className={sidebarItemClass}></Github>,
-            href: "https://github.com/KarimTamani/stackrender",
+            href: "https://github.com/stackrender/stackrender",
             newTab : true , 
         },
     ], []);
