@@ -15,19 +15,35 @@
 
 </h4>
 
-# Welcom to StackRender 🚀
+# Welcom to StackRender ⚡
 StackRender was born from the need to automate backend development, covering everything from the database to the final API endpoint. Our first step toward this long-term vision is to provide a **next-generation, free, open-source database schema diagram generator**.
 
 StackRender helps you go from **specifications** to a **fully functional, production-ready database** that can be exported in your preferred SQL dialect: **MySQL, PostgreSQL, MariaDB, or SQLite**.
 
- ## Features
+### Main features
 
-- **Interactive Diagram UI** – Visually design and manage your database schemas with an intuitive drag-and-drop interface.  
-- **AI-Powered Database Assistant** – (Cloud version) Generate database diagrams from specifications and perform additional operations such as schema enrichment, soft-delete implementation, and automatic documentation generation.  
-- **In-Depth Tables & Columns Control** – Fully customize tables, columns, types, and constraints.  
-- **Indices Suggestions** – Receive recommendations to optimize database performance.  
-- **Import / Export SQL DDL** – Easily import existing schemas or export your design as SQL scripts.  
-- **Foreign Key Cycle Detection** – Identify and resolve circular dependencies in relationships.
+-  **Interactive Diagram UI** – Visually design and manage your database schemas with an intuitive drag-and-drop interface.  
+-  **In-Depth Tables & Columns Control** – Fully customize tables, columns, types, and constraints.  
+-  **Indices Suggestions** – Receive recommendations to optimize database performance.  
+-  **Import / Export SQL DDL** – Easily import existing schemas or export your design as SQL scripts.  
+-  **Foreign Key Cycle Detection** – Identify and resolve circular dependencies in relationships.
+-  **AI-Powered Database Assistant** – (Cloud version) Generate database diagrams from specifications and perform additional operations such as schema enrichment, soft-delete implementation, and automatic documentation generation.  
+
+### Status
+
+StackRender is currently in **Public Beta**. Star and watch this repository to get notified of updates.
+
+### Supported Databases
+
+- ✅ PostgreSQL  
+- ✅ MySQL  
+- ✅ MariaDB  
+- ✅ SQLite  
+
+And more coming very soon!
+## Get Started
+
+Use the [cloud version](https://www.stackrender.io) or deploy locally to start designing your database schemas in minutes.
 
 The next era of database engineering starts now.                                                                                                          
 
