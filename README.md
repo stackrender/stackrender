@@ -46,17 +46,13 @@ And more coming very soon!
 Use the [cloud version](https://www.stackrender.io) or deploy locally to start designing your database schemas in minutes.
 
 ### How to Use
-
 Install dependencies and start the development server:
-
 ```text
 npm install
 npm run dev
 ```
 ### How to Build
-
 Install dependencies and start the production build:
-
 ```text
 npm install
 npm run start
@@ -70,9 +66,27 @@ npm run start
 5. Enjoy editing and viewing your database  
 6. Export your Database SQL DDL and run it!
 
+## 🤝 Community
+
+- [**Discord**](https://discord.com/invite/DsN8RcPR6Y) – Live discussions about upcoming releases and the future of StackRender.  
+- [**GitHub Issues**](https://github.com/stackrender/stackrender/issues) – Report bugs and errors to help us improve your experience.  
+- [**X (Twitter)**](https://x.com/intent/follow?screen_name=Iam_The_Dev) – Get the latest StackRender news and updates.
+
+## 🤲 Contributing
+
+We welcome all contributions, whether small bug fixes or major feature additions.  
+
+- Discuss your ideas and contributions in our [Discord](https://discord.com/invite/DsN8RcPR6Y) community.  
+- Follow the [Contributing Guide](./CONTRIBUTING.md) to get started.  
+- Agree to the [Code of Conduct](./CODE_OF_CONDUCT.md) to ensure a positive and respectful environment.  
+
+Every contribution helps make StackRender better, thank you for being part of the journey! ❤️
+
+## 📜 License
+
+StackRender is licensed under the [GNU Affero General Public License v3.0 (AGPLv3)](./LICENSE).
 
 The next era of database engineering starts now.                                                                                                          
-
 
 <pre>   _____ _             _    _____                _           
   / ____| |           | |  |  __ \              | |          
