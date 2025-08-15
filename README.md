@@ -20,7 +20,7 @@ StackRender was born from the need to automate backend development, covering eve
 
 StackRender helps you go from **specifications** to a **fully functional, production-ready database** that can be exported in your preferred SQL dialect: **MySQL, PostgreSQL, MariaDB, or SQLite**.
 
-### Main features
+## Main features
 
 -  **Interactive Diagram UI** – Visually design and manage your database schemas with an intuitive drag-and-drop interface.  
 -  **In-Depth Tables & Columns Control** – Fully customize tables, columns, types, and constraints.  
