@@ -1,6 +1,6 @@
 
 
-![App Screenshot](https://github.com/stackrender/.github/blob/main/assets/white_hero.PNG?raw=true)
+![App Screenshot](https://github.com/stackrender/.github/blob/main/assets/hero.PNG?raw=true)
 <h4 align="center">
   <a href="https://www.stackrender.io">
     <img src="https://img.shields.io/badge/Start%20Building!-gray.svg?logo=data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjRkZENzAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTMgMyBMMiAxMyBoNyBMMTEgMjEgTDIyIDExIGgtNyBMIDEzIDMgeiIvPjwvc3ZnPg==" alt="Start Building!" />
