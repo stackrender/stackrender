@@ -20,18 +20,14 @@ StackRender was born from the need to automate backend development, covering eve
 
 StackRender helps you go from **specifications** to a **fully functional, production-ready database** that can be exported in your preferred SQL dialect: **MySQL, PostgreSQL, MariaDB, or SQLite**.
 
-🚀 [Cloud Version](https://stackrender.com)<br/>
-💻 [Open Source Repository](https://github.com/yourusername/stackrender)
+ ## Features
 
-### Why Follow Us 📢
-
-We’re building StackRender, a tool that turns database designs into complete, functional apps, and we share every step of the journey.
-
-Follow us for:  
-- Early previews of StackRender features  
-- Free dev tools & open-source goodies  
-- Practical coding tips you can use today  
-- Real-world lessons from building SaaS products  
+- **Interactive Diagram UI** – Visually design and manage your database schemas with an intuitive drag-and-drop interface.  
+- **AI-Powered Database Assistant** – (Cloud version) Generate database diagrams from specifications and perform additional operations such as schema enrichment, soft-delete implementation, and automatic documentation generation.  
+- **In-Depth Tables & Columns Control** – Fully customize tables, columns, types, and constraints.  
+- **Indices Suggestions** – Receive recommendations to optimize database performance.  
+- **Import / Export SQL DDL** – Easily import existing schemas or export your design as SQL scripts.  
+- **Foreign Key Cycle Detection** – Identify and resolve circular dependencies in relationships.
 
 The next era of database engineering starts now.                                                                                                          
 
