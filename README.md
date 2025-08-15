@@ -45,7 +45,34 @@ And more coming very soon!
 
 Use the [cloud version](https://www.stackrender.io) or deploy locally to start designing your database schemas in minutes.
 
+### How to Use
+
+Install dependencies and start the development server:
+
+```text
+npm install
+npm run dev
+```
+### How to Build
+
+Install dependencies and start the production build:
+
+```text
+npm install
+npm run start
+```
+## Try Using It in the Cloud
+
+1. Visit [StackRender.io](https://www.stackrender.io)  
+2. Click **"Launch the Web App"**  
+3. Pick your database  
+4. Import an existing database or leverage StackRender AI to create an initial database blueprint  
+5. Enjoy editing and viewing your database  
+6. Export your Database SQL DDL and run it!
+
+
 The next era of database engineering starts now.                                                                                                          
+
 
 <pre>   _____ _             _    _____                _           
   / ____| |           | |  |  __ \              | |          
