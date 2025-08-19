@@ -10,7 +10,7 @@ import "./index.css";
 import "./i18/index.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+    <React.StrictMode>
     <BrowserRouter>
       <Provider>
         <App />

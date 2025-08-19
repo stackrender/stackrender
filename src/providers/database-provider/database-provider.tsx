@@ -24,7 +24,7 @@ import DatabaseHotkeysProvider from "../database-hotkeys/database-hotkeys-provid
 interface Props { children: React.ReactNode }
 
 const DatabaseProvider: React.FC<Props> = ({ children }) => {
-    
+
     const [currentDatabaseId, setCurrentDatabaseId] = useState<string | undefined>(localStorage.getItem("database_id") as string | undefined);
     // Fetch all databases
     const { data: databases, isLoading: loadingDatabases } = useQuery(toCompilableQuery(
@@ -34,7 +34,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     ));
 
     // Fetch the current database with nested tables, fields, and relationships
-    let { data: database, isLoading: loadingCurrentDatabase  } = useQuery(
+    let { data: database, isLoading: loadingCurrentDatabase } = useQuery(
         toCompilableQuery(
             db.query.databases.findMany({
                 where: (databases, { eq }) => eq(databases.id, currentDatabaseId as string),
@@ -88,7 +88,8 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         database = undefined as any;
 
     // Fetch all data types 
-    let { data: data_types, isLoading: loadingDataTypes  } = useQuery(toCompilableQuery(
+    // Fetch all data types 
+    let { data: data_types, isLoading: loadingDataTypes, isFetching: fetchingDatatypes } = useQuery(toCompilableQuery(
         db.query.data_types.findMany({
             where: (data_types, { eq }) => eq(data_types.dialect, (database as any)?.dialect)
         })
@@ -99,7 +100,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [data_types]);
 
     const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;
-    
+
     const isSwitchingDatabase: boolean = useMemo(() => {
         return isLoading && currentDatabaseId != (database as any)?.id
     }, [currentDatabaseId, database, isLoading]);
@@ -315,7 +316,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                                 tx.insert(fields).values(Object.values(operation.table.fields))
                             );
                         }
-                           if (operation.table.indices && Object.values(operation.table.indices).length > 0) {
+                        if (operation.table.indices && Object.values(operation.table.indices).length > 0) {
                             const indexes = Object.values(operation.table.indices);
                             for (const index of indexes) {
                                 operations.push(tx.insert(indices).values(index));
@@ -377,7 +378,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                     }
                     else if (operation.type == "DELETE_INDEX") {
                         operations.push(
-                            deleteIndicesWithCascade([operation.indexId  ] , tx) 
+                            deleteIndicesWithCascade([operation.indexId], tx)
                         );
                     }
                     else if (operation.type == "UPDATE_INDEX") {
@@ -520,9 +521,9 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
             databases: databases as DatabaseType[],
             isLoading,
             isSwitchingDatabase,
-          
+
             getField,
-             
+
         }}>
             <DatabaseOperationsContext.Provider value={databaseOpsValue}>
                 <DatabaseHistoryProvider>
