@@ -1,21 +1,22 @@
 
 import { EditorView } from '@uiw/react-codemirror';
+ 
+
 
 export const colorOptions = [
-
-  "#ff6363", // Red
-  "#FF7A6A", // Red-Orange
-  "#ff9f74", // Orange
-  "#FFC84D", // Yellow
-  "#B6E672", // Lime Green
-  "#6cdcc4", // Green/Cyan
-  "#7AD1DD", // Cyan
-  "#5ba7f3", // Blue
-  "#8F7FC9", // Softened Indigo
-  "#BFA0D5", // Softened Violet
-  "#F7A9CB"  // Softened Pink
-
+  "#FF6B6B", // Soft Red
+  "#FF8966", // Coral Orange
+  "#FFB570", // Peach Orange
+  "#FFD56B", // Warm Yellow
+  "#A5E76E", // Light Lime Green
+  "#63D9B7", // Aqua Green
+  "#6FD6E3", // Soft Cyan
+  "#6CA8F7", // Clear Blue
+  "#9A85D6", // Soft Indigo
+  "#C7A6E2", // Soft Violet
+    "#F7A8D9"  // Soft Pink
 ];
+
 
 
 export const randomColor = () => {
