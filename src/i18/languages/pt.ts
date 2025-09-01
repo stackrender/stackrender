@@ -193,6 +193,8 @@ export const pt = {
       delete_database_content: "Esta ação é irreversível e removerá o diagrama permanentemente.",
       delete: "Excluir",
       empty_diagram: "Diagrama vazio",
+      create_and_import : "Criar e importar" ,
+
       import_database: {
         title: "Importar seu Banco de Dados",
         import: "Importar",

@@ -184,6 +184,8 @@ export const de = {
       delete_database_content: "Diese Aktion ist unwiderruflich und wird das Diagramm dauerhaft löschen.",
       delete: "Löschen",
       empty_diagram: "Leeres Diagramm",
+      create_and_import : "Erstellen und importieren" ,
+
       import_database: {
         title: "Datenbank importieren",
         import: "Importieren",

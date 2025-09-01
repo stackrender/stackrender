@@ -53,6 +53,9 @@ const Sidebar: React.FC<SidebarProps> = ({ }) => {
         },
     ], []);
 
+
+
+
     return (
         <aside className="h-full z-[20] flex flex-col items-between py-2 justify-between sticky top-0 duration-500 w-12 bg-sidebar  pt-[56px] dark:bg-background">
             <div className="flex flex-col items-center gap-2">

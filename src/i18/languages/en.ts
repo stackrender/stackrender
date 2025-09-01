@@ -181,8 +181,6 @@ export const en = {
             help: "Help",
             show_docs: "Show Docs",
             join_discord: "Join Discord",
-
-
         },
 
         modals: {
@@ -200,6 +198,7 @@ export const en = {
             delete_database_content: "This action is irreversible and will permanently remove the diagram.",
             delete: "Delete",
             empty_diagram: "Empty diagram",
+            create_and_import : "Create and import" ,
             import_database: {
                 title: "Import your Database",
                 import: "Import",

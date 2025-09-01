@@ -184,6 +184,8 @@ export const ar = {
       delete_database_content: "هذا الإجراء لا يمكن التراجع عنه وسيمسح المخطط نهائيًا.",
       delete: "حذف",
       empty_diagram: "مخطط فارغ",
+      create_and_import : "إنشاء واستيراد" ,
+
       import_database: {
         title: "استيراد قاعدة البيانات",
         import: "استيراد",

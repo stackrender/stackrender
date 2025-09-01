@@ -185,6 +185,8 @@ export const fr = {
             delete_database_content: "Cette action est irréversible et supprimera définitivement le diagramme.",
             delete: "Supprimer",
             empty_diagram: "Diagramme vide",
+            create_and_import : "Créer et importer" ,
+
             import_database: {
                 title: "Importer votre base de données",
                 import: "Importer",

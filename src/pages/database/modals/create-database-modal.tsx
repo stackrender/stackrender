@@ -30,7 +30,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
             setSelectedDbType([selectedType]);
     }
 
-    const createNewDatabase = useCallback(async (withImport: boolean = true) => {
+    const createNewDatabase = useCallback(async (withImport: boolean = false) => {
         const databaseId: string = v4();
         return new Promise(async (res, rej) => {
             try {
@@ -61,7 +61,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             title={t("modals.pick_database")}
-            actionName={t("modals.continue")}
+            actionName={t("modals.create")}
             className="min-w-[720px]"
             isDisabled={!isValid}
             actionHandler={createNewDatabase}
@@ -111,10 +111,10 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
                             variant="bordered"
                             size="sm"
                             className="w-full text-font/90 border-1 border-divider"
-                            onPressEnd={ () => createNewDatabase( false )}
+                            onPressEnd={ () => createNewDatabase( true )}
                         >
                             <span className="underline">
-                                     {t("modals.empty_diagram")}
+                                     {t("modals.create_and_import")}
                             </span>
                         </Button>
                     </div>

@@ -184,6 +184,8 @@ export const ru = {
       delete_database_content: "Это действие необратимо и навсегда удалит диаграмму.",
       delete: "Удалить",
       empty_diagram: "Пустая диаграмма",
+      create_and_import : "Создать и импортировать" ,
+
       import_database: {
         title: "Импортируйте вашу базу данных",
         import: "Импорт",

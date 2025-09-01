@@ -198,6 +198,8 @@ export const zh = {
       delete_database_content: "该操作不可撤销，将永久删除该图表。",
       delete: "删除",
       empty_diagram: "空图表",
+      create_and_import : "创建并导入" ,
+
       import_database: {
         title: "导入数据库",
         import: "导入",

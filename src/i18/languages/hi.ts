@@ -194,6 +194,8 @@ export const hi = {
             delete_database_content: "यह क्रिया अपरिवर्तनीय है और आरेख को स्थायी रूप से हटा देगी।",
             delete: "हटाएँ",
             empty_diagram: "खाली आरेख",
+            create_and_import : "बनाएँ और आयात करें" ,
+
             import_database: {
                 title: "अपना डेटाबेस आयात करें",
                 import: "आयात करें",
