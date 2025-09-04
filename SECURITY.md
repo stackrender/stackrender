@@ -11,7 +11,7 @@ We currently provide security updates for the latest stable release of StackRend
 ## Reporting a Vulnerability
 If you discover a security vulnerability in StackRender, please report it to us directly.
 
-- Email: security@stackrender.com  
+- Email: contact@stackrender.com  
 - GitHub Security Advisory: Use the "Report a vulnerability" option in the repository's Security tab.
 
 When reporting, please include:
