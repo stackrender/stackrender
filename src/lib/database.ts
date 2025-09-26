@@ -1,16 +1,20 @@
 
+
 export interface DatabaseType {
     name: string,
     dialect: string;
     logo: string;
     small_logo?: string
+    comming? : boolean
 }
 
 export enum DatabaseDialect {
     MYSQL = "mysql",
     POSTGRES = "postgres",
     SQLITE = "sqlite",
-    MARIADB = "mariadb"
+    MARIADB = "mariadb", 
+    SQL_SERVER = "sql_server", 
+    ORACLE = "oracle"
 };
 
 export const DBTypes: DatabaseType[] = [
@@ -23,7 +27,6 @@ export const DBTypes: DatabaseType[] = [
         name: "MySQL",
         dialect: DatabaseDialect.MYSQL,
         logo: "/mysql_logo.png",
-
         small_logo: "/mysql_logo_small.png"
     },
     {
@@ -39,7 +42,25 @@ export const DBTypes: DatabaseType[] = [
         logo: "/mariadb_logo.png",
         small_logo: "/mariadb_logo_small.png"
     },
+    
+    {
+        name: "SQL Server",
+        dialect: DatabaseDialect.SQL_SERVER,
+        logo: "/sql_server_logo_small.png",
+        small_logo: "/sql_server_logo_small.png" , 
+        comming : true
+    },
+    
+    {
+        name: "Oracle",
+        dialect: DatabaseDialect.ORACLE,
+        logo: "/oracle_logo_small.png",
+        small_logo: "/oracle_logo_small.png" , 
+        comming : true
+    },
 ]
+
+
 
 
 export const getDatabaseByDialect = (dialect: DatabaseDialect): DatabaseType => {

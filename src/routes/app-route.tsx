@@ -1,7 +1,8 @@
 
 import { Route, Routes } from 'react-router-dom';
 import useDashboardRoutes from './dashboard-route';
-import NotFoundPage from '@/pages/not-found/not-found-page';
+import NotFoundPage from '@/features/page-not-found/not-found-page';
+
 const useAppRoutes = () => {
   const dashboardRoutes = useDashboardRoutes();
   return (

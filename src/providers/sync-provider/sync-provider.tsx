@@ -4,7 +4,7 @@ import { PowerSyncContext, usePowerSync } from "@powersync/react";
 import { createContext, Suspense, useContext, useEffect, useState } from 'react';
 import { AppSchema, drizzleSchema } from '@/lib/schemas/app-schema';
 import { StackRenderConnector } from '@/utils/stackrender-connector';
-import { CircularProgress } from '@heroui/react';
+ 
 import { PowerSyncSQLiteDatabase, wrapPowerSyncWithDrizzle } from '@powersync/drizzle-driver';
 import { seedDataTypes } from '@/lib/data_types/seed_datatypes';
 
@@ -39,7 +39,7 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
         seed();
     }, [db])
     return (
-        <Suspense fallback={<CircularProgress />}>
+        <Suspense >
             <PowerSyncContext.Provider value={powerSync}>
                 {children}
             </PowerSyncContext.Provider>

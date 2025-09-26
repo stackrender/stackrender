@@ -4,7 +4,10 @@ export const hi = {
     translation: {
         sidebar: {
             tables: "तालिकाएँ",
-            relationships: "रिलेशनशिप्स"
+            relationships: "रिलेशनशिप्स",
+                        database: "डेटाबेस",
+
+
         },
 
         color_picker: {
@@ -12,7 +15,8 @@ export const hi = {
         },
         navbar: {
             rename_db: "डेटाबेस का नाम बदलें",
-            search: "खोजें"
+            search: "खोजें",
+            command: "कोई कमांड लिखें या खोजें...",
         },
         db_controller: {
             filter: "फ़िल्टर",
@@ -28,6 +32,7 @@ export const hi = {
             note: "नोट",
             name: "नाम",
             type: "प्रकार",
+            required: "अनिवार्य",
             nullable: "नल योग्य",
             select_fields: "फ़ील्ड चुनें",
             unique: "अद्वितीय",
@@ -174,6 +179,7 @@ export const hi = {
             theme: "थीम",
             light: "हल्का",
             dark: "गहरा",
+            system: "सिस्टम" ,
             help: "मदद",
             show_docs: "दस्तावेज़ दिखाएं",
             join_discord: "डिस्कॉर्ड से जुड़ें"

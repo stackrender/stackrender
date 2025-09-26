@@ -1,8 +1,8 @@
 import { DatabaseDataContext, DatabaseOperationsContext } from "./database-context";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { db } from "../sync-provider/sync-provider";
 import { TableInsertType, tables, TableType } from "@/lib/schemas/table-schema";
-import { usePowerSync, useQuery } from "@powersync/react";
+import { useQuery } from "@powersync/react";
 import { toCompilableQuery } from "@powersync/drizzle-driver";
 import { asc, count, desc, eq, inArray, or } from "drizzle-orm";
 import { QueryResult } from "@powersync/web";
@@ -17,7 +17,8 @@ import { field_indices, FieldIndexInsertType } from "@/lib/schemas/field_index-s
 import { v4 } from "uuid";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { deleteFieldsWithCascade, deleteIndicesWithCascade, deleteTablesWithCascade } from "@/utils/cascade";
-import DatabaseHotkeysProvider from "../database-hotkeys/database-hotkeys-provider";
+
+const TYPE_ORDER = ["integer", "text", "boolean", "numeric", "time", "enum"] as const;
 
 
 
@@ -40,7 +41,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                 where: (databases, { eq }) => eq(databases.id, currentDatabaseId as string),
                 with: {
                     tables: {
-                        orderBy: desc(tables.createdAt),
+                        orderBy: desc(tables.sequence),
                         with: {
                             fields: {
                                 orderBy: asc(fields.sequence),
@@ -87,7 +88,10 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     else
         database = undefined as any;
 
-    // Fetch all data types 
+
+
+    console.log ( database )
+
     // Fetch all data types 
     let { data: data_types, isLoading: loadingDataTypes, isFetching: fetchingDatatypes } = useQuery(toCompilableQuery(
         db.query.data_types.findMany({
@@ -95,15 +99,21 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         })
     ));
 
-    const grouped_data_types: any = useMemo(() => {
-        return groupBy(data_types, "type");
-    }, [data_types]);
+    // orderding data types
+    data_types = data_types.sort((a, b) => {
+        const ia = TYPE_ORDER.indexOf(a.type as any);
+        const ib = TYPE_ORDER.indexOf(b.type as any);
+        return (ia === -1 ? TYPE_ORDER.length : ia) -
+            (ib === -1 ? TYPE_ORDER.length : ib);
+    })
 
+
+    
     const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;
 
     const isSwitchingDatabase: boolean = useMemo(() => {
-        return isLoading && currentDatabaseId != (database as any)?.id
-    }, [currentDatabaseId, database, isLoading]);
+        return currentDatabaseId != (database as any)?.id
+    }, [currentDatabaseId, database ]);
 
     // CRUD for database 
     const createDatabase = useCallback(async (database: DatabaseInsertType): Promise<QueryResult> => {
@@ -213,6 +223,17 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
                 await tx.update(fields).set({
                     sequence: index
                 }).where(eq(fields.id, fieldsList[index].id))
+            }
+        })
+    }, [db]);
+
+     // Reorder fields in a table
+    const orderTables = useCallback(async (tablesList: TableType[]): Promise<void> => {
+        return await db.transaction(async (tx) => {
+            for (let index = 0; index < tablesList.length; index++) {
+                await tx.update(tables).set({
+                    sequence: tablesList.length - index - 1
+                }).where(eq(tables.id, tablesList[index].id))
             }
         })
     }, [db]);
@@ -485,7 +506,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         importDatabase,
         data_types,
         getInteger,
-        grouped_data_types,
+        orderTables
     }), [
         isSwitchingDatabase,
         createDatabase,
@@ -512,7 +533,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         importDatabase,
         data_types,
         getInteger,
-        grouped_data_types
+        orderTables
     ]);
     return (
         <DatabaseDataContext.Provider value={{

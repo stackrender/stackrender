@@ -4,14 +4,17 @@ export const ar = {
   translation: {
     sidebar: {
       tables: "الجداول",
-      relationships: "العلاقات"
+      relationships: "العلاقات",
+      database: "قاعدة البيانات",
     },
     color_picker: {
       default_color: "اللون الافتراضي"
     },
     navbar: {
       rename_db: "إعادة تسمية قاعدة البيانات",
-      search: "بحث"
+      search: "بحث",
+
+      command: "اكتب أمرًا أو ابحث...",
     },
     db_controller: {
       filter: "تصفية",
@@ -27,6 +30,8 @@ export const ar = {
       note: "ملاحظة",
       name: "الاسم",
       type: "النوع",
+
+      required: "إلزامي",
       nullable: "يسمح بالقيمة الفارغة",
       select_fields: "اختر الحقول",
       unique: "فريد",
@@ -165,6 +170,7 @@ export const ar = {
       theme: "الثيم",
       light: "فاتح",
       dark: "داكن",
+      system: "النظام",
       help: "مساعدة",
       show_docs: "عرض المستندات",
       join_discord: "انضم إلى Discord"
@@ -184,7 +190,7 @@ export const ar = {
       delete_database_content: "هذا الإجراء لا يمكن التراجع عنه وسيمسح المخطط نهائيًا.",
       delete: "حذف",
       empty_diagram: "مخطط فارغ",
-      create_and_import : "إنشاء واستيراد" ,
+      create_and_import: "إنشاء واستيراد",
 
       import_database: {
         title: "استيراد قاعدة البيانات",
@@ -200,7 +206,7 @@ export const ar = {
         name: "الاسم",
         created_at: "تاريخ الإنشاء",
         tables: "الجداول"
-      } , 
+      },
       export_sql: "تصدير SQL",
       export_sql_header: "تصدير مخطط قاعدة البيانات على شكل كود SQL"
     },

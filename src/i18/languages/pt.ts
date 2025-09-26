@@ -4,7 +4,8 @@ export const pt = {
   translation: {
     sidebar: {
       tables: "Tabelas",
-      relationships: "Relacionamentos"
+      relationships: "Relacionamentos",
+      database: "Banco de dados",
     },
 
     color_picker: {
@@ -12,7 +13,9 @@ export const pt = {
     },
     navbar: {
       rename_db: "Renomear banco de dados",
-      search: "Pesquisar"
+      search: "Pesquisar",
+      
+      command: "Digite um comando ou pesquise...",
     },
     db_controller: {
       filter: "Filtrar",
@@ -28,6 +31,8 @@ export const pt = {
       note: "Nota",
       name: "Nome",
       type: "Tipo",
+      
+      required: "Obrigatório",
       nullable: "Aceita Nulo",
       select_fields: "Selecionar campos",
       unique: "Único",
@@ -173,6 +178,7 @@ export const pt = {
       theme: "Tema",
       light: "Claro",
       dark: "Escuro",
+      system: "Sistema",
       help: "Ajuda",
       show_docs: "Mostrar Documentação",
       join_discord: "Entrar no Discord"
@@ -193,7 +199,7 @@ export const pt = {
       delete_database_content: "Esta ação é irreversível e removerá o diagrama permanentemente.",
       delete: "Excluir",
       empty_diagram: "Diagrama vazio",
-      create_and_import : "Criar e importar" ,
+      create_and_import: "Criar e importar",
 
       import_database: {
         title: "Importar seu Banco de Dados",

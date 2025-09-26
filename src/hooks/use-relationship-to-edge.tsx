@@ -1,6 +1,6 @@
 
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
-import { LEFT_PREFIX, TARGET_PREFIX } from "@/pages/database/table/field";
+import { LEFT_PREFIX, TARGET_PREFIX } from "@/features/database/components/field";
 import { Edge, useReactFlow } from "@xyflow/react";
 import { useEffect } from "react";
 

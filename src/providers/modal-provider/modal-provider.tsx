@@ -2,13 +2,14 @@
 
 import { useCallback, useContext, useState } from "react"
 import { ModalContext, Modals } from "./modal-contxet"
-import { useDisclosure } from "@heroui/react";
-import CreateRelationshipModal from "@/pages/database/modals/create-relationship-modal";
-import { CreateDatabaseModal } from "@/pages/database/modals/create-database-modal";
-import OpenDatabaseModal from "@/pages/database/modals/open-database-modal";
-import DeleteDatabaseModal from "@/pages/database/modals/delete-database-modal";
-import ImportDatabaseModal from "@/pages/database/modals/import-database";
-import ExportSqlModal from "@/pages/database/modals/export-sql-modal";
+
+import CreateRelationshipModal from "@/features/database/modals/create-relationship-modal";
+import { CreateDatabaseModal } from "@/features/database/modals/create-database-modal";
+import OpenDatabaseModal from "@/features/database/modals/open-database-modal";
+import DeleteDatabaseModal from "@/features/database/modals/delete-database-modal";
+import ImportDatabaseModal from "@/features/database/modals/import-database";
+import ExportSqlModal from "@/features/database/modals/export-sql-modal";
+import { useDisclosure } from "@/hooks/use-disclosure";
 
 
 interface Props { children: React.ReactNode }

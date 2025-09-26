@@ -5,14 +5,18 @@ export const fr = {
     translation: {
         sidebar: {
             tables: "Tables",
-            relationships: "Relations"
+            relationships: "Relations",
+            database: "Base de données",
+
         },
         color_picker: {
             default_color: "Couleur par défaut"
         },
         navbar: {
             rename_db: "Renommer la base de données",
-            search: "Rechercher"
+            search: "Rechercher",
+            command: "Tapez une commande ou recherchez...",
+
         },
         db_controller: {
             filter: "Filtrer",
@@ -28,6 +32,8 @@ export const fr = {
             note: "Note",
             name: "Nom",
             type: "Type",
+                        required: "Obligatoire",
+
             nullable: "Nullable",
             select_fields: "Sélectionner les champs",
             unique: "Unique",
@@ -166,6 +172,8 @@ export const fr = {
             theme: "Thème",
             light: "Clair",
             dark: "Sombre",
+                        system: "Système",
+
             help: "Aide",
             show_docs: "Afficher la documentation",
             join_discord: "Rejoindre Discord"
@@ -185,7 +193,7 @@ export const fr = {
             delete_database_content: "Cette action est irréversible et supprimera définitivement le diagramme.",
             delete: "Supprimer",
             empty_diagram: "Diagramme vide",
-            create_and_import : "Créer et importer" ,
+            create_and_import: "Créer et importer",
 
             import_database: {
                 title: "Importer votre base de données",

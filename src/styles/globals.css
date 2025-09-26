@@ -4,9 +4,7 @@
 
 
 
-.text-editable {
-  @apply dark:group-hover:bg-content1 group-hover:bg-background border-[0.5px] border-transparent group-hover:border-primary-300 dark:group-hover:ring-divider rounded-sm cursor-pointer;
-}
+ 
 
 
 .react-flow__node.selected {
@@ -59,38 +57,14 @@ body {
   color: hsl(var(--heroui-primary));
 
 }
-
-div[data-slot="input-wrapper"] {
-  outline: none;
-  border-width: 1px;
-
-}
-
-div[data-slot="mainWrapper"] button[data-slot="trigger"] {
-
-  outline: none;
-  border-width: 1px;
-}
-
-
-div[data-slot="content"] hr[role="separator"] {
-  display: none;
-}
-
-
-
 @keyframes dash {
   to {
     stroke-dashoffset: -10;
   }
 }
-
-
-
-
 /* Target the scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 1px;
   /* Width of the scrollbar */
 
 }
@@ -134,39 +108,7 @@ div[data-slot="content"] hr[role="separator"] {
 
 
 
-thead[role="rowgroup"] th {
-  border-radius: 0px !important;
-
-}
-
-thead[role="rowgroup"] th:last-child {
-  border-radius: 0px 4px 4px 0px !important;
-
-}
-
-thead[role="rowgroup"] th:first-child {
-  border-radius: 4px 0px 0px 4px !important;
-}
-
-tbody[role="rowgroup"] tr td::before {
-  display: none;
-}
-
-
-tbody[role="rowgroup"] tr td {
-  border-radius: 0px;
-}
-
-
-tbody[role="rowgroup"] tr td:last-child {
-  border-radius: 0px 4px 4px 0px !important;
-
-}
-
-tbody[role="rowgroup"] tr td:first-child {
-  border-radius: 4px 0px 0px 4px !important;
-
-}
+ 
 
 
 .cm-editor {
@@ -179,248 +121,29 @@ tbody[role="rowgroup"] tr td:first-child {
   height: 6px;
 }
 
-button[data-testid="remove"] {
+ 
 
-  top: 1px;
-  position: relative;
-}
-
-button[data-testid="remove"]:after {
-  content: '×';
-  color: white;
-  font-size: 11px;
-  position: relative;
-  top: -2px;
-
-
-}
-
-button[data-testid="remove"] svg {
-  display: none;
-}
-
-[data-invalid="true"] div[data-slot="input-wrapper"] {
-  border: 1px solid red !important;
-  background-color: transparent;
-  outline: none;
-}
-
-
-div[data-slot="calendar"] div[data-slot="input-wrapper"] {
-  background-color: hsl(var(--heroui-default));
-  border: hsl(var(--heroui-divider))
-}
-
-
-
-html {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.gh-button {
-  display: inline-block;
-}
-
-.gh-button {
-  box-sizing: border-box;
-  height: 30px;
-  font-weight: bold;
-  font-size: 11px;
-  line-height: 14px;
-  color: #333;
-  text-decoration: none;
-  text-shadow: 0 1px 0 #fff;
-  white-space: nowrap;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 3px;
-
-
-  font-size: 16px;
-  line-height: 22px;
-  border-radius: 4px;
-  background-color: #eee;
-  background-image: linear-gradient(#fcfcfc, #eee);
-  border: 1px solid #d5d5d5;
-}
-
-.gh-button:hover,
-.gh-button:focus {
-  text-decoration: none;
-  background-color: #ddd;
-  background-image: linear-gradient(#eee, #ddd);
-  border-color: #ccc;
-}
-
-.gh-button:active {
-  background: #dcdcdc;
-  border-color: #b5b5b5;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15);
-}
-
-.gh-button__icon {
-
-
-  vertical-align: top;
-  min-width: 20px;
-  min-height: 20px;
-
-  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNy4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNDBweCIgaGVpZ2h0PSI0MHB4IiB2aWV3Qm94PSIxMiAxMiA0MCA0MCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAxMiAxMiA0MCA0MCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8cGF0aCBmaWxsPSIjMzMzMzMzIiBkPSJNMzIsMTMuNGMtMTAuNSwwLTE5LDguNS0xOSwxOWMwLDguNCw1LjUsMTUuNSwxMywxOGMxLDAuMiwxLjMtMC40LDEuMy0wLjljMC0wLjUsMC0xLjcsMC0zLjINCgljLTUuMywxLjEtNi40LTIuNi02LjQtMi42QzIwLDQxLjYsMTguOCw0MSwxOC44LDQxYy0xLjctMS4yLDAuMS0xLjEsMC4xLTEuMWMxLjksMC4xLDIuOSwyLDIuOSwyYzEuNywyLjksNC41LDIuMSw1LjUsMS42DQoJYzAuMi0xLjIsMC43LTIuMSwxLjItMi42Yy00LjItMC41LTguNy0yLjEtOC43LTkuNGMwLTIuMSwwLjctMy43LDItNS4xYy0wLjItMC41LTAuOC0yLjQsMC4yLTVjMCwwLDEuNi0wLjUsNS4yLDINCgljMS41LTAuNCwzLjEtMC43LDQuOC0wLjdjMS42LDAsMy4zLDAuMiw0LjcsMC43YzMuNi0yLjQsNS4yLTIsNS4yLTJjMSwyLjYsMC40LDQuNiwwLjIsNWMxLjIsMS4zLDIsMywyLDUuMWMwLDcuMy00LjUsOC45LTguNyw5LjQNCgljMC43LDAuNiwxLjMsMS43LDEuMywzLjVjMCwyLjYsMCw0LjYsMCw1LjJjMCwwLjUsMC40LDEuMSwxLjMsMC45YzcuNS0yLjYsMTMtOS43LDEzLTE4LjFDNTEsMjEuOSw0Mi41LDEzLjQsMzIsMTMuNHoiLz4NCjwvc3ZnPg0K);
-  background-size: contain;
-}
-
-
-.dark .gh-button {
-  background-image: linear-gradient(#80838d22, #15171b55);
-  border-color: #333639aa;
-}
-
-.dark .gh-button .gh-button__icon {
-  filter: brightness(0) invert(1);
-  /* Makes dark content white */
-}
-
-.dark .gh-button:hover {
-  text-decoration: none;
-  background-color: #80838d22 !important;
-
-  border-color: #333639aa !important;
-}
-
-.dark .gh-button:active {
-  background-color: #80838d22 !important;
-
-  background-image: none !important;
-}
-
-
-/* base timing/easing */
-.animate-in {
-  animation-duration: 300ms;
-  animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-}
-.animate-out {
-  animation-duration: 200ms;
-  animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* fades */
-@keyframes fade-in-0 {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.fade-in-0 {
-  animation-name: fade-in-0;
-}
-@keyframes fade-out-0 {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-.fade-out-0 {
-  animation-name: fade-out-0;
-}
-
-/* zooms */
-@keyframes zoom-in-95 {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-.zoom-in-95 {
-  animation-name: zoom-in-95;
-}
-@keyframes zoom-out-95 {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-}
-.zoom-out-95 {
-  animation-name: zoom-out-95;
-}
-
-/* slide in slight offsets (2px) */
-@keyframes slide-in-from-top-2 {
-  from {
-    transform: translateY(-2px);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-[data-side="bottom"] .slide-in-from-top-2,
-[data-side=bottom] .slide-in-from-top-2 {
-  /* unused directly; used via attribute selector below */
-}
-.slide-in-from-top-2 {
-  animation-name: slide-in-from-top-2;
-}
-
-@keyframes slide-in-from-right-2 {
-  from {
-    transform: translateX(2px);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-.slide-in-from-right-2 {
-  animation-name: slide-in-from-right-2;
-}
-
-@keyframes slide-in-from-left-2 {
-  from {
-    transform: translateX(-2px);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-.slide-in-from-left-2 {
-  animation-name: slide-in-from-left-2;
-}
-
-@keyframes slide-in-from-bottom-2 {
-  from {
-    transform: translateY(2px);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-.slide-in-from-bottom-2 {
-  animation-name: slide-in-from-bottom-2;
-}
-
-/* combine with state selectors (Radix uses data-state on the content) */
-[data-state="open"] {
-  /* open will pick up .animate-in + the relevant name classes */
-}
-[data-state="closed"] {
-  /* closed will use .animate-out variants like fade-out-0 and zoom-out-95 */
-}
-
-/* reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .animate-in,
-  .animate-out {
-    animation-duration: 0.01ms !important;
-  }
-}
 
 
 
 .main-linear-background {
   background: linear-gradient(180deg, rgb(140 104 255 / 15%) -1.95%, rgb(131 92 255 / 0%) 20.34%), #ffffff00;
 }
+
+.assistant-textarea-background {
+  background-image: linear-gradient(90deg, rgb(138, 30, 252) 0%, rgb(254, 67, 119) 52%, rgb(255, 151, 54) 100%);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg,
+      rgb(213, 108, 255) 4.5%,
+      rgb(123, 82, 255) 51.36%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+ 
+.auth-gradient {
+  background-image: radial-gradient(56.51% 23.56% at 50% 0%, #8e51ff55 0%, #F6F8FA00 100%);
+}
+
+ 

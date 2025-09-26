@@ -203,12 +203,23 @@ function orderTables(tables: SortableTable[]): string[] {
 
 
 
+const getTableNextSequence = (tables: TableType[]): number => {
+    if (tables.length == 0)
+        return 0;
+
+    const maxSequenceItem = tables.reduce((max, table: TableType) => {
+        return table.sequence > max.sequence ? table : max;
+    });
+    return maxSequenceItem.sequence + 1;
+}
+
 
 export {
     adjustTablesPositions,
     getDefaultTableOverlapping,
     isTablesOverlapping,
     cloneTable,
-    orderTables
+    orderTables, 
+    getTableNextSequence
 
 }

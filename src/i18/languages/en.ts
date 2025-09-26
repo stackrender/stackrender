@@ -6,7 +6,8 @@ export const en = {
     translation: {
         sidebar: {
             tables: "Tables",
-            relationships: "Relationships"
+            relationships: "Relationships", 
+                        database : "Database" 
         },
 
         color_picker: {
@@ -14,7 +15,9 @@ export const en = {
         },
         navbar: {
             rename_db: "Rename database",
-            search: "Search"
+            search: "Search" , 
+            
+            command : "Type a command or search..." , 
         },
         db_controller: {
             filter: "Filter",
@@ -40,7 +43,8 @@ export const en = {
 
             source_table: "Source Table",
             referenced_table: "Referenced Table",
-
+            
+            required: "Required",
             select_table: "Select table",
             select_field: "Select field",
 
@@ -178,6 +182,8 @@ export const en = {
             theme: "Theme",
             light: "Light",
             dark: "Dark",
+            
+            system : "System" , 
             help: "Help",
             show_docs: "Show Docs",
             join_discord: "Join Discord",

@@ -4,14 +4,17 @@ export const ru = {
   translation: {
     sidebar: {
       tables: "Таблицы",
-      relationships: "Связи"
+      relationships: "Связи",
+      database: "База данных",
     },
     color_picker: {
       default_color: "Цвет по умолчанию"
     },
     navbar: {
       rename_db: "Переименовать базу данных",
-      search: "Поиск"
+      search: "Поиск",
+      
+      command: "Введите команду или выполните поиск...",
     },
     db_controller: {
       filter: "Фильтр",
@@ -27,6 +30,7 @@ export const ru = {
       note: "Заметка",
       name: "Имя",
       type: "Тип",
+      required: "Обязательно",
       nullable: "Допускает NULL",
       select_fields: "Выберите поля",
       unique: "Уникальный",
@@ -165,6 +169,7 @@ export const ru = {
       theme: "Тема",
       light: "Светлая",
       dark: "Тёмная",
+      system: "Система",
       help: "Помощь",
       show_docs: "Показать документацию",
       join_discord: "Присоединиться к Discord"

@@ -47,6 +47,7 @@ export interface TableType extends InferSelectModel<typeof tables> {
     sourceRelations? :RelationshipType[] ; 
     targetRelations? : RelationshipType[] ; 
     
+    sequence : number ;  
 };
 
 

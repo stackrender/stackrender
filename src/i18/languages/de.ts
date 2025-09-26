@@ -4,14 +4,18 @@ export const de = {
   translation: {
     sidebar: {
       tables: "Tabellen",
-      relationships: "Beziehungen"
+      relationships: "Beziehungen",
+      database: "Datenbank",
+
     },
     color_picker: {
       default_color: "Standardfarbe"
     },
     navbar: {
       rename_db: "Datenbank umbenennen",
-      search: "Suchen"
+      search: "Suchen",
+      command: "Geben Sie einen Befehl ein oder suchen Sie...",
+
     },
     db_controller: {
       filter: "Filter",
@@ -28,6 +32,8 @@ export const de = {
       name: "Name",
       type: "Typ",
       nullable: "Nullwert zulässig",
+      required: "Erforderlich",
+
       select_fields: "Felder auswählen",
       unique: "Eindeutig",
       table_note: "Tabellennotiz",
@@ -165,6 +171,7 @@ export const de = {
       theme: "Design",
       light: "Hell",
       dark: "Dunkel",
+      system: "System",
       help: "Hilfe",
       show_docs: "Dokumentation anzeigen",
       join_discord: "Discord beitreten"
@@ -184,7 +191,7 @@ export const de = {
       delete_database_content: "Diese Aktion ist unwiderruflich und wird das Diagramm dauerhaft löschen.",
       delete: "Löschen",
       empty_diagram: "Leeres Diagramm",
-      create_and_import : "Erstellen und importieren" ,
+      create_and_import: "Erstellen und importieren",
 
       import_database: {
         title: "Datenbank importieren",
@@ -200,7 +207,7 @@ export const de = {
         name: "Name",
         created_at: "Erstellt am",
         tables: "Tabellen"
-      } , 
+      },
       export_sql: "SQL exportieren",
       export_sql_header: "Exportiere dein Datenbankdiagramm als SQL-Code"
     },

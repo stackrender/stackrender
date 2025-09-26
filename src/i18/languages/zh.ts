@@ -4,7 +4,10 @@ export const zh = {
   translation: {
     sidebar: {
       tables: "数据表",
-      relationships: "关系"
+      relationships: "关系",
+      database: "数据库",
+
+
     },
 
     color_picker: {
@@ -12,7 +15,9 @@ export const zh = {
     },
     navbar: {
       rename_db: "重命名数据库",
-      search: "搜索"
+      search: "搜索",
+
+      command: "输入命令或搜索...",
     },
     db_controller: {
       filter: "筛选",
@@ -35,6 +40,8 @@ export const zh = {
       collapse: "全部折叠",
       primary_key: "主键",
       foreign_key: "外键",
+
+      required: "必填",
 
       source_table: "源表",
       referenced_table: "引用表",
@@ -178,6 +185,8 @@ export const zh = {
       theme: "主题",
       light: "浅色",
       dark: "深色",
+      system: "系统",
+
       help: "帮助",
       show_docs: "查看文档",
       join_discord: "加入 Discord"
@@ -198,7 +207,7 @@ export const zh = {
       delete_database_content: "该操作不可撤销，将永久删除该图表。",
       delete: "删除",
       empty_diagram: "空图表",
-      create_and_import : "创建并导入" ,
+      create_and_import: "创建并导入",
 
       import_database: {
         title: "导入数据库",

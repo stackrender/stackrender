@@ -1,28 +1,27 @@
-import type { NavigateOptions } from "react-router-dom";
+ 
+import { FontProvider } from "./providers/font-provider/font-provider";
+import { SearchProvider } from "./providers/search-provider/search-provider";
+import { ThemeProvider } from "./providers/theme-provider/theme-provider";
+import { Toaster } from "./components/ui/sonner";
+import { TooltipProvider } from "./components/ui/tooltip";
 
-import { HeroUIProvider } from "@heroui/system";
-import { useHref, useNavigate } from "react-router-dom";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+ 
+export function UIProviders({ children }: { children: React.ReactNode }) {
 
-declare module "@react-types/shared" {
-  interface RouterConfig {
-    routerOptions: NavigateOptions;
-  }
-}
-
-export function Provider({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
 
   return (
-    <HeroUIProvider navigate={navigate} useHref={useHref}>
-      <NextThemesProvider
-        defaultTheme='system'
-        attribute='class'
-      >
 
-        {children}
+    <FontProvider>
+      <ThemeProvider defaultTheme ={"dark"}>
+        <TooltipProvider delayDuration={0}>
+          <Toaster />
+          <SearchProvider>
+            {children}
+          </SearchProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </FontProvider>
 
-      </NextThemesProvider>
-    </HeroUIProvider>
+
   );
 }
