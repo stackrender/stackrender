@@ -549,8 +549,7 @@ export const postgresAstToField = (ast: any, data_types: DataType[], sequence: n
         const nullableConstraints: any | undefined = constraints.find((c: any) => c.type == "not null");
         const defaultValueConstraints: any | undefined = constraints.find((c: any) => c.type == "default");
 
-        if (defaultValueConstraints) {
-            console.log(defaultValueConstraints.default)
+        if (defaultValueConstraints) { 
             if (defaultValueConstraints.default.type == "keyword" && defaultValueConstraints.default.keyword == "current_timestamp")
                 defaultValue = TimeDefaultValues.NOW;
 

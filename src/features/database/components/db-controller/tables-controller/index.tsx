@@ -72,8 +72,7 @@ const TablesController: React.FC = ({ }) => {
     useEffect(() => searchTables(), [allTables]);
 
     const addNewTable = useCallback(async () => {
-
-        console.log(getTableNextSequence(tables))
+ 
         const newTableId: string = v4();
         const viewport = getViewport();
         const { x, y, zoom } = viewport;

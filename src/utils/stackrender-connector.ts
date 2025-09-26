@@ -104,8 +104,7 @@ export class StackRenderConnector implements PowerSyncBackendConnector {
             localStorage.setItem("last_upload_at", new Date().toISOString());
             window.dispatchEvent(new StorageEvent("storage", { key: "lastUploadAt"  }));
     
-        } catch (ex: any) {
-            console.debug(ex);
+        } catch (ex: any) { 
             throw ex;
         }
     }

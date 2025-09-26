@@ -89,8 +89,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         database = undefined as any;
 
 
-
-    console.log ( database )
+ 
 
     // Fetch all data types 
     let { data: data_types, isLoading: loadingDataTypes, isFetching: fetchingDatatypes } = useQuery(toCompilableQuery(
