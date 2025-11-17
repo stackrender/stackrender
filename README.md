@@ -45,18 +45,36 @@ And more coming very soon!
 
 Use the [cloud version](https://www.stackrender.io) or deploy locally to start designing your database schemas in minutes.
 
-### How to Use
+### How to Use Locally
+
+#### Using Docker (Recommended)
+The easiest way to run StackRender locally is using Docker:
+
+```bash
+# Build and run using Docker Compose
+docker-compose up
+
+# Or build and run using Docker directly
+docker build -t stackrender .
+docker run -p 8080:80 stackrender
+```
+
+Then visit `http://localhost:8080` in your browser.
+
+#### Using Node.js
 Install dependencies and start the development server:
-```text
+```bash
 npm install
 npm run dev
 ```
+
 ### How to Build
-Install dependencies and start the production build:
-```text
+Install dependencies and create a production build:
+```bash
 npm install
-npm run start
+npm run build
 ```
+
 ## Try Using It in the Cloud
 
 1. Visit [StackRender.io](https://www.stackrender.io)  

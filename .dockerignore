@@ -1,0 +1,53 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build outputs
+dist
+dist-ssr
+*.local
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor directories and files
+.vscode
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Misc
+README.md
+LICENSE
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+SECURITY.md
+
+# Lock files (we keep package-lock.json but ignore others)
+pnpm-lock.yaml
+yarn.lock
+bun.lockb
+
+# Vite cache
+vite.config.ts.timestamp-*
