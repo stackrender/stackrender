@@ -88,7 +88,7 @@ const CreateRelationshipModal: React.FC<CreateRelationshipModalProps> = ({ onRel
             onOpenChange={onOpenChange}
             title={t("db_controller.create_relationship")}
             actionName={t("modals.create")}
-            className="min-w-[520px]"
+               className="md:min-w-[520px] w-full"
             isDisabled={!isValid}
             actionHandler={addRelationship}
         >

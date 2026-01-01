@@ -194,12 +194,12 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
             onOpenChange={onOpenChange}
             title={t("modals.import_database.title")}
             actionName={t("modals.import_database.import")}
-            className="!min-w-[860px] !max-w-[860px] flex flex-col"
+                className="lg:min-w-[860px] md:min-w-[560px] w-full max-h-screen overflow-auto "
             actionHandler={onImport}
             isDisabled={!parsedDatabase}
         >
-            <div className="flex flex-col gap-4 ">
-                <div className="w-full space-y-2">
+            <div className="flex flex-col gap-4 !min-w-0  ">
+                <div className="w-full space-y-2 !min-w-0 ">
                     <p className="text-sm text-muted-foreground">
                         {t("modals.import_database.import_options")}
                     </p>

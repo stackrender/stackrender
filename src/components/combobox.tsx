@@ -64,9 +64,12 @@ export const Combobox = (props: ComboboxProps) => {
           aria-expanded={open}
           className={cn("justify-between", className)}
         >
-          {value
-            ? items.find((item) => item.id === value)?.[label]
-            : (placeholder ? placeholder : "Select items...")}
+        <label className="truncate">
+            {
+              value
+                ? items.find((item) => item.id === value)?.[label]
+                : (placeholder ? placeholder : "Select items...")}
+          </label>
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

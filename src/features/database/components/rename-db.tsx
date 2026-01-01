@@ -46,7 +46,7 @@ const RenameDB: React.FC = ({ }) => {
         });
         setIsLoading(false);
         setEditMode(false);
-    } 
+    }
 
 
     if (!database)
@@ -59,7 +59,7 @@ const RenameDB: React.FC = ({ }) => {
                 <Tooltip >
                     <TooltipTrigger asChild>
                         <label
-                            className=" w-full max-w-[256px]   truncate    h-8    text-sm font-medium  flex gap-4 items-center justify-center  cursor-pointer"
+                            className=" w-full max-w-[256px] truncate h-8 text-sm font-medium  flex gap-4 items-center justify-center  cursor-pointer"
                             onDoubleClick={() => setEditMode(true)}
                         >
                             <img
@@ -95,7 +95,7 @@ const RenameDB: React.FC = ({ }) => {
                         value={dbName}
                         onBlur={saveDatabaseName}
                         autoFocus
-                        className="h-8"
+                        className="h-8 min-w-[164px]"
                     />
                     <Button
                         variant="default"

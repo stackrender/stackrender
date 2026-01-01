@@ -128,7 +128,7 @@ const TablesController: React.FC = ({ }) => {
     }, [tables]);
 
     return (
-        <div className="w-full h-full flex flex-col pl-3 ">
+        <div className="w-full h-full flex flex-col pl-3 min-h-0">
             <div className="flex  items-center pb-2 gap-2 pt-3 pr-3 ">
                 <Tooltip >
                     <TooltipTrigger asChild>

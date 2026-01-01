@@ -105,7 +105,7 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                     placeholder={t("db_controller.type")}
                     selectedItem={selectedType}
                     onSelectionChange={updateFieldType}
-                    className="flex flex-1  !bg-transparent !font-normal"
+                    className="flex flex-1  !bg-transparent !font-normal min-w-0"
                 />
             </div>
             <div className="flex gap-2 ml-2 ">
@@ -113,9 +113,9 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                     <TooltipTrigger asChild>
                         <span>
                             <Toggle size={"sm"}
-                                //                            className="size-9 rounded-md bg-secondary data-[state=on]:bg-background dark:data-[state=on]:bg-card data-[state=on]:border-1  text-muted-foreground data-[state=on]:text-foreground/75   "
-                                className="size-9 text-muted-foreground data-[state=on]:border-1"
-                                pressed={!field.nullable as boolean}
+                              
+                              className="size-9 text-muted-foreground "
+                                  pressed={!field.nullable as boolean}
                                 onPressedChange={toggleNullable}
                             >
                                 <IconKeyframe className="size-4" />
@@ -130,8 +130,8 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                     <TooltipTrigger asChild>
                         <span>
                             <Toggle size={"sm"}
-                                className="size-9 text-muted-foreground data-[state=on]:border-1"
-                                pressed={field.isPrimary as boolean}
+                             className="size-9 text-muted-foreground "
+                                 pressed={field.isPrimary as boolean}
                                 onPressedChange={togglePrimaryKey}
                             >
                                 <IconKey className="size-4" />
