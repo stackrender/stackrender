@@ -153,7 +153,7 @@ export const useMenuData = () => {
                 {
                     id: "menu.join_discord", title: t("menu.join_discord"),
                     clickHandler: () => {
-                        window.open("https://discord.gg/DsN8RcPR6Y", "_blank")
+                        window.open("https://discord.gg/4dv26jR4Pj", "_blank")
                     }
                 },
             ],

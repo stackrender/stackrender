@@ -27,10 +27,10 @@ If you find a bug:
 If you have an idea for improvement:
 - Open a **feature request** in the issues section.
 - Describe the feature and explain why it would be useful.
-- You may also discuss ideas with the community on [Discord](https://discord.gg/DsN8RcPR6Y).
+- You may also discuss ideas with the community on [Discord](https://discord.gg/4dv26jR4Pj).
 
 ## License Agreement
 By contributing, you agree that your work will be licensed under the **GNU Affero General Public License v3.0**.
 
 ## Questions or Support
-If you have questions about the contribution process, open a discussion on GitHub or reach out on our [Discord](https://discord.gg/DsN8RcPR6Y).
+If you have questions about the contribution process, open a discussion on GitHub or reach out on our [Discord](https://discord.gg/4dv26jR4Pj).

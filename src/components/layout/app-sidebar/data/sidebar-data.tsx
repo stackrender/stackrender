@@ -46,7 +46,7 @@ export const useSidebarData = () => {
                 },
                 {
                     title: "Discord",
-                    url: "https://discord.gg/DsN8RcPR6Y",
+                    url: "https://discord.gg/4dv26jR4Pj",
                     icon: IconBrandDiscord,
                     newTab : true
                 },
