@@ -7,10 +7,10 @@ import { sql } from '@codemirror/lang-sql';
 import { DatabaseDialect, ImportDatabaseMethod, ImportDatabaseOption, ImportMethodType, MARIADB_DUMP_EXAMPLE, MARIADB_DUMP_INSTRUCTIONS, MYSQL_DUMP_EXAMPLE, MYSQL_DUMP_INSTRUCTIONS, PG_DUMP_EXAMPLE, PG_DUMP_INSTRUCTIONS, SQLITE_DUMP_EXAMPLE, SQLITE_DUMP_INSRUCTION } from "@/lib/database";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 
-import { AlertCircleIcon, Code } from "lucide-react"; 
+import { AlertCircleIcon, Code } from "lucide-react";
 import { SqlToDatabase } from "@/utils/render/parsers/sql_to_database";
 import Clipboard from "@/components/clipboard";
-import { Trans } from 'react-i18next'; 
+import { Trans } from 'react-i18next';
 import { Node, useReactFlow } from "@xyflow/react";
 import { adjustTablesPositions } from "@/utils/tables";
 import { TableInsertType } from "@/lib/schemas/table-schema";
@@ -181,12 +181,8 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
     }, [parsedDatabase]);
 
 
-
-
     if (isLoading || isSwitchingDatabase)
         return;
-
-
 
     return (
         <Modal
@@ -194,7 +190,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
             onOpenChange={onOpenChange}
             title={t("modals.import_database.title")}
             actionName={t("modals.import_database.import")}
-                className="lg:min-w-[860px] md:min-w-[560px] w-full max-h-screen overflow-auto "
+            className="lg:min-w-[860px] md:min-w-[560px] w-full max-h-screen overflow-auto "
             actionHandler={onImport}
             isDisabled={!parsedDatabase}
         >

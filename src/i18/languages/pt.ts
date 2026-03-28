@@ -6,6 +6,7 @@ export const pt = {
       tables: "Tabelas",
       relationships: "Relacionamentos",
       database: "Banco de dados",
+      documentation : "Documentação"
     },
 
     color_picker: {
@@ -204,6 +205,7 @@ export const pt = {
       import_database: {
         title: "Importar seu Banco de Dados",
         import: "Importar",
+        view_docs : "Ver documentação" , 
         import_options: "Gostaria de importar usando:",
         import_error: "Erro de Análise SQL",
         import_error_description: "Não foi possível importar seu SQL porque contém sintaxe inválida.",

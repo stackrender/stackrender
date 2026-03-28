@@ -28,12 +28,12 @@ const TableAccordionItem = forwardRef<HTMLDivElement, TableAccordionItemProps>(
  
 
         return (
-            <AccordionItem value={table.id} className="my-2 border-none" id={table.id} ref={ref}>
+            <AccordionItem value={table.id} className=" border-none" id={table.id} ref={ref}>
                 <div
                     ref={setNodeRef}
                     style={style}
                     {...attributes}
-                    className="w-full border-b "
+                    className="w-full  "
                 >
                     <TableAccordionTrigger table={table} />
                     <AccordionContent className="flex flex-col gap-4 text-balance">

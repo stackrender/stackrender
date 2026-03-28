@@ -91,7 +91,7 @@ const TableAccordionContent: React.FC<TableAccordionBodyProps> = ({ table, keys 
             >
                 
                 <AccordionItem value="fields" className="border-none">
-                    <AccordionTrigger className="py-1 rounded-none  text-muted-foreground " position="right" >
+                    <AccordionTrigger className="py-1 rounded-none  text-muted-foreground pr-1.5" position="right" >
                         <div className="w-full flex gap-1 items-center">
                             <IconFolder className="size-4" />
                             {t("db_controller.fields")}
@@ -103,7 +103,7 @@ const TableAccordionContent: React.FC<TableAccordionBodyProps> = ({ table, keys 
                 </AccordionItem>
                
                 <AccordionItem value="indexes" className="border-none">
-                    <AccordionTrigger className=" py-1  rounded-none text-muted-foreground " position="right">
+                    <AccordionTrigger className=" py-1  rounded-none text-muted-foreground pr-1.5" position="right">
                         <div className="w-full flex gap-1 items-center">         
                             <IconBolt className="size-4" />
                             {t("db_controller.indexes")}
@@ -115,7 +115,7 @@ const TableAccordionContent: React.FC<TableAccordionBodyProps> = ({ table, keys 
                 </AccordionItem>
 
                 <AccordionItem value="note"  className="border-none">
-                    <AccordionTrigger className=" py-1 rounded-none  text-muted-foreground  " position="right">
+                    <AccordionTrigger className=" py-1 rounded-none  text-muted-foreground  pr-1.5" position="right">
                         <div className="w-full flex gap-1 items-center">
                                <IconMessageCircle className="size-4  " />
                             {t("db_controller.note")}
@@ -133,7 +133,7 @@ const TableAccordionContent: React.FC<TableAccordionBodyProps> = ({ table, keys 
                 </AccordionItem> 
               
             </Accordion>
-            <div className="flex  pt-2  justify-between    items-center ">
+            <div className="flex  pt-2  justify-between  pr-1.5  items-center ">
                 <div className="h-full flex items-center">
                     <ColorPicker
                         defaultColor={table.color as string}

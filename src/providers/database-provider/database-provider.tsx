@@ -1,5 +1,5 @@
 import { DatabaseDataContext, DatabaseOperationsContext } from "./database-context";
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { db } from "../sync-provider/sync-provider";
 import { TableInsertType, tables, TableType } from "@/lib/schemas/table-schema";
 import { useQuery } from "@powersync/react";
@@ -88,8 +88,11 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     else
         database = undefined as any;
 
+    useEffect(() => {
+        console.log(database);
+    }, [database])
 
- 
+
 
     // Fetch all data types 
     let { data: data_types, isLoading: loadingDataTypes, isFetching: fetchingDatatypes } = useQuery(toCompilableQuery(
@@ -107,12 +110,12 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     })
 
 
-    
+
     const isLoading: boolean = loadingDataTypes || loadingDatabases || loadingCurrentDatabase;
 
     const isSwitchingDatabase: boolean = useMemo(() => {
         return currentDatabaseId != (database as any)?.id
-    }, [currentDatabaseId, database ]);
+    }, [currentDatabaseId, database]);
 
     // CRUD for database 
     const createDatabase = useCallback(async (database: DatabaseInsertType): Promise<QueryResult> => {
@@ -226,7 +229,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         })
     }, [db]);
 
-     // Reorder fields in a table
+    // Reorder fields in a table
     const orderTables = useCallback(async (tablesList: TableType[]): Promise<void> => {
         return await db.transaction(async (tx) => {
             for (let index = 0; index < tablesList.length; index++) {

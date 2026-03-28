@@ -6,8 +6,7 @@ export const zh = {
       tables: "数据表",
       relationships: "关系",
       database: "数据库",
-
-
+      documentation: "文档"
     },
 
     color_picker: {
@@ -16,7 +15,6 @@ export const zh = {
     navbar: {
       rename_db: "重命名数据库",
       search: "搜索",
-
       command: "输入命令或搜索...",
     },
     db_controller: {
@@ -212,6 +210,7 @@ export const zh = {
       import_database: {
         title: "导入数据库",
         import: "导入",
+        view_docs : "查看文档" , 
         import_options: "请选择导入方式：",
         import_error: "SQL 解析错误",
         import_error_description: "我们无法导入您的 SQL，因为它包含无效语法。",

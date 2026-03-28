@@ -19,16 +19,16 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     const [focusedTableId, setFocusedTableId] = useState<string | undefined>(undefined)
     const [focusedRelationshipId, setFocusedRelationshipId] = useState<string | undefined>(undefined)
     const [isConnectionInProgress, setIsConnectionInProgress] = useState<boolean>(false);
-    
+
     const [showController, setShowController] = useState<boolean>(() => {
-        const value: string | null = localStorage.getItem(CONTROLLER_VISIBILITY_KEY) ; 
+        const value: string | null = localStorage.getItem(CONTROLLER_VISIBILITY_KEY);
         if (value)
             return JSON.parse(value);
         return true;
     });
     const [cardinalityStyle, setCardinalityStyle] = useState<CardinalityStyle>(() => {
         const value: string | null = localStorage.getItem(CARDINALITY_STYLE_KEY);
-    
+
         if (value)
             return value as CardinalityStyle;
         return CardinalityStyle.SYMBOLIC;
@@ -101,19 +101,21 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
     }, [setFocusedRelationshipId]);
 
 
-    const changeCardinalityStyle = useCallback((style : CardinalityStyle) => {
-        localStorage.setItem(CARDINALITY_STYLE_KEY , style) ; 
-        setCardinalityStyle( style) ; 
-    } , []) ; 
+    const changeCardinalityStyle = useCallback((style: CardinalityStyle) => {
+        localStorage.setItem(CARDINALITY_STYLE_KEY, style);
+        setCardinalityStyle(style);
+    }, []);
 
-    const openController = useCallback((isOpen : boolean) => {
-        localStorage.setItem( CONTROLLER_VISIBILITY_KEY ,   JSON.stringify(isOpen) ) ; 
-        setShowController(isOpen) ; 
-    } , [])
+    const openController = useCallback((isOpen: boolean) => {
+        localStorage.setItem(CONTROLLER_VISIBILITY_KEY, JSON.stringify(isOpen));
+        setShowController(isOpen);
+    }, [])
 
     const contextDatatValue = useMemo(() => ({
         focusedTableId,
         focusedRelationshipId,
+        setFocusedTableId,
+        setFocusedRelationshipId
 
     }), [focusedTableId, focusedRelationshipId,]);
 
@@ -124,7 +126,7 @@ const DiagramProvider: React.FC<Props> = ({ children }) => {
         isConnectionInProgress,
         showController,
         cardinalityStyle,
-        changeCardinalityStyle , 
+        changeCardinalityStyle,
         openController
 
     }), [focusOnTable, focusOnRelationship, setIsConnectionInProgress, isConnectionInProgress, showController, setShowController, cardinalityStyle,

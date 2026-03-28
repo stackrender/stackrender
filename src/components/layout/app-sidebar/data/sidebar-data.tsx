@@ -10,6 +10,7 @@ import {
 import type { SidebarData } from '../../types';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
+import { BookIcon } from 'lucide-react';
 
 export const useSidebarData = () => {
 
@@ -37,13 +38,7 @@ export const useSidebarData = () => {
         ],
         footerNavGroups:[ {
             title: '',
-            items: [
-                {
-                    title: "X",
-                    url: "https://x.com/Iam_The_Dev",
-                    icon: IconBrandX,
-                    newTab : true
-                },
+            items: [ 
                 {
                     title: "Discord",
                     url: "https://discord.gg/4dv26jR4Pj",
@@ -56,6 +51,12 @@ export const useSidebarData = () => {
                     icon: IconBrandGithub,
                     newTab : true
                 },
+                {
+                    title : t("sidebar.documentation") , 
+                    url : "https://www.stackrender.io/docs" , 
+                    icon : BookIcon, 
+                    newTab : true  
+                }
 
             ],
         }] 

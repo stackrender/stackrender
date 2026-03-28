@@ -5,6 +5,9 @@ import { createContext, Dispatch } from "react";
 interface DiagramDataContextType {
     focusedTableId: string | undefined;
     focusedRelationshipId: string | undefined;
+    
+    setFocusedTableId : ( focused : string | undefined) => void , 
+    setFocusedRelationshipId : ( focused : string | undefined) => void 
 }
 
 interface DiagramOpsContextType {

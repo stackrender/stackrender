@@ -9,8 +9,7 @@ import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { useReactFlow } from "@xyflow/react";
 import SqlPreview from "../sql-preview";
-import EmptyList from "@/components/empty-list";
-import { useModal } from "@/providers/modal-provider/modal-provider";
+import EmptyList from "@/components/empty-list"; 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IconListDetails, IconPlus } from "@tabler/icons-react";
@@ -28,6 +27,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { getTableNextSequence } from "@/utils/tables";
+import { Separator } from "@/components/ui/separator";
 
 
 const TablesController: React.FC = ({ }) => {
@@ -38,9 +38,9 @@ const TablesController: React.FC = ({ }) => {
     const { tables: allTables } = database || { tables: [] };
     const [tables, setTables] = useState<TableType[]>(allTables);
     const { t } = useTranslation();
-    const [selectedTable, setSelectedTable] = useState<string | undefined>(undefined);
+   
     const [showSqlPreview, setShowSqlPreview] = useState<boolean>(false);
-    const { focusedTableId } = useDiagram();
+    const { focusedTableId , setFocusedTableId} = useDiagram();
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
     const sensors = useSensors(
@@ -59,7 +59,7 @@ const TablesController: React.FC = ({ }) => {
                 const newIndex = items.findIndex((item: TableType) => item.id == over.id);
 
                 const tables = arrayMove(items, oldIndex, newIndex);
-       
+
                 orderTables(tables)
 
                 return tables;
@@ -72,7 +72,7 @@ const TablesController: React.FC = ({ }) => {
     useEffect(() => searchTables(), [allTables]);
 
     const addNewTable = useCallback(async () => {
- 
+
         const newTableId: string = v4();
         const viewport = getViewport();
         const { x, y, zoom } = viewport;
@@ -96,17 +96,15 @@ const TablesController: React.FC = ({ }) => {
             }]
         } as TableInsertType);
 
-        setSelectedTable(newTableId);
+        setFocusedTableId(newTableId);
     }, [database, tables, getViewport, getInteger]);
 
     useEffect(() => {
-        if (focusedTableId) {
-            setSelectedTable(focusedTableId);
-            setShowSqlPreview(false);
+       if (focusedTableId) {
             const accordionItem = document.getElementById(focusedTableId)
             if (accordionItem)
                 accordionItem?.scrollIntoView({
-                    behavior: 'smooth', block: 'center'
+                    behavior: 'smooth', block: "nearest"
                 })
         }
     }, [focusedTableId]);
@@ -128,8 +126,8 @@ const TablesController: React.FC = ({ }) => {
     }, [tables]);
 
     return (
-        <div className="w-full h-full flex flex-col pl-3 min-h-0">
-            <div className="flex  items-center pb-2 gap-2 pt-3 pr-3 ">
+        <div className="w-full h-full flex flex-col min-h-0">
+            <div className="flex  items-center  gap-2 p-3">
                 <Tooltip >
                     <TooltipTrigger asChild>
                         <Button
@@ -174,13 +172,13 @@ const TablesController: React.FC = ({ }) => {
             </div>
             {
                 allTables.length > 0 && !showSqlPreview &&
-                <ScrollArea className="overflow-y-auto  pr-3 h-full  w-full ">
+                <ScrollArea className="px-3 h-full  w-full overflow-hidden">
                     <Accordion
                         type="single"
                         collapsible
                         className="w-full"
-                        value={selectedTable}
-                        onValueChange={setSelectedTable}
+                             value={focusedTableId}
+                        onValueChange={setFocusedTableId}
                     >
                         <DndContext
                             sensors={sensors}
@@ -194,7 +192,10 @@ const TablesController: React.FC = ({ }) => {
                             >
 
                                 {tables.map((table: TableType) => (
-                                    <TableAccordionItem table={table} key={table.id} />
+                                    <>
+                                        <TableAccordionItem table={table} key={table.id} />
+                                        <Separator className="my-1" />
+                                    </>
                                 ))}
                             </SortableContext>
 
@@ -213,7 +214,7 @@ const TablesController: React.FC = ({ }) => {
             }
             {
                 (allTables.length == 0) &&
-                <div className="pr-3 h-full">
+                <div className="px-3 h-full">
                     <EmptyList
                         title={t("db_controller.empty_list.no_tables")}
                         description={t("db_controller.empty_list.no_tables_description")}

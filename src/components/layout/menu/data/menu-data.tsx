@@ -124,11 +124,9 @@ export const useMenuData = () => {
                         openController(!showController)
                     }
                 },
-
                 {
                     id: "menu.theme",
                     title: t("menu.theme"),
-
                     children: [
                         {
                             id: "light",
@@ -150,6 +148,12 @@ export const useMenuData = () => {
             id: "menu.help",
             title: t("menu.help"),
             children: [
+                {
+                    id: "menu.documentation", title: t("sidebar.documentation"),
+                    clickHandler: () => {
+                        window.open("https://www.stackrender.io/docs", "_blank")
+                    }
+                },  
                 {
                     id: "menu.join_discord", title: t("menu.join_discord"),
                     clickHandler: () => {

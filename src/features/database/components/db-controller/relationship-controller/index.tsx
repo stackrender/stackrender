@@ -14,6 +14,7 @@ import { IconFilter2Up, IconPlus } from "@tabler/icons-react";
 import { Accordion } from "@/components/ui/accordion";
 import RelationshipAccordionItem from "./relationship-accordion-item/relationship-accordion-item";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 const RelationshipController: React.FC = ({ }) => {
 
@@ -22,31 +23,27 @@ const RelationshipController: React.FC = ({ }) => {
     const { database } = useDatabase();
     const { relationships: allRelationships } = database || { relationships: [] };
     const [relationships, setRelationships] = useState<RelationshipType[]>(allRelationships);
-
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
-    const { t } = useTranslation();
-    const [selectedRelationship, setSelectedRelationship] = useState<string | undefined>();
-    const { focusedRelationshipId } = useDiagram();
+    const { t } = useTranslation(); 
+    const { focusedRelationshipId , setFocusedRelationshipId } = useDiagram();
 
     useEffect(() => searchRelationships(), [allRelationships]);
 
     useEffect(() => {
-        if (focusedRelationshipId) {
-            setSelectedRelationship(focusedRelationshipId);
+   if (focusedRelationshipId) {
             const accordionItem = document.getElementById(focusedRelationshipId)
             if (accordionItem)
                 accordionItem?.scrollIntoView({
-                    behavior: 'smooth', block: 'center'
+                    behavior: 'smooth', block: "nearest"
                 })
         }
     }, [focusedRelationshipId]);
 
     const onOpen = useCallback(() => {
         open(Modals.CREATE_RELATIONSHIP, {
-            onRlationshipCreated: (id: string) => setSelectedRelationship(id)
+            onRlationshipCreated: (id: string) => setFocusedRelationshipId(id)
         })
     }, []);
-
 
     const searchRelationships = useCallback(() => {
         const keyword: string | undefined = nameRef.current?.value;
@@ -66,13 +63,12 @@ const RelationshipController: React.FC = ({ }) => {
     }, [nameRef, allRelationships]);
 
     const collapseAll = useCallback(() => {
-        setSelectedRelationship("");
+        setFocusedRelationshipId(undefined);
     }, []);
 
     return (
-        <div className="w-full h-full flex flex-col pl-3 min-h-0">
-
-            <div className="flex  items-center pb-2 gap-2 pt-3 pr-3 ">
+        <div className="w-full h-full flex flex-col  min-h-0">
+            <div className="flex items-center gap-2 p-3">
                 <Tooltip >
                     <TooltipTrigger asChild>
                         <Button
@@ -116,16 +112,19 @@ const RelationshipController: React.FC = ({ }) => {
 
             {
                 allRelationships.length > 0 &&
-                <ScrollArea className=" flex-1 overflow-auto pr-3">
+                <ScrollArea className="flex-1 px-3  overflow-hidden">
                     <Accordion
                         type="single"
                         collapsible
                         className="w-full "
-                        value={selectedRelationship}
-                        onValueChange={setSelectedRelationship}
+                        value={focusedRelationshipId}
+                        onValueChange={setFocusedRelationshipId}
                     >
                         {relationships.map((relationship: RelationshipType) => (
-                            <RelationshipAccordionItem relationship={relationship} key={relationship.id} />
+                            <>
+                                <RelationshipAccordionItem relationship={relationship} key={relationship.id} />
+                                <Separator className="my-1" />
+                            </>
                         ))}
                     </Accordion>
                 </ScrollArea>
@@ -133,7 +132,7 @@ const RelationshipController: React.FC = ({ }) => {
 
             {
                 (allRelationships.length == 0) &&
-                <div className="pr-2 h-full">
+                <div className="px-3 h-full">
                     <EmptyList
                         title={t("db_controller.empty_list.no_relationships")}
                         description={t("db_controller.empty_list.no_relationships_description")}

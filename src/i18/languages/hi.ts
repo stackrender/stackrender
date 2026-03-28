@@ -5,9 +5,8 @@ export const hi = {
         sidebar: {
             tables: "तालिकाएँ",
             relationships: "रिलेशनशिप्स",
-                        database: "डेटाबेस",
-
-
+            database: "डेटाबेस",
+            documentation : "दस्तावेज़"
         },
 
         color_picker: {
@@ -179,7 +178,7 @@ export const hi = {
             theme: "थीम",
             light: "हल्का",
             dark: "गहरा",
-            system: "सिस्टम" ,
+            system: "सिस्टम",
             help: "मदद",
             show_docs: "दस्तावेज़ दिखाएं",
             join_discord: "डिस्कॉर्ड से जुड़ें"
@@ -200,11 +199,12 @@ export const hi = {
             delete_database_content: "यह क्रिया अपरिवर्तनीय है और आरेख को स्थायी रूप से हटा देगी।",
             delete: "हटाएँ",
             empty_diagram: "खाली आरेख",
-            create_and_import : "बनाएँ और आयात करें" ,
+            create_and_import: "बनाएँ और आयात करें",
 
             import_database: {
                 title: "अपना डेटाबेस आयात करें",
                 import: "आयात करें",
+                view_docs : "दस्तावेज़ देखें" , 
                 import_options: "क्या आप निम्न के माध्यम से आयात करना चाहेंगे:",
                 import_error: "SQL पार्सिंग त्रुटि",
                 import_error_description: "हम आपका SQL आयात नहीं कर सके क्योंकि इसमें अमान्य सिंटैक्स है।",
@@ -216,7 +216,7 @@ export const hi = {
                 name: "नाम",
                 created_at: "बनाया गया",
                 tables: "टेबल्स"
-            } , 
+            },
             export_sql: "SQL निर्यात करें",
             export_sql_header: "अपने डेटाबेस आरेख को SQL कोड में निर्यात करें"
         },

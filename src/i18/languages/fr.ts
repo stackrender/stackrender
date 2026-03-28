@@ -7,6 +7,7 @@ export const fr = {
             tables: "Tables",
             relationships: "Relations",
             database: "Base de données",
+            documentation : "Docs"
 
         },
         color_picker: {
@@ -198,6 +199,7 @@ export const fr = {
             import_database: {
                 title: "Importer votre base de données",
                 import: "Importer",
+                view_docs : "Voir la documentation" , 
                 import_options: "Souhaitez-vous importer en utilisant :",
                 import_error: "Erreur d’analyse SQL",
                 import_error_description: "Nous n'avons pas pu importer votre SQL car il contient une syntaxe invalide.",
