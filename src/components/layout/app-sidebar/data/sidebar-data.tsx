@@ -1,8 +1,6 @@
 import {    
     IconBrandDiscord,
     IconBrandGithub,
-    IconBrandX, 
-    IconSparkles,
     IconTableAlias,
     IconVectorSpline,
 } from '@tabler/icons-react'

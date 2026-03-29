@@ -7,7 +7,7 @@ import { sql } from '@codemirror/lang-sql';
 import { DatabaseDialect, ImportDatabaseMethod, ImportDatabaseOption, ImportMethodType, MARIADB_DUMP_EXAMPLE, MARIADB_DUMP_INSTRUCTIONS, MYSQL_DUMP_EXAMPLE, MYSQL_DUMP_INSTRUCTIONS, PG_DUMP_EXAMPLE, PG_DUMP_INSTRUCTIONS, SQLITE_DUMP_EXAMPLE, SQLITE_DUMP_INSRUCTION } from "@/lib/database";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 
-import { AlertCircleIcon, Code } from "lucide-react";
+import { AlertCircleIcon, Code, HelpCircle } from "lucide-react";
 import { SqlToDatabase } from "@/utils/render/parsers/sql_to_database";
 import Clipboard from "@/components/clipboard";
 import { Trans } from 'react-i18next';
@@ -19,9 +19,12 @@ import { Label } from "@/components/ui/label";
 import { useTheme } from "@/providers/theme-provider/theme-provider";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { buttonVariants } from "@/components/ui/button";
+
 
 const options: ImportDatabaseOption[] = [{
     dialect: DatabaseDialect.POSTGRES,
+    docUrl: "https://stackrender.io/docs/import/postgresql",
     methods: [{
         id: "pg_dump",
         name: "pg_dump",
@@ -40,6 +43,7 @@ const options: ImportDatabaseOption[] = [{
     }]
 }, {
     dialect: DatabaseDialect.MYSQL,
+    docUrl: "https://stackrender.io/docs/import/mysql",
     methods: [{
         id: "mysql_dump",
         name: "mysqldump",
@@ -57,6 +61,7 @@ const options: ImportDatabaseOption[] = [{
 }
     , {
     dialect: DatabaseDialect.MARIADB,
+    docUrl: "https://stackrender.io/docs/import/mariadb",
     methods: [{
         id: "mariadb-dump",
         name: "mariadb-dump",
@@ -87,6 +92,7 @@ const options: ImportDatabaseOption[] = [{
 
 }, {
     dialect: DatabaseDialect.SQLITE,
+    docUrl: "https://stackrender.io/docs/import/sqlite",
     methods: [{
         id: "sqlite3",
         name: "Sqlite3",
@@ -103,6 +109,8 @@ const options: ImportDatabaseOption[] = [{
     }]
 }
 ];
+
+
 const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
     const { t } = useTranslation();
 
@@ -199,41 +207,56 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
                     <p className="text-sm text-muted-foreground">
                         {t("modals.import_database.import_options")}
                     </p>
-                    {
-                        <RadioGroup
-                            onValueChange={onImportMethodChange}
-                            value={selectedMethodId}
-                            className="flex ">
-                            {
-                                currentOption?.methods.map((method: ImportDatabaseMethod) => (
-                                    <Label htmlFor={method.id}
-                                        key={method.id}
-                                        className={cn(" h-8  px-2 rounded-md border hover:bg-secondary cursor-pointer flex items-center gap-1 ",
-                                            (selectedMethodId == method.id) ? "border-primary bg-primary/20 " : "",
-                                        )}>
-                                        <RadioGroupItem value={method.id} id={method.id} className="sr-only" />
-                                        {
-                                            method.icon &&
-
-                                            <div >
-                                                {method.icon}
-                                            </div>
-                                        }
-                                        <img
-                                            src={method.logo}
-                                            className="rounded-none h-4  "
-                                        />
-                                        <span >
-                                            {method.name}
-                                        </span>
-
-
-                                    </Label>
-                                ))
+                    <div className="flex flex-col lg:flex-row-reverse gap-2 justify-between items-center ">
+                        <a
+                            className={
+                                buttonVariants({
+                                    variant: "outline"
+                                })
                             }
-                        </RadioGroup>
+                            href={currentOption?.docUrl}
+                            target="_blank"
+                        >
+                            {t("modals.import_database.view_docs")}
 
-                    }
+                            <HelpCircle className="size-4 text-muted-foreground" />
+                        </a>
+                        {
+                            <RadioGroup
+                                onValueChange={onImportMethodChange}
+                                value={selectedMethodId}
+                                className="flex ">
+                                {
+                                    currentOption?.methods.map((method: ImportDatabaseMethod) => (
+                                        <Label htmlFor={method.id}
+                                            key={method.id}
+                                            className={cn(" h-8  px-2 rounded-md border hover:bg-secondary cursor-pointer flex items-center gap-1 ",
+                                                (selectedMethodId == method.id) ? "border-primary bg-primary/20 " : "",
+                                            )}>
+                                            <RadioGroupItem value={method.id} id={method.id} className="sr-only" />
+                                            {
+                                                method.icon &&
+
+                                                <div >
+                                                    {method.icon}
+                                                </div>
+                                            }
+                                            <img
+                                                src={method.logo}
+                                                className="rounded-none h-4  "
+                                            />
+                                            <span >
+                                                {method.name}
+                                            </span>
+
+
+                                        </Label>
+                                    ))
+                                }
+                            </RadioGroup>
+
+                        }
+                    </div>
                     {
                         selectedImportMethod?.type == ImportMethodType.DUMP &&
                         <div className="space-y-2">
