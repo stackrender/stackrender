@@ -67,7 +67,7 @@ npm run start
 6. Export your Database SQL DDL and run it!
 
 ## 🤝 Community
-
+- [**Docs**](https://www.stackrender.io/docs) – Explore the StackRender docs to learn more about its features.  
 - [**Discord**](https://discord.com/invite/4dv26jR4Pj) – Live discussions about upcoming releases and the future of StackRender.  
 - [**GitHub Issues**](https://github.com/stackrender/stackrender/issues) – Report bugs and errors to help us improve your experience.  
 - [**X (Twitter)**](https://x.com/intent/follow?screen_name=Iam_The_Dev) – Get the latest StackRender news and updates.
