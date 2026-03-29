@@ -13,6 +13,10 @@ RUN npm config set strict-ssl false && npm install
 # Copy source files
 COPY . .
 
+# Increase Node memory to prevent out-of-memory errors during build
+ENV NODE_OPTIONS=--max-old-space-size=4096
+
+
 # Build the application
 RUN npm run build
 
