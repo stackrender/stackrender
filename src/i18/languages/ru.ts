@@ -6,6 +6,7 @@ export const ru = {
       tables: "Таблицы",
       relationships: "Связи",
       database: "База данных",
+      documentation : "Документация"
     },
     color_picker: {
       default_color: "Цвет по умолчанию"
@@ -13,7 +14,6 @@ export const ru = {
     navbar: {
       rename_db: "Переименовать базу данных",
       search: "Поиск",
-      
       command: "Введите команду или выполните поиск...",
     },
     db_controller: {
@@ -194,6 +194,7 @@ export const ru = {
       import_database: {
         title: "Импортируйте вашу базу данных",
         import: "Импорт",
+        view_docs : "Просмотреть документацию" , 
         import_options: "Вы хотите импортировать с помощью:",
         import_error: "Ошибка разбора SQL",
         import_error_description: "Не удалось импортировать SQL, так как он содержит недопустимый синтаксис.",

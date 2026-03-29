@@ -66,13 +66,13 @@ const RelationshipAccordionTrigger: React.FC<RelationshipAccordionTriggerProps> 
                         </label>
                     </div>
                     <div className="hidden shrink-0 flex-row group-hover:flex gap-2">
-                        <Button variant="outline" size="icon" className="size-7 shrink-0  " onClick={(event: any) => {
+                        <Button variant="outline" size="icon" className="size-8 shrink-0  " onClick={(event: any) => {
                             event.stopPropagation();
                             setEditMode(true)
                         }}>
                             <IconPencil className="size-4 text-muted-foreground " />
                         </Button>
-                        <Button variant="outline" size="icon" className="size-7 shrink-0  " onClick={(event: any) => {
+                        <Button variant="outline" size="icon" className="size-8 shrink-0  " onClick={(event: any) => {
                             event.stopPropagation();
                             focusOnRelationship(relationship.id, true)
                         }}>
@@ -92,16 +92,23 @@ const RelationshipAccordionTrigger: React.FC<RelationshipAccordionTriggerProps> 
                         type="text"
                         onClick={(event) => event.stopPropagation()}
                         className="h-8"
+                            onKeyDown={(e: any) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                editRelationshipName();
+                                e.target.blur();
+                            }
+                        }}
 
                     />
-                    <Button variant="ghost" size="icon" className="size-7 shrink-0 rounded-sm" onClick={editRelationshipName}>
+                    <Button variant="ghost" size="icon" className="size-8 shrink-0 rounded-sm" onClick={editRelationshipName}>
                         <IconCheck className="size-4 text-muted-foreground " />
                     </Button>
                 </>
             }
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="size-7 shrink-0  rounded-sm" >
+                    <Button variant="ghost" size="icon" className="size-8 shrink-0  rounded-sm" >
                         <IconDotsVertical className="size-4 text-muted-foreground " />
                     </Button>
                 </DropdownMenuTrigger>

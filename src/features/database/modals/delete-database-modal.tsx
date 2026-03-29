@@ -26,7 +26,7 @@ const DeleteDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
             onOpenChange={onOpenChange}
             title={t("modals.delete_database")}
             actionName={t("modals.delete")}
-            className="min-w-[560px]"
+                 className="md:min-w-[560px] w-full"
             actionHandler={onDelete}
             variant="danger"
         >

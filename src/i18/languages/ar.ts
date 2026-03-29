@@ -6,6 +6,7 @@ export const ar = {
       tables: "الجداول",
       relationships: "العلاقات",
       database: "قاعدة البيانات",
+      documentation : "الوثائق"
     },
     color_picker: {
       default_color: "اللون الافتراضي"
@@ -195,6 +196,7 @@ export const ar = {
       import_database: {
         title: "استيراد قاعدة البيانات",
         import: "استيراد",
+        view_docs : "عرض الوثائق" , 
         import_options: "هل ترغب في الاستيراد باستخدام:",
         import_error: "خطأ في تحليل SQL",
         import_error_description: "تعذر استيراد SQL الخاص بك بسبب وجود صيغة غير صحيحة.",

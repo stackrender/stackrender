@@ -6,7 +6,7 @@ export const de = {
       tables: "Tabellen",
       relationships: "Beziehungen",
       database: "Datenbank",
-
+      documentation : "Dokumentation"
     },
     color_picker: {
       default_color: "Standardfarbe"
@@ -196,6 +196,7 @@ export const de = {
       import_database: {
         title: "Datenbank importieren",
         import: "Importieren",
+        view_docs : "Dokumentation anzeigen" , 
         import_options: "Möchtest du importieren mit:",
         import_error: "SQL-Parsing-Fehler",
         import_error_description: "Wir konnten dein SQL nicht importieren, da es ungültige Syntax enthält.",

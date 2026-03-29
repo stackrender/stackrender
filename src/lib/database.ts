@@ -88,7 +88,8 @@ export interface ImportDatabaseMethod {
 
 export interface ImportDatabaseOption {
     dialect: DatabaseDialect,
-    methods: ImportDatabaseMethod[]
+    methods: ImportDatabaseMethod[] ; 
+    docUrl? : string ;
 }
 
 

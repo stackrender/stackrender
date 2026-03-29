@@ -1,5 +1,5 @@
 
- 
+
 
 
 interface BaseNavItem {
@@ -10,8 +10,8 @@ interface BaseNavItem {
 
 type NavLink = BaseNavItem & {
     url: string
-    items?: never; 
-    newTab? : boolean
+    items?: never;
+    newTab?: boolean
 }
 
 type NavCollapsible = BaseNavItem & {
@@ -23,13 +23,14 @@ type NavItem = NavCollapsible | NavLink
 
 interface NavGroup {
     title: string
-    items: NavItem[]
+    items: NavItem[];
+    onClick?: () => void;
 }
 
 interface SidebarData {
 
-    
-    footerNavGroups : NavGroup[]
+
+    footerNavGroups: NavGroup[]
     navGroups: NavGroup[]
 }
 
@@ -47,4 +48,4 @@ interface MenuItem {
     clickHandler?: () => void
 }
 
-export type { SidebarData, NavGroup, NavItem, NavCollapsible, NavLink , MenuItem }
+export type { SidebarData, NavGroup, NavItem, NavCollapsible, NavLink, MenuItem }

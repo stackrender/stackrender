@@ -5,7 +5,8 @@ export const es = {
     translation: {
         sidebar: {
             tables: "Tablas",
-            relationships: "Relaciones"
+            relationships: "Relaciones", 
+            documentation : "Documentación"
         },
 
         color_picker: {
@@ -204,6 +205,7 @@ export const es = {
             import_database: {
                 title: "Importar tu base de datos",
                 import: "Importar",
+                view_docs : "Ver la documentación" , 
                 import_options: "¿Te gustaría importar usando :",
                 import_error: "Error al analizar SQL",
                 import_error_description: "No pudimos importar tu SQL porque contiene sintaxis inválida.",

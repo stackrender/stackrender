@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { ThemeSwitch } from './theme-switch'
 import RenameDb from '@/features/database/components/rename-db'
 import LanguagesDropdown from './languages-dropdown'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   fixed?: boolean
@@ -38,19 +39,13 @@ export const Header = ({
     return () => document.removeEventListener('scroll', onScroll)
   }, []);
 
-
-
-
-  const { open } = useModal();
-
-
   const { t } = useTranslation();
 
-
+  const isMobile = useIsMobile();
   return (
     <header
       className={cn(
-        'bg-background  flex  items-center gap-3 p-2 sm:gap-4  ',
+        'bg-background flex-col md:flex items-center gap-3 p-2 sm:gap-4  ',
         fixed && 'header-fixed peer/header fixed z-50 w-[inherit] rounded-md ',
         offset > 10 && fixed ? 'shadow-sm' : 'shadow-none',
         className
@@ -61,23 +56,38 @@ export const Header = ({
         <div className="justify-self-start flex h-8 gap-3 items-center  ">
           <SidebarTrigger variant='outline' className='scale-125 sm:scale-100' />
           <Separator orientation='vertical' className='h-6' />
-          <Menu />
+          {!isMobile && <Menu />}
         </div>
 
 
         <div className=" justify-self-center ">
-          <Search className='hidden md:flex' placeholder={t("navbar.search")} />
+          <Search className='hidden lg:flex' placeholder={t("navbar.search")} />
+          {
+            isMobile &&
+            <div className='w-full'>
+              <RenameDb />
+            </div>
+          }
         </div>
 
         <div className="justify-self-end flex gap-2">
-
-          <RenameDb />
+          {
+            !isMobile &&
+            <div className='w-full'>
+              <RenameDb />
+            </div>
+          }
+          
           <ThemeSwitch />
           <LanguagesDropdown />
 
         </div>
       </div>
+      {isMobile && <div className='flex justify-center'>
+        <Menu />
 
+      </div>
+      }
     </header>
   )
 }

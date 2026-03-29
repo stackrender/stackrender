@@ -4,7 +4,7 @@ import { Edge, Node, NodeProps } from "@xyflow/react";
 import hash from 'object-hash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-    Check, 
+    Check,
     ChevronUp,
     ChevronDown,
 } from 'lucide-react';
@@ -15,13 +15,11 @@ import { useDatabaseOperations } from "@/providers/database-provider/database-pr
 import { useTranslation } from "react-i18next";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
-import { Card,  CardContent  , CardHeader  } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { IconFocus2, IconPencil,  IconTableFilled } from "@tabler/icons-react";
+import { IconFocus2, IconPencil, IconTableFilled } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
-
 
 export type TableProps = Node<{
     table: TableType,
@@ -102,6 +100,8 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                     }
                     : undefined
             }
+            onDoubleClick={focus}
+
 
         >
             <CardHeader className="group rounded-t rounded-t-md p-1.5  flex items-center mb-0 bg-primary/10 "
@@ -142,6 +142,13 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                             value={tableName}
                             onBlur={saveTableName}
                             style={{ color: table.color as string }}
+                            onKeyDown={(e: any) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    saveTableName();
+                                    e.target.blur();
+                                }
+                            }}
                         />
                         <div className="flex gap-1 shrink-0 flex-row  transition-opacity duration-200">
                             <Button variant="outline" size="icon" className="size-6 shrink-0 shadow-sm rounded-sm" onClick={() => setEditMode(true)}>

@@ -15,13 +15,13 @@ const ExportSqlModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             title={t("modals.export_sql")}
-            className="min-w-[960px]  max-w-[960px]  max-h-[90vh] "
+            className="w-full lg:min-w-[960px]"
             description={t("modals.export_sql_header")}
         >
-            <div className="h-full max-h-[72vh] ">
+            <div className="h-full max-h-[72vh] min-w-0">
                 <SqlPreview />
             </div>
-        
+
         </Modal>
 
     )

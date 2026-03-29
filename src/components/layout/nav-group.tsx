@@ -29,7 +29,7 @@ import {
 } from '../ui/dropdown-menu'
 import { NavCollapsible, NavItem, NavLink, NavGroup as NavGroupType } from './types.ts'
 
-export function NavGroup({ title, items }: NavGroupType) {
+export function NavGroup({ title, items , onClick }: NavGroupType) {
     const { state, isMobile } = useSidebar();
     const location = useLocation();
     const href = location.pathname
@@ -41,7 +41,7 @@ export function NavGroup({ title, items }: NavGroupType) {
                     const key = `${item.title}-${item.url}`
 
                     if (!item.items)
-                        return <SidebarMenuLink key={key} item={item} href={href} target={item.newTab ? "_blank" : undefined}/>
+                        return <SidebarMenuLink key={key} item={item} href={href} target={item.newTab ? "_blank" : undefined} onClick={onClick}/>
 
                     if (state === 'collapsed' && !isMobile)
                         return (
@@ -59,7 +59,7 @@ const NavBadge = ({ children }: { children: ReactNode }) => (
     <Badge className='rounded-full px-1 py-0 text-xs'>{children}</Badge>
 )
 
-const SidebarMenuLink = ({ item, href , target}: { item: NavLink; href: string; target?: string }) => {
+const SidebarMenuLink = ({ item, href , target , onClick}: { item: NavLink; href: string; target?: string ,  onClick? : ()=> void }) => {
     const { setOpenMobile } = useSidebar()
     return (
         <SidebarMenuItem>
@@ -67,6 +67,7 @@ const SidebarMenuLink = ({ item, href , target}: { item: NavLink; href: string; 
                 asChild
                 isActive={checkIsActive(href, item)}
                 tooltip={item.title}
+                      onClick={onClick}
             >
                 <Link to={item.url} onClick={() => setOpenMobile(false)} target={target}>
                     {item.icon && <item.icon />}

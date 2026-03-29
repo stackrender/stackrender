@@ -15,7 +15,7 @@ interface RelationshipAccordionItemProps {
 const RelationshipAccordionItem: React.FC<RelationshipAccordionItemProps> = ({ relationship }) => {
 
     return (
-        <AccordionItem value={relationship.id} className="my-2" id={relationship.id}>
+        <AccordionItem value={relationship.id} className="border-none" id={relationship.id}>
             <RelationshipAccordionTrigger relationship={relationship} />
             <AccordionContent className="flex flex-col gap-4 text-balance">
                 <RelationshipAccordionContent

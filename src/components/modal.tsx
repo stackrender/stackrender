@@ -67,7 +67,7 @@ const Modal: React.FC<ModalProps> = ({
                 {
                     footer &&
                     <DialogFooter >
-                        <div className="flex justify-between  w-full">
+                        <div className="flex justify-between w-full flex-col gap-4 sm:flex-row">
 
 
                             {

@@ -98,6 +98,13 @@ const Field: React.FC<Props> = (props) => {
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => setFieldName(e.target.value)}
                             className="h-6 font-bold pb-1.5 rounded-sm px-1"
+                              onKeyDown={(e: any) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    saveFieldName();
+                                    e.target.blur();
+                                }
+                            }}
                         />
 
                 }

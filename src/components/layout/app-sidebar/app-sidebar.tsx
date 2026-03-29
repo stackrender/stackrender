@@ -10,9 +10,11 @@ import {
 import { NavGroup } from '../nav-group'
 import { useSidebarData } from './data/sidebar-data'
 import { Separator } from '@/components/ui/separator';
+import { useDiagramOps } from '@/providers/diagram-provider/diagram-provider';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const sidebarData = useSidebarData();
+    const { openController } = useDiagramOps();
     return (
         <Sidebar collapsible='icon' variant='floating' {...props} className='bg-card border-r' >
             <SidebarHeader>
@@ -24,12 +26,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <h3 className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground truncate font-semibold text-sm '>
                         StackRender
                     </h3>
-                </div>           
+                </div>
             </SidebarHeader>
             <SidebarContent>
                 {sidebarData.navGroups.map((props: any, index: number) => (
                     <div key={props.title}>
-                        <NavGroup key={props.title} {...props} />
+                        <NavGroup key={props.title} {...props} onClick={() => openController(true)} />
                         {
                             index != sidebarData.navGroups.length - 1 &&
                             <div className='px-2'>
@@ -50,7 +52,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             </div>
                         }
                     </div>
-                ))} 
+                ))}
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>

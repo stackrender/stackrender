@@ -126,14 +126,14 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                         </Tooltip>
                     </div>
                     <div className="hidden !shrink-0 flex-row group-hover:flex gap-2 ">
-                        <Button variant="outline" size="icon" className="size-7 shrink-0" onClick={(event: any) => {
+                        <Button variant="outline" size="icon" className="size-8 shrink-0" onClick={(event: any) => {
                             event.stopPropagation();
                             setEditMode(true)
 
                         }}>
                             <IconPencil className="size-4 text-muted-foreground " />
                         </Button>
-                        <Button variant="outline" size="icon" className="size-7 shrink-0  " onClick={(event: any) => {
+                        <Button variant="outline" size="icon" className="size-8 shrink-0  " onClick={(event: any) => {
                             event.stopPropagation();
                             focusOnTable(table.id, true)
                         }}>
@@ -154,9 +154,16 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                         type="text"
                         onClick={(event) => event.stopPropagation()}
                         className="h-8"
+                            onKeyDown={(e: any) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                saveTableName();
+                                e.target.blur();
+                            }
+                        }}
 
                     />
-                    <Button variant="ghost" size="icon" className="size-7 shrink-0 rounded-sm" onClick={saveTableName} >
+                    <Button variant="ghost" size="icon" className="size-8 shrink-0 rounded-sm" onClick={saveTableName} >
                         <IconCheck className="size-4 text-muted-foreground " />
                     </Button>
                 </>
@@ -164,7 +171,7 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
 
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="size-7 shrink-0 flex  rounded-sm" >
+                    <Button variant="ghost" size="icon" className="size-8 shrink-0 flex  rounded-sm" >
                         <IconDotsVertical className="size-4 text-muted-foreground " />
                     </Button>
                 </DropdownMenuTrigger>

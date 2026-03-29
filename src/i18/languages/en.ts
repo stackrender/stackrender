@@ -6,8 +6,9 @@ export const en = {
     translation: {
         sidebar: {
             tables: "Tables",
-            relationships: "Relationships", 
-                        database : "Database" 
+            relationships: "Relationships",
+            database: "Database", 
+            documentation : "Docs"
         },
 
         color_picker: {
@@ -15,9 +16,9 @@ export const en = {
         },
         navbar: {
             rename_db: "Rename database",
-            search: "Search" , 
-            
-            command : "Type a command or search..." , 
+            search: "Search",
+
+            command: "Type a command or search...",
         },
         db_controller: {
             filter: "Filter",
@@ -43,7 +44,7 @@ export const en = {
 
             source_table: "Source Table",
             referenced_table: "Referenced Table",
-            
+
             required: "Required",
             select_table: "Select table",
             select_field: "Select field",
@@ -182,8 +183,8 @@ export const en = {
             theme: "Theme",
             light: "Light",
             dark: "Dark",
-            
-            system : "System" , 
+
+            system: "System",
             help: "Help",
             show_docs: "Show Docs",
             join_discord: "Join Discord",
@@ -204,10 +205,11 @@ export const en = {
             delete_database_content: "This action is irreversible and will permanently remove the diagram.",
             delete: "Delete",
             empty_diagram: "Empty diagram",
-            create_and_import : "Create and import" ,
+            create_and_import: "Create and import",
             import_database: {
                 title: "Import your Database",
                 import: "Import",
+                view_docs : "View Docs" , 
                 import_options: "Would you like to import using :",
                 import_error: "SQL Parsing Error",
                 import_error_description: "We couldn't import your SQL because it contains invalid syntax.",
