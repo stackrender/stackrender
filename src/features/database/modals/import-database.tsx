@@ -6,13 +6,11 @@ import { overrideDarkTheme, overrideLightTheme } from "@/lib/colors";
 import { sql } from '@codemirror/lang-sql';
 import { DatabaseDialect, ImportDatabaseMethod, ImportDatabaseOption, ImportMethodType, MARIADB_DUMP_EXAMPLE, MARIADB_DUMP_INSTRUCTIONS, MYSQL_DUMP_EXAMPLE, MYSQL_DUMP_INSTRUCTIONS, PG_DUMP_EXAMPLE, PG_DUMP_INSTRUCTIONS, SQLITE_DUMP_EXAMPLE, SQLITE_DUMP_INSRUCTION } from "@/lib/database";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
-
 import { AlertCircleIcon, Code, HelpCircle } from "lucide-react";
-import { SqlToDatabase } from "@/utils/render/parsers/sql_to_database";
 import Clipboard from "@/components/clipboard";
 import { Trans } from 'react-i18next';
 import { Node, useReactFlow } from "@xyflow/react";
-import { adjustTablesPositions } from "@/utils/tables";
+import { adjustTablesPositions, getTableNextSequence } from "@/utils/tables";
 import { TableInsertType } from "@/lib/schemas/table-schema";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -20,6 +18,8 @@ import { useTheme } from "@/providers/theme-provider/theme-provider";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
+import { BaseSqlImporter } from "@/utils/import/base-sql-importer";
+import { getImporter } from "@/utils/import/import-utils";
 
 
 const options: ImportDatabaseOption[] = [{
@@ -108,12 +108,32 @@ const options: ImportDatabaseOption[] = [{
         numberOfInstructions: 5,
     }]
 }
+    , {
+    dialect: DatabaseDialect.MSSQL,
+    docUrl: "https://stackrender.io/docs/import/mssql",
+    methods: [{
+        id: "ssms",
+        name: "SSMS",
+        logo: "/ssms.png",
+        type: ImportMethodType.DB_CLIENT,
+        numberOfInstructions: 5,
+    }]
+}, {
+    dialect: DatabaseDialect.ORACLE,
+    docUrl: "https://stackrender.io/docs/import/oracle",
+    methods: [{
+        id: "sqldeveloper",
+        name: "SQL Developer",
+        logo: "/sqldeveloper.png",
+        type: ImportMethodType.DB_CLIENT,
+        numberOfInstructions: 6,
+    }]
+}
 ];
 
 
 const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => {
     const { t } = useTranslation();
-
 
     const { theme: resolvedTheme } = useTheme();
     const { database, isLoading, isSwitchingDatabase } = useDatabase();
@@ -122,6 +142,17 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
     const [parsedDatabase, setParsedDatabase] = useState<any | undefined>(undefined)
     const [error, setError] = useState<boolean>(false);
     const { fitView } = useReactFlow();
+
+    const [importer, setImporter] = useState<BaseSqlImporter | undefined>(undefined);
+
+    useEffect(() => {
+        if (isLoading || data_types.length == 0 || !database?.dialect)
+            return;
+
+        else if (data_types.length > 0) {
+            setImporter(getImporter(database.dialect, data_types))
+        }
+    }, [isLoading, data_types]);
 
     let currentOption: ImportDatabaseOption | undefined = useMemo(() => {
         return options.find((option: ImportDatabaseOption) => option.dialect == database?.dialect)
@@ -141,52 +172,63 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
         return currentOption?.methods.find((method: ImportDatabaseMethod) => method.id == selectedMethodId) as ImportDatabaseMethod;
     }, [selectedMethodId, currentOption])
 
+
     const validateSql = useCallback((code: string) => {
-        try {
-            const parsedDatabase = SqlToDatabase(code, data_types, database?.dialect as DatabaseDialect);
-
-            setParsedDatabase(parsedDatabase);
-            setError(false);
-
-        } catch (error) {
-
-            setError(true);
-            setParsedDatabase(undefined)
-        }
-        setSqlCode(code)
-
-    }, [database?.dialect, data_types])
-
-
-
-    const onImport = useCallback(async () => {
-        return new Promise(async (res, rej) => {
+        if (importer)
             try {
-                const nodes: Node[] = parsedDatabase.tables.map((table: TableInsertType) => ({
-                    id: table.id,
-                    data: {
-                        table
-                    }
-                }))
-
-                const adjustedTables = await adjustTablesPositions(nodes, parsedDatabase.relationships);
-                await importDatabase(adjustedTables, parsedDatabase.relationships, parsedDatabase.indices);
-
-                onOpenChange && onOpenChange(false);
-
-                setTimeout(() => {
-                    fitView({
-                        duration: 500
-                    });
-                }, 300);
+                const parsedDatabase = importer.parseSql(code);
+                setParsedDatabase(parsedDatabase);
+                setError(false);
 
             } catch (error) {
 
                 setError(true);
-                rej()
+                setParsedDatabase(undefined)
             }
-        })
-    }, [parsedDatabase]);
+        else {
+            console.error("Importer not loaded");
+        }
+        setSqlCode(code)
+
+    }, [database?.dialect, data_types, importer])
+
+    const onImport = useCallback(async () => {
+
+        let nextTableSequence: number = getTableNextSequence(database ? database.tables : []);
+        if (parsedDatabase)
+            return new Promise(async (res, rej) => {
+                try {
+                    const nodes: Node[] = parsedDatabase.tables.map((table: TableInsertType) => ({
+                        id: table.id,
+                        data: {
+                            table
+                        }
+                    }))
+
+                    const adjustedTables = await adjustTablesPositions(nodes, parsedDatabase.relationships);
+
+                    for (let index = 0; index < adjustedTables.length; index++) {
+                        adjustedTables[index].sequence = nextTableSequence;
+                        nextTableSequence += 1;
+                    }
+
+                    await importDatabase(adjustedTables, parsedDatabase.relationships, parsedDatabase.indexes);
+
+                    onOpenChange && onOpenChange(false);
+
+                    setTimeout(() => {
+                        fitView({
+                            duration: 500
+                        });
+                    }, 300);
+
+                } catch (error) {
+
+                    setError(true);
+                    rej()
+                }
+            })
+    }, [parsedDatabase, database]);
 
 
     if (isLoading || isSwitchingDatabase)

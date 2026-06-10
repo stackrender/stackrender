@@ -269,6 +269,21 @@ export const pt = {
         step3: "Vá para <bold>Arquivo > Exportar > Banco de Dados para Arquivo SQL</bold>.",
         step4: "Na janela de diálogo, escolha <bold>Exportar apenas o esquema</bold> e clique em <bold>Salvar</bold>.",
         step5: "Finalmente, copie o conteúdo do arquivo <code>.sql</code> para o <bold>editor de código</bold> abaixo."
+      } ,
+            ssms: {
+        "step1": "Abra o SQL Server Management Studio (SSMS).",
+        "step2": "Clique com o botão direito no seu banco de dados e selecione Tarefas → Gerar Scripts no menu de contexto.",
+        "step3": "Na etapa Escolher Objetos, selecione Escolher objetos específicos do banco de dados e marque todas as tabelas.",
+        "step4": "Na etapa Definir opções de script, selecione Salvar em arquivo e escolha onde salvar o arquivo .sql.",
+        "step5": "Conclua o assistente e depois abra o arquivo .sql gerado e copie seu conteúdo para o editor de código abaixo."
+      },
+      sqldeveloper: {
+        "step1": "Abra o Oracle SQL Developer e conecte-se ao seu banco de dados.",
+        "step2": "No menu superior, vá em Ferramentas → Exportação de Banco de Dados.",
+        "step3": "Na janela de exportação, selecione sua conexão e certifique-se de que apenas Pretty Print e Terminator estejam marcados, e que Export Data esteja desmarcado para garantir exportação apenas do schema.",
+        "step4": "Escolha onde salvar o arquivo de exportação e continue para a próxima etapa.",
+        "step5": "Em Tipos de Objetos Padrão, marque apenas Tabelas, Índices, Restrições e Restrições referenciais. Deixe todas as outras opções desmarcadas.",
+        "step6": "Conclua o assistente e depois abra o arquivo .sql gerado e copie seu conteúdo para o editor de código abaixo."
       }
     }
   }

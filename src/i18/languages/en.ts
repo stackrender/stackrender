@@ -277,6 +277,23 @@ export const en = {
                 step5: "Finally, copy the contents of the <code>.sql</code> file into the <bold>code editor</bold> below."
 
             },
+            
+            ssms: {
+                "step1": "Open <bold>SQL Server Management Studio (SSMS)</bold>.",
+                "step2": "Right-click your database, then select <bold>Tasks → Generate Scripts</bold> from the context menu.",
+                "step3": "In the <bold>Choose Objects</bold> step, select <bold>Choose specific database objects</bold>, then check all tables.",
+                "step4": "In the <bold>Set Scripting Options</bold> step, select <bold>Save to file</bold> and choose where to save the <code>.sql</code> file.",
+                "step5": "Complete the wizard, then open the generated <code>.sql</code> file and copy its contents into the <bold>code editor</bold> below."
+            },
+            sqldeveloper: {
+                "step1": "Open <bold>Oracle SQL Developer</bold> and connect to your database.",
+                "step2": "From the top menu, go to <bold>Tools → Database Export</bold>.",
+                "step3": "In the export dialog, select your connection, then make sure only <bold>Pretty Print</bold> and <bold>Terminator</bold> are checked, and <bold>Export Data</bold> is unchecked to ensure schema-only export.",
+                "step4": "Choose where to save the export file, then continue to the next step.",
+                "step5": "Under <bold>Standard Object Types</bold>, check only <bold>Tables</bold>, <bold>Indexes</bold>, <bold>Constraints</bold>, and <bold>Referential Constraints</bold>. Leave all other options unchecked.",
+                "step6": "Complete the wizard, then open the generated <code>.sql</code> file and copy its contents into the <bold>code editor</bold> below."
+            }
+
 
         }
 

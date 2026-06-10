@@ -6,7 +6,7 @@ export const ar = {
       tables: "الجداول",
       relationships: "العلاقات",
       database: "قاعدة البيانات",
-      documentation : "الوثائق"
+      documentation: "الوثائق"
     },
     color_picker: {
       default_color: "اللون الافتراضي"
@@ -196,7 +196,7 @@ export const ar = {
       import_database: {
         title: "استيراد قاعدة البيانات",
         import: "استيراد",
-        view_docs : "عرض الوثائق" , 
+        view_docs: "عرض الوثائق",
         import_options: "هل ترغب في الاستيراد باستخدام:",
         import_error: "خطأ في تحليل SQL",
         import_error_description: "تعذر استيراد SQL الخاص بك بسبب وجود صيغة غير صحيحة.",
@@ -259,6 +259,21 @@ export const ar = {
         step3: "من القائمة، اختر <bold>File > Export > Database to SQL file</bold>.",
         step4: "في النافذة، اختر <bold>Export schema only</bold> ثم انقر <bold>Save</bold>.",
         step5: "أخيرًا، انسخ محتوى ملف <code>.sql</code> إلى محرر الكود أدناه."
+      },
+      ssms: {
+        "step1": "افتح SQL Server Management Studio (SSMS).",
+        "step2": "انقر بزر الفأرة الأيمن على قاعدة البيانات، ثم اختر Tasks → Generate Scripts من القائمة.",
+        "step3": "في خطوة Choose Objects، اختر Choose specific database objects ثم قم بتحديد جميع الجداول.",
+        "step4": "في خطوة Set Scripting Options، اختر Save to file وحدد مكان حفظ ملف .sql.",
+        "step5": "أكمل المعالج، ثم افتح ملف .sql الذي تم إنشاؤه وانسخ محتواه إلى محرر الكود أدناه."
+      },
+      sqldeveloper: {
+        "step1": "افتح Oracle SQL Developer واتصل بقاعدة البيانات الخاصة بك.",
+        "step2": "من القائمة العلوية، اذهب إلى Tools → Database Export.",
+        "step3": "في نافذة التصدير، اختر الاتصال الخاص بك وتأكد من تفعيل Pretty Print و Terminator فقط، وإلغاء تحديد Export Data لضمان تصدير المخطط فقط.",
+        "step4": "اختر مكان حفظ ملف التصدير ثم تابع إلى الخطوة التالية.",
+        "step5": "تحت Standard Object Types، اختر فقط Tables و Indexes و Constraints و Referential Constraints، واترك باقي الخيارات بدون تحديد.",
+        "step6": "أكمل المعالج، ثم افتح ملف .sql الناتج وانسخ محتواه إلى محرر الكود أدناه."
       }
     }
   }

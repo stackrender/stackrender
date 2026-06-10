@@ -268,6 +268,21 @@ export const hi = {
                 step3: "शीर्ष मेनू से <bold>File > Export > Database to SQL file</bold> पर जाएं।",
                 step4: "डायलॉग में <bold>Export schema only</bold> चुनें और <bold>Save</bold> पर क्लिक करें।",
                 step5: "अंत में, <code>.sql</code> फ़ाइल की सामग्री को नीचे दिए गए <bold>code editor</bold> में कॉपी करें।"
+            } , 
+                ssms: {
+                "step1": "SQL Server Management Studio (SSMS) खोलें।",
+                "step2": "अपना डेटाबेस पर राइट-क्लिक करें, फिर संदर्भ मेनू से Tasks → Generate Scripts चुनें।",
+                "step3": "Choose Objects चरण में, Choose specific database objects चुनें, फिर सभी टेबल्स को चेक करें।",
+                "step4": "Set Scripting Options चरण में, Save to file चुनें और .sql फ़ाइल को सेव करने का स्थान चुनें।",
+                "step5": "विज़ार्ड पूरा करें, फिर जनरेट की गई .sql फ़ाइल खोलें और उसकी सामग्री को नीचे दिए गए कोड एडिटर में कॉपी करें।"
+            },
+            sqldeveloper: {
+                "step1": "Oracle SQL Developer खोलें और अपने डेटाबेस से कनेक्ट करें।",
+                "step2": "ऊपरी मेनू से Tools → Database Export पर जाएँ।",
+                "step3": "Export डायलॉग में अपना कनेक्शन चुनें, फिर सुनिश्चित करें कि केवल Pretty Print और Terminator चुने गए हैं, और Export Data अनचेक है ताकि केवल schema export हो।",
+                "step4": "एक्सपोर्ट फ़ाइल को सेव करने का स्थान चुनें, फिर अगले चरण पर जाएँ।",
+                "step5": "Standard Object Types के अंतर्गत केवल Tables, Indexes, Constraints, और Referential Constraints चुनें। बाकी सभी विकल्प अनचेक रखें।",
+                "step6": "विज़ार्ड पूरा करें, फिर जनरेट की गई .sql फ़ाइल खोलें और उसकी सामग्री को नीचे दिए गए कोड एडिटर में कॉपी करें।"
             }
         }
     }

@@ -6,7 +6,7 @@ export const de = {
       tables: "Tabellen",
       relationships: "Beziehungen",
       database: "Datenbank",
-      documentation : "Dokumentation"
+      documentation: "Dokumentation"
     },
     color_picker: {
       default_color: "Standardfarbe"
@@ -196,7 +196,7 @@ export const de = {
       import_database: {
         title: "Datenbank importieren",
         import: "Importieren",
-        view_docs : "Dokumentation anzeigen" , 
+        view_docs: "Dokumentation anzeigen",
         import_options: "Möchtest du importieren mit:",
         import_error: "SQL-Parsing-Fehler",
         import_error_description: "Wir konnten dein SQL nicht importieren, da es ungültige Syntax enthält.",
@@ -259,6 +259,21 @@ export const de = {
         step3: "Gehe zu <bold>File > Export > Database to SQL file</bold>.",
         step4: "Wähle im Dialog <bold>Export schema only</bold> und klicke auf <bold>Save</bold>.",
         step5: "Kopiere abschließend den Inhalt der <code>.sql</code>-Datei in den Editor."
+      },
+      ssms: {
+        "step1": "Öffnen Sie SQL Server Management Studio (SSMS).",
+        "step2": "Klicken Sie mit der rechten Maustaste auf Ihre Datenbank und wählen Sie im Kontextmenü Tasks → Skripte generieren.",
+        "step3": "Im Schritt Objekte auswählen wählen Sie Bestimmte Datenbankobjekte auswählen und markieren Sie alle Tabellen.",
+        "step4": "Im Schritt Skripting-Optionen festlegen wählen Sie In Datei speichern und wählen Sie den Speicherort für die .sql-Datei.",
+        "step5": "Schließen Sie den Assistenten ab, öffnen Sie anschließend die generierte .sql-Datei und kopieren Sie deren Inhalt in den Code-Editor unten."
+      },
+      sqldeveloper: {
+        "step1": "Öffnen Sie Oracle SQL Developer und verbinden Sie sich mit Ihrer Datenbank.",
+        "step2": "Gehen Sie im oberen Menü zu Tools → Datenbank-Export.",
+        "step3": "Im Exportdialog wählen Sie Ihre Verbindung und stellen Sie sicher, dass nur Pretty Print und Terminator aktiviert sind und Export Data deaktiviert ist, um nur das Schema zu exportieren.",
+        "step4": "Wählen Sie den Speicherort der Exportdatei und fahren Sie mit dem nächsten Schritt fort.",
+        "step5": "Unter Standard-Objekttypen wählen Sie nur Tabellen, Indizes, Einschränkungen und referenzielle Einschränkungen aus. Lassen Sie alle anderen Optionen deaktiviert.",
+        "step6": "Schließen Sie den Assistenten ab, öffnen Sie anschließend die generierte .sql-Datei und kopieren Sie deren Inhalt in den Code-Editor unten."
       }
     }
   }

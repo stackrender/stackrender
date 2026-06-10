@@ -1,3 +1,14 @@
+import { DatabaseDialect } from "@/lib/database";
+import { DataType } from "@/lib/schemas/data-type-schema";
+import MysqlRenderer from "./database/mysql-renderer";
+import PostgresqlRenderer from "./database/postgresql-renderer";
+import MariaDbRenderer from "./database/mariadb-renderer";
+import OracleRenderer from "./database/oracle-renderer";
+import MSSqlRenderer from "./database/mssql-database-renderer";
+import SqliteRenderer from "./database/sqlite-database-renderer";
+import { TableType } from "@/lib/schemas/table-schema";
+import { FieldType } from "@/lib/schemas/field-schema";
+
 /**
  * Fixes charset/collation placement in SQL CREATE TABLE statements
  * @param sql The SQL string to process
@@ -151,4 +162,32 @@ export interface CircularDependencyError {
   cycle: string[];
   success: boolean;
   message: string;
+}
+
+export const getPostgresEnumName = (table: TableType, field: FieldType): string => {
+
+  return `${table.name}_${field.name.toLowerCase()}_enum`
+}
+
+export const getRenderer = (dialect: DatabaseDialect, data_types: DataType[]) => {
+
+  switch (dialect) {
+    case DatabaseDialect.MYSQL:
+      return new MysqlRenderer(data_types);
+
+    case DatabaseDialect.POSTGRES:
+      return new PostgresqlRenderer(data_types);
+
+    case DatabaseDialect.MARIADB:
+      return new MariaDbRenderer(data_types);
+
+    case DatabaseDialect.ORACLE:
+      return new OracleRenderer(data_types);
+
+    case DatabaseDialect.MSSQL:
+      return new MSSqlRenderer(data_types);
+
+    case DatabaseDialect.SQLITE:
+      return new SqliteRenderer(data_types);
+  }
 }

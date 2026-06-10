@@ -5,6 +5,8 @@ import { PostgresDataType } from "./postgres_data_types";
 import { SqliteDataTypes } from "./sqlite_data_types";
 import { MariaDbDataType } from "./mariadb_data_types";
 import { DatabaseDialect } from "../database";
+import { OracleDataType } from "./oracle_data_types";
+import { MSSQLDataType } from "./mssql_data_types";
 
 
 
@@ -18,7 +20,9 @@ export const seedDataTypes = async (db: any) => {
             ...mapToDataType(MysqlDataType , DatabaseDialect.MYSQL) , 
             ...mapToDataType(PostgresDataType , DatabaseDialect.POSTGRES) , 
             ...mapToDataType(SqliteDataTypes , DatabaseDialect.SQLITE) , 
-            ...mapToDataType(MariaDbDataType , DatabaseDialect.MARIADB) 
+            ...mapToDataType(MariaDbDataType , DatabaseDialect.MARIADB) , 
+            ...mapToDataType(OracleDataType , DatabaseDialect.ORACLE) , 
+            ...mapToDataType(MSSQLDataType , DatabaseDialect.MSSQL) , 
         ] as DataInsertType[])
     }
      

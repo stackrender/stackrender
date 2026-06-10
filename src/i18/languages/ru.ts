@@ -257,6 +257,21 @@ export const ru = {
         step3: "Выберите <bold>Файл > Экспорт > База данных в SQL файл</bold>.",
         step4: "Выберите <bold>Экспортировать только схему</bold> и нажмите <bold>Сохранить</bold>.",
         step5: "Скопируйте содержимое <code>.sql</code> файла в редактор ниже."
+      },
+           ssms: {
+        "step1": "Откройте SQL Server Management Studio (SSMS).",
+        "step2": "Щёлкните правой кнопкой мыши по вашей базе данных, затем выберите Tasks → Generate Scripts в контекстном меню.",
+        "step3": "В шаге Choose Objects выберите Select specific database objects и отметьте все таблицы.",
+        "step4": "В шаге Set Scripting Options выберите Save to file и укажите, куда сохранить файл .sql.",
+        "step5": "Завершите мастер, затем откройте созданный файл .sql и скопируйте его содержимое в редактор кода ниже."
+      },
+      sqldeveloper: {
+        "step1": "Откройте Oracle SQL Developer и подключитесь к базе данных.",
+        "step2": "В верхнем меню перейдите в Tools → Database Export.",
+        "step3": "В окне экспорта выберите соединение и убедитесь, что отмечены только Pretty Print и Terminator, а Export Data отключён, чтобы экспортировать только схему.",
+        "step4": "Выберите место сохранения файла экспорта и перейдите к следующему шагу.",
+        "step5": "В разделе Standard Object Types отметьте только Tables, Indexes, Constraints и Referential Constraints. Остальные параметры оставьте отключёнными.",
+        "step6": "Завершите мастер, затем откройте созданный файл .sql и скопируйте его содержимое в редактор кода ниже."
       }
     }
   }

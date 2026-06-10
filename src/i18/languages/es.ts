@@ -273,6 +273,22 @@ export const es = {
                 step5: "Finalmente, copia el contenido del archivo <code>.sql</code> en el <bold>editor de código</bold> a continuación."
 
             },
+                  
+            ssms: {
+                "step1": "Abra SQL Server Management Studio (SSMS).",
+                "step2": "Haga clic derecho en su base de datos y luego seleccione Tareas → Generar scripts en el menú contextual.",
+                "step3": "En el paso Elegir objetos, seleccione Elegir objetos específicos de la base de datos y marque todas las tablas.",
+                "step4": "En el paso Establecer opciones de script, seleccione Guardar en archivo y elija dónde guardar el archivo .sql.",
+                "step5": "Complete el asistente, luego abra el archivo .sql generado y copie su contenido en el editor de código a continuación."
+            },
+            sqldeveloper: {
+                "step1": "Abra Oracle SQL Developer y conéctese a su base de datos.",
+                "step2": "En el menú superior, vaya a Herramientas → Exportación de base de datos.",
+                "step3": "En el diálogo de exportación, seleccione su conexión y asegúrese de que solo estén marcadas Pretty Print y Terminator, y que Export Data esté desmarcado para asegurar exportación solo del esquema.",
+                "step4": "Elija dónde guardar el archivo de exportación y continúe al siguiente paso.",
+                "step5": "En Tipos de objetos estándar, marque solo Tablas, Índices, Restricciones y Restricciones referenciales. Deje todo lo demás desmarcado.",
+                "step6": "Complete el asistente, luego abra el archivo .sql generado y copie su contenido en el editor de código a continuación."
+            }
 
         }
 

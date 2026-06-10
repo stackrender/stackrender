@@ -210,7 +210,7 @@ export const zh = {
       import_database: {
         title: "导入数据库",
         import: "导入",
-        view_docs : "查看文档" , 
+        view_docs: "查看文档",
         import_options: "请选择导入方式：",
         import_error: "SQL 解析错误",
         import_error_description: "我们无法导入您的 SQL，因为它包含无效语法。",
@@ -276,6 +276,21 @@ export const zh = {
         step3: "顶部菜单选择 <bold>文件 > 导出 > 导出为 SQL 文件</bold>。",
         step4: "选择 <bold>仅导出结构</bold> 并点击 <bold>保存</bold>。",
         step5: "将 .sql 文件内容复制到下方 <bold>代码编辑器</bold> 中。"
+      },
+      ssms: {
+        "step1": "打开 SQL Server Management Studio (SSMS)。",
+        "step2": "右键单击你的数据库，然后在上下文菜单中选择 任务 → 生成脚本。",
+        "step3": "在“选择对象”步骤中，选择“选择特定数据库对象”，然后勾选所有表。",
+        "step4": "在“设置脚本选项”步骤中，选择“保存到文件”，并选择保存 .sql 文件的位置。",
+        "step5": "完成向导后，打开生成的 .sql 文件，并将其内容复制到下面的代码编辑器中。"
+      },
+      sqldeveloper: {
+        "step1": "打开 Oracle SQL Developer 并连接到你的数据库。",
+        "step2": "从顶部菜单进入 工具 → 数据库导出。",
+        "step3": "在导出对话框中，选择你的连接，并确保只勾选 Pretty Print 和 Terminator，同时取消勾选 Export Data，以确保仅导出结构。",
+        "step4": "选择导出文件的保存位置，然后进入下一步。",
+        "step5": "在标准对象类型下，仅勾选 表、索引、约束 和 参照约束。取消所有其他选项。",
+        "step6": "完成向导后，打开生成的 .sql 文件，并将其内容复制到下面的代码编辑器中。"
       }
     }
   }

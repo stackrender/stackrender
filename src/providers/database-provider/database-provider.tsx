@@ -17,6 +17,7 @@ import { field_indices, FieldIndexInsertType } from "@/lib/schemas/field_index-s
 import { v4 } from "uuid";
 import { DataType } from "@/lib/schemas/data-type-schema";
 import { deleteFieldsWithCascade, deleteIndicesWithCascade, deleteTablesWithCascade } from "@/utils/cascade";
+import { DatabaseDialect } from "@/lib/database";
 
 const TYPE_ORDER = ["integer", "text", "boolean", "numeric", "time", "enum"] as const;
 
@@ -431,7 +432,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     }, [db, currentDatabaseId]);
 
     const getInteger = useCallback(() => {
-        return data_types.find((dataType: DataType) => dataType.name == "integer");
+        return data_types.find((dataType: DataType) => dataType.name == "integer" || (dataType.name == "int" && dataType.dialect == DatabaseDialect.MSSQL));
     }, [data_types]);
 
     const importDatabase = useCallback(async (importedTables: TableInsertType[], importedRelationships: RelationshipInsertType[], importedIndices: IndexInsertType[]) => {

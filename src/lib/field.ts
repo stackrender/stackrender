@@ -107,3 +107,4 @@ export enum ForeignKeyActions {
 }
 
 export const MYSQL_MAX_VAR_LENGTH = 255; 
+export const DEFAULT_LENGTH_PARAM = 100;

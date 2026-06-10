@@ -1,3 +1,5 @@
+import _ from "lodash";
+import { DatabaseType as DatabaseSchemaType } from "./schemas/database-schema";
 
 
 export interface DatabaseType {
@@ -13,7 +15,7 @@ export enum DatabaseDialect {
     POSTGRES = "postgres",
     SQLITE = "sqlite",
     MARIADB = "mariadb", 
-    SQL_SERVER = "sql_server", 
+    MSSQL = "mssql", 
     ORACLE = "oracle"
 };
 
@@ -45,10 +47,10 @@ export const DBTypes: DatabaseType[] = [
     
     {
         name: "SQL Server",
-        dialect: DatabaseDialect.SQL_SERVER,
+        dialect: DatabaseDialect.MSSQL,
         logo: "/sql_server_logo_small.png",
         small_logo: "/sql_server_logo_small.png" , 
-        comming : true
+        
     },
     
     {
@@ -56,7 +58,7 @@ export const DBTypes: DatabaseType[] = [
         dialect: DatabaseDialect.ORACLE,
         logo: "/oracle_logo_small.png",
         small_logo: "/oracle_logo_small.png" , 
-        comming : true
+        
     },
 ]
 
@@ -115,3 +117,14 @@ export enum CardinalityStyle {
     SYMBOLIC = "SYMBOLIC"
 }
 
+
+
+export const emptyDb = (database: DatabaseSchemaType) : DatabaseSchemaType => {
+
+    let cloneDb : any = _.cloneDeep(database);
+    cloneDb.tables = [];
+    cloneDb.relationships = [];
+    cloneDb.numOfTables = 0;
+
+    return cloneDb as DatabaseSchemaType;
+}

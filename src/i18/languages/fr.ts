@@ -262,6 +262,21 @@ export const fr = {
                 step3: "Allez à <bold>Fichier > Exporter > Base de données vers fichier SQL</bold>.",
                 step4: "Dans la fenêtre, sélectionnez <bold>Exporter uniquement le schéma</bold> et cliquez sur <bold>Enregistrer</bold>.",
                 step5: "Enfin, copiez le contenu du fichier <code>.sql</code> dans l’éditeur de code ci-dessous."
+            },
+                 ssms: {
+                "step1": "Ouvrez SQL Server Management Studio (SSMS).",
+                "step2": "Faites un clic droit sur votre base de données, puis sélectionnez Tâches → Générer des scripts dans le menu contextuel.",
+                "step3": "Dans l’étape Choisir les objets, sélectionnez Choisir des objets spécifiques de la base de données, puis cochez toutes les tables.",
+                "step4": "Dans l’étape Définir les options de script, sélectionnez Enregistrer dans un fichier et choisissez l’emplacement où enregistrer le fichier .sql.",
+                "step5": "Terminez l’assistant, puis ouvrez le fichier .sql généré et copiez son contenu dans l’éditeur de code ci-dessous."
+            },
+            sqldeveloper: {
+                "step1": "Ouvrez Oracle SQL Developer et connectez-vous à votre base de données.",
+                "step2": "Dans le menu supérieur, allez dans Outils → Exportation de base de données.",
+                "step3": "Dans la boîte de dialogue d’exportation, sélectionnez votre connexion, puis assurez-vous que seules les options Pretty Print et Terminator sont cochées, et que Export Data est décoché pour garantir une exportation du schéma uniquement.",
+                "step4": "Choisissez l’emplacement du fichier d’exportation, puis passez à l’étape suivante.",
+                "step5": "Sous Types d’objets standards, cochez uniquement Tables, Index, Contraintes et Contraintes référentielles. Laissez toutes les autres options décochées.",
+                "step6": "Terminez l’assistant, puis ouvrez le fichier .sql généré et copiez son contenu dans l’éditeur de code ci-dessous."
             }
         }
     }
