@@ -38,9 +38,10 @@ StackRender is currently in **Public Beta**. Star and watch this repository to g
 - ✅ PostgreSQL  
 - ✅ MySQL  
 - ✅ MariaDB  
-- ✅ SQLite  
+- ✅ SQLite
+- ✅ Oracle
+- ✅ SQL Server (MSSQL)
 
-And more coming very soon!
 ## Get Started
 
 Use the [cloud version](https://www.stackrender.io) or deploy locally to start designing your database schemas in minutes.
