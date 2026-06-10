@@ -52,7 +52,7 @@ const CircularDependencyAlert: React.FC<CircularDependencyAlertProps> = ({ error
         deleteRelationship(id)
     }, [])
     return (
-        <div className="flex flex-col gap-2 w-full h-full items-center pt-12 ">
+         <div className="flex flex-col gap-2 w-full h-full items-center pt-12 ">
             <AlertTriangle
                 className="size-12 text-destructive"
             />
@@ -63,14 +63,14 @@ const CircularDependencyAlert: React.FC<CircularDependencyAlertProps> = ({ error
                 {t("db_controller.circular_dependency.description")} , <span className="font-medium text-foreground"> {t("db_controller.circular_dependency.suggestion")}  </span>
             </p>
 
-            <ul aria-label="Relationships" className="w-[80%] max-w-[360px]" 
+            <ul aria-label="Relationships" className="w-[80%] max-w-[360px] mt-4" 
             >
                 {
                     circularRelationships.map((relationship: RelationshipType) => (
                         <li
                             onClick={() => focus(relationship.id)}
                             key={relationship.id}>
-                            <div className="hover:bg-secondary flex items-center justify-between h-10 mb-2 px-3 rounded-md cursor-pointer">
+                            <div className="hover:bg-secondary flex items-center justify-between h-10 mb-2 px-3 rounded-md cursor-pointer bg-card border-1">
                                 <span className="text-sm">
                                     {relationship.sourceTable.name} -&gt;  {relationship.targetTable.name}
                                 </span>

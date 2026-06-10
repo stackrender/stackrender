@@ -41,14 +41,13 @@ const Clipboard: React.FC<ClipboardProps> = ({ text }) => {
     }, [text])
 
     return (
-        <Tooltip>
+  <Tooltip>
             <TooltipTrigger asChild>
                 <span>
                     <Button
                         size="icon"
-
                         variant="outline"
-                        className="size-8"
+                        className="w-7 h-7 text-muted-foreground bg-card/50   backdrop-blur-xs dark:backdrop-blur-md shadow-lg"
                         onClick={copyToClipboard}
                     >
                         {

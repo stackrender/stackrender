@@ -52,6 +52,7 @@ import { Modals } from "@/providers/modal-provider/modal-contxet";
 import { useModal } from "@/providers/modal-provider/modal-provider";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import useToast from "@/hooks/use-toast";
 
 
 
@@ -72,7 +73,7 @@ const DatabaseDiagram: React.FC = () => {
 
     // Diagram-related state (e.g. connection in progress)
     const { setIsConnectionInProgress, cardinalityStyle, showController, openController } = useDiagramOps();
-
+    const raise = useToast() ; 
     // Destructure tables and relationships from database
     const { tables, relationships } = database || { tables: [], relationships: [] };
 
@@ -145,13 +146,11 @@ const DatabaseDiagram: React.FC = () => {
         } else {
 
 
-            toast(t("db_controller.invalid_relationship.title"), {
-                description: t("db_controller.invalid_relationship.description"),
-                classNames: {
-                    description: "!text-destructive",
-                    title: "!text-destructive"
-                },
-            })
+                 raise(
+                t("db_controller.invalid_relationship.title"),
+                t("db_controller.invalid_relationship.description"),
+                "ERROR" 
+            )
         }
 
         setIsConnectionInProgress(false);
@@ -266,17 +265,18 @@ const DatabaseDiagram: React.FC = () => {
                         </Controls >
                         <MiniMap
                             nodeStrokeWidth={4}
-                            className="!bg-background border-1 rounded-lg overflow-hidden "
-                            maskStrokeColor={resolvedTheme == "dark" ? "#FFFFFF1A" : "#e2e8f0"}
-                            maskColor={resolvedTheme == "dark" ? "#21262d77" : "#62748e05"}
+                            className="!bg-input/50 ring-1  ring-border shadow-sm rounded-md overflow-hidden shadow-md backdrop-blur-xs dark:!bg-background/50 "
+                            maskStrokeColor={resolvedTheme == "dark" ? "#FFFFFF1A" : "#cad5e2"}
+                            maskColor={resolvedTheme == "dark" ? "#21262d88" : "#f1f5f9cc"}
                             maskStrokeWidth={1}
-                            nodeClassName={"!fill-muted-foreground/20 "}
+
+                            nodeClassName={"!fill-foreground/20 "}
                             style={{
-                                width: 164,
+                                width: 148,
                                 height: 128
                             }}
                         />
-                        <Background color="#62748e" className="dark:!bg-background " />
+                        <Background color="#62748e" className="!bg-background dark:!bg-background" />
 
                     </ReactFlow>
                     <div

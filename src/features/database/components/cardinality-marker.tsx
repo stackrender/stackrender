@@ -48,8 +48,8 @@ const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false,
                 >
                     <svg
                         fill="transparent"
-                        className={selected ? "stroke-ring dark:!stroke-primary-foreground" : "stroke-ring/60 dark:!stroke-muted-foreground/60"}
-                        strokeWidth="4"
+                        className={selected ? ' !stroke-[oklch(0.60_0.028_263.3984)] dark:!stroke-primary-foreground' : 'stroke-[oklch(0.72_0.022_263.3984)] dark:!stroke-muted-foreground'}
+                        strokeWidth="6"
                         width="24"
                         height="24"
                         viewBox="0 0 100 100">
@@ -74,24 +74,24 @@ const CardinalityMarker: React.FC<CardinalityMarkerProps> = ({ selected = false,
                 <circle
                     cx="12"
                     cy="12"
-                    r="8"
+                    r="6"
                     strokeWidth="1"
                     className={
-                        cn(" fill-background",
-                            selected ? " stroke-ring fill-background dark:!stroke-primary-foreground" :
-                             " stroke-ring/60 dark:!stroke-muted-foreground "
+                        cn(" fill-background ",
+                            selected ? " stroke-[oklch(0.60_0.028_263.3984)] fill-background dark:!stroke-primary-foreground" :
+                             " stroke-[oklch(0.72_0.022_263.3984)]  dark:!stroke-muted-foreground "
                         )
                     }
                 />
                 <text
                     x="12"
-                    y="13"
+                    y="12.5"
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fontSize="8"
+                    fontSize="6"
                     className={
-                        cn("fill-ring/60 font-semibold dark:!fill-muted-foreground" , 
-                            selected ? "fill-ring dark:!fill-primary-foreground" : "" , 
+                        cn("fill-[oklch(0.72_0.022_263.3984)] font-semibold dark:!fill-muted-foreground" , 
+                            selected ? "fill-[oklch(0.60_0.028_263.3984)] dark:!fill-primary-foreground" : "" , 
                         )
                     }
                 >

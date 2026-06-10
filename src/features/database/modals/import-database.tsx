@@ -1,9 +1,6 @@
 import Modal, { ModalProps } from "@/components/modal"
-import ReactCodeMirror, { oneDark } from "@uiw/react-codemirror";
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { overrideDarkTheme, overrideLightTheme } from "@/lib/colors";
-import { sql } from '@codemirror/lang-sql';
 import { DatabaseDialect, ImportDatabaseMethod, ImportDatabaseOption, ImportMethodType, MARIADB_DUMP_EXAMPLE, MARIADB_DUMP_INSTRUCTIONS, MYSQL_DUMP_EXAMPLE, MYSQL_DUMP_INSTRUCTIONS, PG_DUMP_EXAMPLE, PG_DUMP_INSTRUCTIONS, SQLITE_DUMP_EXAMPLE, SQLITE_DUMP_INSRUCTION } from "@/lib/database";
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { AlertCircleIcon, Code, HelpCircle } from "lucide-react";
@@ -20,6 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
 import { BaseSqlImporter } from "@/utils/import/base-sql-importer";
 import { getImporter } from "@/utils/import/import-utils";
+import CodeEditor from "@/components/code-editor";
 
 
 const options: ImportDatabaseOption[] = [{
@@ -180,8 +178,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
                 setParsedDatabase(parsedDatabase);
                 setError(false);
 
-            } catch (error) {
-
+            } catch (error) { 
                 setError(true);
                 setParsedDatabase(undefined)
             }
@@ -235,7 +232,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
         return;
 
     return (
-        <Modal
+         <Modal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             title={t("modals.import_database.title")}
@@ -245,7 +242,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
             isDisabled={!parsedDatabase}
         >
             <div className="flex flex-col gap-4 !min-w-0  ">
-                <div className="w-full space-y-2 !min-w-0 ">
+                <div className="w-full space-y-2 min-w-0 ">
                     <p className="text-sm text-muted-foreground">
                         {t("modals.import_database.import_options")}
                     </p>
@@ -298,6 +295,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
                             </RadioGroup>
 
                         }
+
                     </div>
                     {
                         selectedImportMethod?.type == ImportMethodType.DUMP &&
@@ -316,7 +314,7 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
                                     <div className="  font-normal w-full">
                                         <span className="border-1 border-border p-1 px-2  rounded-md  w-full flex items-center justify-between">
                                             {selectedImportMethod.instruction}
-                                            <Clipboard text={selectedImportMethod.example} />
+                                            <Clipboard text={selectedImportMethod.instruction} />
                                         </span>
                                     </div>
 
@@ -362,18 +360,17 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
                     }
 
                 </div>
-                <div className="flex flex-col  ">
-                    <ReactCodeMirror
+                <div className="flex flex-1 flex-col  ">
+                    <CodeEditor
                         className={
-                            cn("flex w-full border-1 rounded-md border-divider overflow-hidden  ",
+                            cn("flex w-full   border-1 rounded-md border-divider overflow-hidden ",
                                 (error || parsedDatabase?.errors?.length > 0) ? "min-h-[360px] max-h-[360px]" : "min-h-[424px] max-h-[424px]"
                             )
                         }
-                        extensions={[sql()]}
                         value={sqlCode}
                         onChange={validateSql}
-                        theme={resolvedTheme == "light" ? overrideLightTheme : [oneDark, overrideDarkTheme]}
                     />
+
                     <div className="mt-4">
                         {
                             error &&
@@ -394,13 +391,13 @@ const ImportDatabaseModal: React.FC<ModalProps> = ({ isOpen, onOpenChange }) => 
                             (parsedDatabase?.errors && parsedDatabase?.errors?.length > 0) &&
                             <Alert
                                 variant={"default"}
-                                className="text-chart-5 dark:text-chart-3"
+                                className="text-chart-4"
                             >
 
                                 <AlertTitle>
                                     {t("modals.import_database.import_warning")}
                                 </AlertTitle>
-                                <AlertDescription className="text-chart-5 dark:text-chart-3">
+                                <AlertDescription className="text-chart-4 ">
                                     {t("modals.import_database.import_warning_description")}
                                 </AlertDescription>
 

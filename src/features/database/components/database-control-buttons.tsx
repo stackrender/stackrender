@@ -9,7 +9,7 @@ import { useDatabaseHistory } from "@/providers/database-history/database-histor
 import { useOnViewportChange, useReactFlow } from "@xyflow/react";
 
 import { LayoutGrid, Redo, Scan, Undo, ZoomIn, ZoomOut } from "lucide-react";
-import { useCallback,   useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface DbControlButtons {
@@ -58,8 +58,8 @@ const DatabaseControlButtons: React.FC<DbControlButtons> = ({ adjustPositions })
     }, []);
 
     return (
-        <div className="flex !rounded-md p-2 border-1 !overflow-hidden !bg-background/20 dark:!bg-card/20 text-muted-foreground shadow-md backdrop-blur-sm"
-        >
+        <div className="flex !rounded-md p-2 border-1 !overflow-hidden !bg-input/50  dark:!bg-card/50 text-muted-foreground shadow-md backdrop-blur-xs dark:backdrop-blur-md">
+
             <Tooltip>
                 <TooltipTrigger asChild>
                     <span>

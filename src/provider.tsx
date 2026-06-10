@@ -12,7 +12,7 @@ export function UIProviders({ children }: { children: React.ReactNode }) {
   return (
 
     <FontProvider>
-      <ThemeProvider defaultTheme ={"dark"}>
+      <ThemeProvider defaultTheme ={"light"}>
         <TooltipProvider delayDuration={0}>
           <Toaster />
           <SearchProvider>

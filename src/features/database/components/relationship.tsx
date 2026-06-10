@@ -80,7 +80,7 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
                 sourceY,
                 targetX: targetSide === 'left' ? targetLeftX : targetRightX,
                 targetY,
-                borderRadius: 6,
+                borderRadius: 8,
                 sourcePosition:
                     sourceSide === 'left' ? Position.Left : Position.Right,
                 targetPosition:
@@ -125,7 +125,7 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
                 markerEnd={`url(#${endMarker})`}
                 fill="none"
                 className={cn([
-                    `!stroke-1  ${selected ? '!stroke-ring dark:!stroke-primary-foreground' : 'stroke-ring/60 dark:!stroke-muted-foreground'}`,
+                    `!stroke-[1.5px]  ${selected ? '  !stroke-[oklch(0.60_0.028_263.3984)] dark:!stroke-primary-foreground' : 'stroke-[oklch(0.72_0.022_263.3984)] dark:!stroke-muted-foreground'}`,
                 ])}
                 onClick={(e) => {
                     if (e.detail === 2) {
@@ -143,7 +143,6 @@ const Relationship: React.FC<EdgeProps<RelationshipProps>> = (props) => {
                 fill="none"
                 strokeOpacity={0}
                 strokeWidth={16}
-
                 className="react-flow__edge-interaction"
                 onClick={(e) => {
                     if (e.detail === 2) {

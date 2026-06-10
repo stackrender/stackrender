@@ -206,9 +206,10 @@ const TablesController: React.FC = ({ }) => {
             }
             {
                 allTables.length > 0 && showSqlPreview &&
-                <div className=" flex-1 overflow-auto -ml-3">
+                <div className=" flex-1 overflow-auto ">
                     <SqlPreview
                         tableFilterIds={tableFilterIds}
+                        className="rounded-none  border-0 border-t-1"
                     />
                 </div>
             }

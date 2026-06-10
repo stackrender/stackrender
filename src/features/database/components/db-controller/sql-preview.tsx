@@ -1,34 +1,33 @@
- 
+
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import React, { useEffect, useMemo, useState } from "react";
-import CodeMirror from '@uiw/react-codemirror';
-import { sql } from '@codemirror/lang-sql';
-import { oneDark } from '@codemirror/theme-one-dark';
-import { overrideDarkTheme, overrideLightTheme } from "@/lib/colors";
+ 
 import { DatabaseType } from "@/lib/schemas/database-schema";
 import CircularDependencyAlert from "./circular-dependecy-alert";
 import { useTranslation } from "react-i18next";
 import Clipboard from "@/components/clipboard";
 import { TableType } from "@/lib/schemas/table-schema";
 import { RelationshipType } from "@/lib/schemas/relationship-schema";
-import { useTheme } from "@/providers/theme-provider/theme-provider";
-import { toast } from "sonner";
+ 
 import BaseDatabaseRenderer from "@/utils/render/database/base-database-renderer";
 import { CircularDependencyError, getRenderer } from "@/utils/render/render-uttils";
 import { areArraysEqual } from "@/utils/utils";
+import CodeEditor from "@/components/code-editor";
+import useToast from "@/hooks/use-toast";
 
 
 interface SqlPreviewProps {
-    tableFilterIds?: string[]
+    tableFilterIds?: string[] , 
+    className? : string ; 
 }
 
-const SqlPreview: React.FC<SqlPreviewProps> = ({ tableFilterIds }) => {
+const SqlPreview: React.FC<SqlPreviewProps> = ({ tableFilterIds , className}) => {
 
 
     const { database: currentDatabase } = useDatabase();
     const { data_types } = useDatabaseOperations();
-    const [sqlCode, setSqlCode] = useState<string>("");
-
+    const [sqlCode, setSqlCode] = useState<string>(""); 
+    const raise = useToast();
     const [circularDependency, setCircularDependency] = useState<CircularDependencyError | undefined>(undefined);
 
     const database = useMemo(() => {
@@ -42,19 +41,18 @@ const SqlPreview: React.FC<SqlPreviewProps> = ({ tableFilterIds }) => {
             ),
         } as DatabaseType;
     }, [currentDatabase, tableFilterIds])
-
-    const { theme } = useTheme();
+ 
     const { t } = useTranslation();
 
     useEffect(() => {
         (async () => {
 
             if (database?.dialect && data_types.length > 0) {
- 
+
                 try {
                     const renderer: BaseDatabaseRenderer = getRenderer(database.dialect, data_types);
                     const sql: string = await renderer.renderDDL(database)
- 
+
                     setSqlCode(sql);
                     setCircularDependency(undefined);
 
@@ -76,35 +74,34 @@ const SqlPreview: React.FC<SqlPreviewProps> = ({ tableFilterIds }) => {
     }, [database, data_types]);
 
 
+
     useEffect(() => {
         if (circularDependency)
-            toast(t("db_controller.circular_dependency.title"), {
-                description: t("db_controller.circular_dependency.description"),
-                classNames: {
-                    description: "!text-destructive",
-                    title: "!text-destructive"
-                },
-            });
+            raise(
+                t("db_controller.circular_dependency.title"),
+                t("db_controller.circular_dependency.description"),
+                "ERROR"
+            );
+
     }, [circularDependency]);
+
 
     if (circularDependency)
         return <CircularDependencyAlert error={circularDependency} />
 
     else
         return (
-            <div className="flex w-full h-full relative ">
-                <div className="absolute right-[12px] top-[4px] z-[1]  ">
+            <div className="flex w-full h-full relative min-w-0 !min-h-0  ">
+                <div className="absolute right-2 top-2 z-1">
                     <Clipboard
                         text={sqlCode}
                     />
                 </div>
-                <CodeMirror
+                <CodeEditor
                     defaultValue={sqlCode}
                     value={sqlCode}
-                    className="flex flex-1 w-full "
-                    extensions={[sql()]}
                     readOnly
-                    theme={theme != "dark" ? overrideLightTheme : [oneDark, overrideDarkTheme]}
+                    className={ className}
                 />
             </div>
         )

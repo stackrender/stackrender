@@ -145,8 +145,7 @@ export class BaseSqlImporter {
                 } catch (error) {
                     errors.push(error as Error);
                 }
-            }
-
+            } 
 
             if (tables.length == 0)
                 throw Error("Can't parse sql") 
@@ -307,7 +306,6 @@ export class BaseSqlImporter {
         const dataType: DataType | undefined = this.processDataType(typeName as string);
 
         if (!dataType) {
-            console.log (typeName , this.data_types)
             throw Error("Data type not found");
         }
         // get data type modifiers

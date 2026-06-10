@@ -16,11 +16,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const sidebarData = useSidebarData();
     const { openController } = useDiagramOps();
     return (
-        <Sidebar collapsible='icon' variant='floating' {...props} className='bg-card border-r' >
+        <Sidebar collapsible='icon'  {...props}  >
             <SidebarHeader>
-                <div className='flex items-center'>
+                <div className='flex items-center gap-2'>
                     <img
-                        className='w-8 h-8 p-[6px] rounded-md '
+                   className='w-8  p-[4px] rounded-md '
                         src='/stackrender.png'
                     />
                     <h3 className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground truncate font-semibold text-sm '>

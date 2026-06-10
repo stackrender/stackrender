@@ -18,5 +18,9 @@ export default defineConfig({
   worker: {
     format: 'es',
     plugins: () => [ topLevelAwait()]
+  } , 
+
+  build: {
+    target: "esnext"
   }
 })

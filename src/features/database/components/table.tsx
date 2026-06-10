@@ -56,7 +56,7 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
 
 
     const fields: React.ReactNode[] = useMemo(() => {
-        return table.fields.map((field: FieldType) => {
+        return table.fields.map((field: FieldType , index : number) => {
 
             const highlight: boolean = highlightedEdges.find((edge: any) =>
                 (edge.data?.relationship as RelationshipType).sourceFieldId == field.id ||
@@ -68,6 +68,7 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                 showHandles={selected}
                 highlight={highlight}
                 color={table.color as string}
+                className={ index == table.fields.length - 1 ? "!rounded-b-md" : undefined }
             />)
         })
     }, [table.fields, selected, highlightedEdges]);
@@ -78,11 +79,11 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
     }, []);
 
     return (
-        <Card
+          <Card
             className={cn(
-                "rounded-[12px] p-0.5  gap-0 transition-all duration-200",
+                "rounded-lg p-0.5  gap-0  transition-all duration-200  border-none ring-1 ring-slate-300 shadow-xs dark:ring-border  ",
                 overlapping
-                    ? 'ring-1 ring-destructive  scale-105 shadow-danger '
+                    ? 'ring-1 !ring-destructive  scale-105 shadow-danger '
                     : '',
                 !pulsing && overlapping
                     ? 'scale-105'
@@ -91,23 +92,23 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                     ? 'scale-110'
                     : '',
 
-                selected && !overlapping ? "ring-1 ring-primary" : ""
+                selected && !overlapping ? "ring-[1.5px] !ring-primary" : ""
             )}
             style={
                 (selected && table.color && !overlapping) ?
                     {
-                        boxShadow: "0 0 0 1px " + table.color,
+                        boxShadow: "0 0 0 1.5px " + table.color,
                     }
                     : undefined
             }
             onDoubleClick={focus}
 
-
         >
-            <CardHeader className="group rounded-t rounded-t-md p-1.5  flex items-center mb-0 bg-primary/10 "
+            <CardHeader className="group rounded-t rounded-t-md p-1.5 border-1  border-primary/20  flex items-center mb-0 bg-primary/10  "
                 style={
                     table.color ? {
-                        backgroundColor: table.color + "20" as string
+                        backgroundColor: table.color + "20" as string,
+                        border: " 1px  solid " + table.color + "60"
                     } : undefined
                 }
             >
@@ -115,15 +116,17 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                 {!editMode ? <>
                     <label
                         className=" w-full text-editable truncate  py-0.5 text-sm font-bold  text-primary"
-                        onDoubleClick={() => setEditMode(true)}
+                        onDoubleClick={ () => setEditMode(true)  }
                         style={{ color: table.color as string }}
                     >
                         {tableName}
                     </label>
                     <div className="flex gap-1 hidden shrink-0 flex-row group-hover:flex  ">
-                        <Button variant="outline" size="icon" className="size-6 shrink-0 shadow-sm rounded-sm" onClick={() => setEditMode(true)}>
-                            <IconPencil className="size-3 text-muted-foreground " />
-                        </Button>
+                        
+                            <Button variant="outline" size="icon" className="size-6 shrink-0 shadow-sm rounded-sm" onClick={() => setEditMode(true)}>
+                                <IconPencil className="size-3 text-muted-foreground " />
+                            </Button>
+                        
                         <Button variant="outline" size="icon" className="size-6 shrink-0 shadow-sm rounded-sm" onClick={focus}>
                             <IconFocus2 className="size-3 text-muted-foreground " />
                         </Button>
@@ -159,14 +162,14 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
 
                 }
             </CardHeader>
-            <CardContent className="p-0 mt-0">
+            <CardContent className="p-0 mt-0 rounded-b-md ">
                 {
                     !showMore ? fields.slice(0, MAX_FIELDS) : fields
                 }
 
                 {fields.length > MAX_FIELDS && (
                     <div
-                        className="flex h-8 cursor-pointer items-center gap-1 justify-center text-xs  transition-colors duration-200 "
+                        className="flex h-8 cursor-pointer items-center gap-1 justify-center text-xs  transition-colors duration-200  "
                         onClick={toggleShowMore}
                     >
                         {showMore ? (

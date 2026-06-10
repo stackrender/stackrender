@@ -88,10 +88,7 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
         database = database[0] as any;
     else
         database = undefined as any;
-
-    useEffect(() => {
-        console.log(database);
-    }, [database])
+ 
 
 
 

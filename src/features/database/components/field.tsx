@@ -17,7 +17,8 @@ interface Props {
     field: FieldType,
     showHandles?: boolean,
     highlight?: boolean,
-    color?: string
+    color?: string,
+    className?: string
 }
 
 
@@ -28,7 +29,7 @@ export const TARGET_PREFIX = "target_";
 
 const Field: React.FC<Props> = (props) => {
 
-    const { field, showHandles, highlight, color } = props;
+    const { field, showHandles, highlight, color, className } = props;
     const [editMode, setEditMode] = useState<boolean>(false);
     const { deleteField, editField } = useDatabaseOperations();
     const [fieldName, setFieldName] = useState<string>(field.name);
@@ -39,14 +40,17 @@ const Field: React.FC<Props> = (props) => {
     }, [field.name]);
 
     const removeField = useCallback(() => {
+
         deleteField(field.id)
-    }, [])
+    }, [field.id])
 
     const saveFieldName = useCallback(() => {
+
         editField({
             id: field.id,
             name: fieldName
         } as FieldType);
+
         setEditMode(false);
     }, [fieldName]);
 
@@ -54,16 +58,17 @@ const Field: React.FC<Props> = (props) => {
     return (
         <div className={cn(
             "group relative flex h-8 items-center justify-between gap-1 px-1.5 text-sm hover:bg-secondary transition-all duration-200 ease-in-out ",
-            highlight ? "bg-secondary" : ""
+            highlight ? "bg-secondary" : "",
+            className
         )}>
-            <div className="text-muted-foreground flex items-center truncate  gap-1.5">
+            <div className="text-muted-foreground flex items-center truncate w-full   gap-1.5 min-w-0  ">
                 {
                     field.isPrimary &&
                     <IconKey className="size-3" />
                 }
                 {
                     field.nullable && !field.isPrimary &&
-                    <IconKeyframe className="size-3" />
+                    <IconKeyframe className="size-3 stroke-3" />
                 }
                 {
                     !field.nullable && !field.isPrimary &&
@@ -72,7 +77,7 @@ const Field: React.FC<Props> = (props) => {
                 {
                     !editMode ?
                         <label
-                            className={"truncate flex gap-1 text-xs text-foreground  "}
+                            className={"truncate flex gap-1 text-xs text-foreground font-medium "}
                             onDoubleClick={() => setEditMode(true)}
                         >
                             {fieldName}
@@ -98,7 +103,7 @@ const Field: React.FC<Props> = (props) => {
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => setFieldName(e.target.value)}
                             className="h-6 font-bold pb-1.5 rounded-sm px-1"
-                              onKeyDown={(e: any) => {
+                            onKeyDown={(e: any) => {
                                 if (e.key === "Enter") {
                                     e.preventDefault();
                                     saveFieldName();
@@ -106,15 +111,15 @@ const Field: React.FC<Props> = (props) => {
                                 }
                             }}
                         />
-
                 }
             </div>
             {
                 !editMode ?
                     <div className="text-xs text-muted-foreground flex   shrink-0 ">
-                        <div className="group-hover:opacity-0">
+                        <div className={cn(" !text-muted-foreground font-medium group-hover:opacity-0")}>
                             {field.type?.name?.split(' ')[0]}
                         </div>
+
                         <div className="flex gap-1 opacity-0 shrink-0 flex-row group-hover:opacity-100 transition-opacity duration-200 absolute right-1 top-1 ">
                             <Button variant="outline" size="icon" className="size-6 shrink-0 shadow-sm rounded-sm" onClick={() => setEditMode(true)}>
                                 <IconPencil className="size-3 text-muted-foreground " />
@@ -123,6 +128,7 @@ const Field: React.FC<Props> = (props) => {
                                 <IconTrash className="size-3 text-destructive " />
                             </Button>
                         </div>
+
                     </div>
                     :
                     <div className="text-xs text-muted-foreground flex ml-1">

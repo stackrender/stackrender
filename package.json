@@ -1,7 +1,7 @@
 {
   "name": "StackRender",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.3.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -86,7 +86,7 @@
     "@types/react-dom": "18.3.0",
     "@typescript-eslint/eslint-plugin": "8.11.0",
     "@typescript-eslint/parser": "8.11.0",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "10.4.19",
     "esbuild": "^0.28.0",
     "eslint": "^8.57.0",
@@ -102,7 +102,7 @@
     "rollup": "^4.61.1",
     "tw-animate-css": "^1.3.6",
     "typescript": "5.6.3",
-    "vite": "^8.0.3",
+    "vite": "^5.2.0",
     "vite-plugin-top-level-await": "^1.5.0",
     "vite-tsconfig-paths": "^4.3.2"
   }
