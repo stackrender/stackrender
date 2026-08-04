@@ -9,7 +9,7 @@ This guide explains how to run StackRender using Docker.
 The easiest way to run StackRender:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 The application will be available at `http://localhost:8080`
@@ -17,7 +17,7 @@ The application will be available at `http://localhost:8080`
 To stop the application:
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ### Using Docker CLI
@@ -114,7 +114,7 @@ docker logs stackrender
 Or with Docker Compose:
 
 ```bash
-docker-compose logs
+docker compose logs
 ```
 
 ### Port Already in Use
