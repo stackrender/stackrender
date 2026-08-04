@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "lint": "eslint -c .eslintrc.json ./src/**/**/*.{ts,tsx} --fix",
     "preview": "vite preview"
   },
@@ -88,6 +88,7 @@
     "@typescript-eslint/parser": "8.11.0",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "10.4.19",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.28.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "9.1.0",
