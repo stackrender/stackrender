@@ -103,6 +103,14 @@ RUN npm config set strict-ssl false && npm install
 
 This is necessary in some build environments with certificate validation issues.
 
+### Out of Memory During Build
+
+The production build is memory-intensive (the app compiles thousands of modules). If `docker compose up` or `docker build` fails with an out-of-memory error such as `Reached heap limit` or `cannot allocate memory` during the `npm run build` step, increase the memory available to Docker:
+
+- **Docker Desktop**: Settings, then Resources, then Memory. Set it to at least **6-8 GB** and apply.
+
+The Dockerfile raises the Node heap (`NODE_OPTIONS=--max-old-space-size`) for the build. That heap size must fit inside the memory available to Docker, so raising the Docker memory limit is the fix when the build runs out of memory.
+
 ### Container Not Starting
 
 Check the logs:
