@@ -95,6 +95,8 @@ export const ar = {
         type_enter: "اكتب واضغط Enter",
         precision_def: "إجمالي الأرقام المسموحة (قبل + بعد الفاصلة).",
         scale_def: "عدد الأرقام بعد الفاصلة.",
+        no_default: "لا توجد قيمة افتراضية",
+random_uuid: "معرّف UUID عشوائي",
         time_default_value: {
           no_value: "لا توجد قيمة",
           custom: "وقت مخصص",

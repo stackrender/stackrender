@@ -7,7 +7,7 @@ import { DataTypes, TimeDefaultValues } from "@/lib/field";
 
 import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import dayjs from 'dayjs';
-import { now  } from "@internationalized/date";
+import { now } from "@internationalized/date";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 import { MultiSelect } from "@/components/multi-select";
 import { DatePicker } from "@/components/date-picker";
+import { DatabaseDialect } from "@/lib/database";
 
 interface DefaultValueType {
     number?: boolean;
@@ -23,7 +24,8 @@ interface DefaultValueType {
     boolean?: boolean;
     time?: boolean;
     select?: boolean;
-    multiSelect?: boolean
+    multiSelect?: boolean;
+    uuid?: boolean
 }
 
 interface FieldDefaultValueProps {
@@ -64,8 +66,8 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
 
     const [defaultDateTime, setDefaultDateTime] = useState<any>(() => {
         try {
-            if (field.type.name == "time" ) {
-                return field.defaultValue ; 
+            if (field.type.name == "time") {
+                return field.defaultValue;
             }
 
             if (field.defaultValue) {
@@ -78,7 +80,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
             return undefined;
         }
     });
- 
+
     const defaultValueType: DefaultValueType = useMemo(() => {
         return {
             number: field.type?.type == DataTypes.INTEGER || field.type?.type == DataTypes.NUMERIC,
@@ -86,7 +88,8 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
             boolean: field.type?.type == DataTypes.BOOLEAN,
             time: field.type?.type == DataTypes.TIME && field.type?.name != "year",
             select: field.type?.type == DataTypes.ENUM && field.type?.name != "set",
-            multiSelect: field.type?.type == DataTypes.ENUM && field.type?.name == "set"
+            multiSelect: field.type?.type == DataTypes.ENUM && field.type?.name == "set",
+            uuid: field.type.name == "uuid" || field.type.name == "uniqueidentifier"
         }
     }, [field]);
 
@@ -94,7 +97,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
 
     const [selectedValues, setSelectedValues] = useState<string[] | string>(() => {
 
-        if (defaultValueType.select) {
+        if (defaultValueType.select || defaultValueType.uuid) {
             if (!field.defaultValue)
                 return "none";
             else
@@ -204,7 +207,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
 
         let value: string | undefined;
 
-        
+
 
         if (field.type.name != "time" && date) {
             setDefaultDateTime(date);
@@ -214,8 +217,8 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
             else if (field.type.name == "datetime" || field.type.name == "timestamp" || field.type.name == "timestamptz")
                 value = dayjs(date).format("YYYY-MM-DD HH:mm:ss")
         }
-        else if ( field.type.name == "time") {
-            value = defaultDateTime ; 
+        else if (field.type.name == "time") {
+            value = defaultDateTime;
         }
 
 
@@ -227,7 +230,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
 
     const enumValueChange = useCallback((selection: any) => {
 
-        if (defaultValueType.select) {
+        if (defaultValueType.select || defaultValueType.uuid) {
             setSelectedValues(selection);
             editField({
                 id: field.id,
@@ -256,11 +259,11 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
 
 
 
+
     return (
         <>
             {
                 !defaultValueType.boolean &&
-
                 <Label htmlFor="default_value">
                     {t("db_controller.field_settings.default_value")}
                 </Label>
@@ -317,7 +320,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
 
                     <SelectContent>
                         <SelectItem value={"none"} >
-                            No Default value
+                            {t("db_controller.field_settings.no_default")}
                         </SelectItem>
 
                         {
@@ -330,6 +333,34 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                                 </SelectItem>
                             ))
                         }
+                    </SelectContent>
+                </Select>
+            }
+
+            {
+
+                (defaultValueType.uuid) &&
+
+                <Select
+                    aria-label="value"
+                    value={selectedValues as any}
+                    onValueChange={enumValueChange as any}
+
+                >
+                    <SelectTrigger id="charset" className="w-full flex ">
+                        <SelectValue placeholder={t('db_controller.field_settings.pick_value')} />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                        <SelectItem value={"none"} >
+                            {t("db_controller.field_settings.no_default")}
+                        </SelectItem>
+                        <SelectItem value={"random"} >
+                            {t("db_controller.field_settings.random_uuid")}
+
+                        </SelectItem>
+
+
                     </SelectContent>
                 </Select>
             }
@@ -364,7 +395,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                             </SelectItem>
                             <SelectItem value={TimeDefaultValues.CUSTOM}>{t("db_controller.field_settings.time_default_value.custom")}</SelectItem>
                             {
-                                (field.type.name == "datetime" || field.type.name?.includes("timestamp")) ?
+                                (field.type.name?.includes("datetime") || field.type.name?.includes("timestamp") || ((field.type.dialect == DatabaseDialect.ORACLE || field.type.dialect == DatabaseDialect.MSSQL) && field.type.name == "date")) ?
                                     <SelectItem value={TimeDefaultValues.NOW}>{t("db_controller.field_settings.time_default_value.now")}</SelectItem> : null
                             }
                         </SelectContent>
@@ -389,12 +420,11 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                             <Input
                                 id="time"
                                 type="time"
-                                step={1} 
+                                step={1}
                                 defaultValue={defaultDateTime}
-                                onChange={(event) =>  setDefaultDateTime( event.target.value)}
+                                onChange={(event) => setDefaultDateTime(event.target.value)}
                                 onBlur={saveDefaultDateTime as any}
                                 className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-
                             />
                         </>
                     }
@@ -406,6 +436,8 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
 
 
 export default React.memo(fieldDefautlValue);
+
+
 
 
 

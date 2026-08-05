@@ -101,6 +101,8 @@ export const zh = {
         type_enter: "输入并按回车",
         precision_def: "允许的总位数（小数点前+后）。",
         scale_def: "小数点后的位数。",
+        no_default: "无默认值",
+random_uuid: "随机 UUID",
         time_default_value: {
           no_value: "无值",
           custom: "自定义时间",

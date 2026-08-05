@@ -95,6 +95,8 @@ export const de = {
         type_enter: "Tippen und Enter drücken",
         precision_def: "Zulässige Gesamtanzahl an Ziffern (vor + nach dem Dezimalpunkt).",
         scale_def: "Ziffern nach dem Dezimalpunkt.",
+        no_default: "Kein Standardwert",
+random_uuid: "Zufällige UUID",
         time_default_value: {
           no_value: "Kein Wert",
           custom: "Benutzerdefinierte Zeit",

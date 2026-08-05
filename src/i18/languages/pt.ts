@@ -101,6 +101,8 @@ export const pt = {
         type_enter: "Digite e pressione enter",
         precision_def: "Dígitos totais permitidos (antes + depois do decimal).",
         scale_def: "Dígitos permitidos após o decimal.",
+        no_default: "Sem valor padrão",
+random_uuid: "UUID aleatório",
         time_default_value: {
           no_value: "Sem valor",
           custom: "Hora personalizada",

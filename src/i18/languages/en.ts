@@ -7,8 +7,8 @@ export const en = {
         sidebar: {
             tables: "Tables",
             relationships: "Relationships",
-            database: "Database", 
-            documentation : "Docs"
+            database: "Database",
+            documentation: "Docs"
         },
 
         color_picker: {
@@ -104,6 +104,8 @@ export const en = {
                 type_enter: "Type and press enter",
                 precision_def: "Total digits allowed (before + after the decimal).",
                 scale_def: "Digits allowed after the decimal.",
+                no_default: "No Default value",
+                random_uuid: "Random UUID",
                 time_default_value: {
                     no_value: "No value",
                     custom: "Custom time",
@@ -209,7 +211,7 @@ export const en = {
             import_database: {
                 title: "Import your Database",
                 import: "Import",
-                view_docs : "View Docs" , 
+                view_docs: "View Docs",
                 import_options: "Would you like to import using :",
                 import_error: "SQL Parsing Error",
                 import_error_description: "We couldn't import your SQL because it contains invalid syntax.",
@@ -277,7 +279,7 @@ export const en = {
                 step5: "Finally, copy the contents of the <code>.sql</code> file into the <bold>code editor</bold> below."
 
             },
-            
+
             ssms: {
                 "step1": "Open <bold>SQL Server Management Studio (SSMS)</bold>.",
                 "step2": "Right-click your database, then select <bold>Tasks → Generate Scripts</bold> from the context menu.",

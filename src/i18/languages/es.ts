@@ -99,6 +99,8 @@ export const es = {
                 type_enter: "Escribe y presiona enter",
                 precision_def: "Total de dígitos permitidos (antes + después del decimal).",
                 scale_def: "Dígitos permitidos después del decimal.",
+                no_default: "Sin valor predeterminado",
+random_uuid: "UUID aleatorio",
                 time_default_value: {
                     no_value: "Sin valor",
                     custom: "Hora personalizada",

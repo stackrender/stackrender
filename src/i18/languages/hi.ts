@@ -100,6 +100,8 @@ export const hi = {
                 type_enter: "टाइप करें और एंटर दबाएं",
                 precision_def: "कुल अनुमत अंक (दशमलव से पहले और बाद)।",
                 scale_def: "दशमलव के बाद अनुमत अंक।",
+                no_default: "कोई डिफ़ॉल्ट मान नहीं",
+random_uuid: "रैंडम UUID",
                 time_default_value: {
                     no_value: "कोई मान नहीं",
                     custom: "कस्टम समय",

@@ -7,7 +7,7 @@ export const fr = {
             tables: "Tables",
             relationships: "Relations",
             database: "Base de données",
-            documentation : "Docs"
+            documentation: "Docs"
 
         },
         color_picker: {
@@ -33,7 +33,7 @@ export const fr = {
             note: "Note",
             name: "Nom",
             type: "Type",
-                        required: "Obligatoire",
+            required: "Obligatoire",
 
             nullable: "Nullable",
             select_fields: "Sélectionner les champs",
@@ -97,6 +97,8 @@ export const fr = {
                 type_enter: "Tapez et appuyez sur Entrée",
                 precision_def: "Nombre total de chiffres autorisés (avant + après la virgule).",
                 scale_def: "Nombre de chiffres autorisés après la virgule.",
+                no_default: "Aucune valeur par défaut",
+                random_uuid: "UUID aléatoire",
                 time_default_value: {
                     no_value: "Aucune valeur",
                     custom: "Heure personnalisée",
@@ -173,7 +175,7 @@ export const fr = {
             theme: "Thème",
             light: "Clair",
             dark: "Sombre",
-                        system: "Système",
+            system: "Système",
 
             help: "Aide",
             show_docs: "Afficher la documentation",
@@ -199,7 +201,7 @@ export const fr = {
             import_database: {
                 title: "Importer votre base de données",
                 import: "Importer",
-                view_docs : "Voir la documentation" , 
+                view_docs: "Voir la documentation",
                 import_options: "Souhaitez-vous importer en utilisant :",
                 import_error: "Erreur d’analyse SQL",
                 import_error_description: "Nous n'avons pas pu importer votre SQL car il contient une syntaxe invalide.",
@@ -263,7 +265,7 @@ export const fr = {
                 step4: "Dans la fenêtre, sélectionnez <bold>Exporter uniquement le schéma</bold> et cliquez sur <bold>Enregistrer</bold>.",
                 step5: "Enfin, copiez le contenu du fichier <code>.sql</code> dans l’éditeur de code ci-dessous."
             },
-                 ssms: {
+            ssms: {
                 "step1": "Ouvrez SQL Server Management Studio (SSMS).",
                 "step2": "Faites un clic droit sur votre base de données, puis sélectionnez Tâches → Générer des scripts dans le menu contextuel.",
                 "step3": "Dans l’étape Choisir les objets, sélectionnez Choisir des objets spécifiques de la base de données, puis cochez toutes les tables.",

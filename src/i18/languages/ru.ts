@@ -93,6 +93,8 @@ export const ru = {
         type_enter: "Введите и нажмите Enter",
         precision_def: "Общее количество допустимых цифр (до и после запятой).",
         scale_def: "Допустимое количество цифр после запятой.",
+        no_default: "Нет значения по умолчанию",
+random_uuid: "Случайный UUID",
         time_default_value: {
           no_value: "Нет значения",
           custom: "Произвольное время",
