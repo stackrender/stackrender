@@ -101,9 +101,10 @@ describe("getRenderer().renderDDL - emitted DDL across dialects", () => {
 
       it("emits the foreign key from posts to users with ON DELETE CASCADE", async () => {
         const sql = await render(c.dialect);
-
-        expect(sql).toMatch(/FOREIGN KEY\s*\(\s*user_id\s*\)/i);
-        expect(sql).toMatch(/REFERENCES\s+[`"]?users[`"]?\s*\(\s*id\s*\)/i);
+        expect(sql).toMatch(/FOREIGN KEY\s*\(\s*[`"]?user_id[`"]?\s*\)/i);
+        expect(sql).toMatch(
+          /REFERENCES\s+[`"]?users[`"]?\s*\(\s*[`"]?id[`"]?\s*\)/i
+        );
         expect(sql).toMatch(/ON DELETE CASCADE/i);
       });
     });
