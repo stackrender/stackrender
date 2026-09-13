@@ -28,6 +28,9 @@ export const ar = {
       show_code: "عرض الكود",
       fields: "الحقول",
       indexes: "الفهارس",
+      
+      no_index: "لم يتم العثور على فهارس",
+      create_new_index: "إنشاء فهرس جديد",
       note: "ملاحظة",
       name: "الاسم",
       type: "النوع",
@@ -84,6 +87,12 @@ export const ar = {
         text_setting: "إعداد النص",
         charset: "ترميز الحروف",
         collation: "التجميع",
+        no_charset: "لا توجد مجموعة أحرف",
+        no_collation: "لا يوجد ترتيب",
+        input_tag_placeholder: "أدخل القيم، مفصولة بفواصل...",
+        multi_select_placeholder: "حدد الحقول...",
+        date_placeholder: "اختر تاريخًا",
+        time: "الوقت",
         scale: "المقياس",
         max_length: "الطول الأقصى",
         integer_width: "عرض العدد الصحيح",
@@ -96,7 +105,7 @@ export const ar = {
         precision_def: "إجمالي الأرقام المسموحة (قبل + بعد الفاصلة).",
         scale_def: "عدد الأرقام بعد الفاصلة.",
         no_default: "لا توجد قيمة افتراضية",
-random_uuid: "معرّف UUID عشوائي",
+        random_uuid: "معرّف UUID عشوائي",
         time_default_value: {
           no_value: "لا توجد قيمة",
           custom: "وقت مخصص",
@@ -129,6 +138,21 @@ random_uuid: "معرّف UUID عشوائي",
         description: "يحتوي المخطط الخاص بك على علاقة مفتاح خارجي دائرية بين الجداول. لإصلاحها،",
         suggestion: "قم بإزالة إحدى العلاقات أدناه التي تسبب الدورة.",
         remove_relationship: "إزالة العلاقة"
+      },
+      validation: {
+        identifiers: {
+          table: "جدول",
+          column: "عمود",
+          index: "فهرس",
+          constraint: "قيد"
+        },
+        error_message: "معرّف غير صالح",
+        identifier_required: "اسم ${identifier} مطلوب",
+        identifier_required_description: "يرجى إدخال اسم لـ ${identifier}.",
+        invalid_identifier: "اسم ${identifier} غير صالح",
+        invalid_identifier_description: "استخدم الأحرف والأرقام والشرطات السفلية فقط. يجب أن يبدأ اسم ${identifier} بحرف.",
+        identifier_length: "اسم ${identifier} طويل جدًا",
+        identifier_length_description: "يتجاوز اسم ${identifier} هذا الحد الأقصى للطول وهو ${length} بايت الذي يسمح به ${dialect}."
       }
     },
     table: {

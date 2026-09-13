@@ -51,7 +51,7 @@ interface DatabaseOperationsContextType {
     createIndex: (index: IndexInsertType) => Promise<QueryResult>,
     editIndex: (index: IndexInsertType) => Promise<QueryResult>,
     deleteIndex: (id: string) => Promise<void>,
-    editFieldIndices: (indexId: string, fieldIds: string[]) => Promise<void>,
+    editFieldIndices: (indexId: string, fieldIds: string[] , deleteIds : string[]) => Promise<void>,
     // relationship operations
     createRelationship: (relationship: RelationshipInsertType) => Promise<QueryResult>,
     editRelationship: (relationship: RelationshipInsertType) => Promise<QueryResult>,

@@ -11,20 +11,21 @@ import React, {  useEffect, useState } from "react";
 import {  useDatabaseOperations } from "@/providers/database-provider/database-provider";
 
 import hash from "object-hash" ; 
+import { DatabaseDialect } from "@/lib/database";
 
 interface Props {
     tableFields: FieldType[] ; 
-    tableId : string ; 
+    tableId : string ;
+    dialect?: DatabaseDialect
 }
 
 
-const FieldList: React.FC<Props> = ({ tableFields , tableId}) => {
+const FieldList: React.FC<Props> = ({ tableFields , tableId , dialect}) => {
  
     const [fields, setFields] = useState<FieldType[]>(tableFields);
     const { orderTableFields  } = useDatabaseOperations();
 
     useEffect(() => {
-
         setFields(tableFields)
     }, [tableFields])
 
@@ -65,7 +66,7 @@ const FieldList: React.FC<Props> = ({ tableFields , tableId}) => {
                     >
                         {
                             fields.map((field: FieldType) => (
-                                <FieldItem field={field} key={field.id} />
+                                <FieldItem field={field} key={field.id} dialect={dialect}/>
 
                             ))
                         }

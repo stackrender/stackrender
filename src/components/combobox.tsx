@@ -19,7 +19,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
- 
 
 interface ComboboxProps {
   items: any[]
@@ -28,13 +27,14 @@ interface ComboboxProps {
   selectedItem?: string;
   onSelectionChange?: (id: string) => void;
   className?: string;
-  isDisabled?: boolean 
+  isDisabled?: boolean; 
+  valueLength?: number 
 }
 
 
 export const Combobox = (props: ComboboxProps) => {
 
-  const { items, label = "label", placeholder, onSelectionChange, selectedItem, className, isDisabled } = props;
+  const { items, label = "label", placeholder, onSelectionChange, selectedItem, className, isDisabled , valueLength } = props;
   const [query, setQuery] = React.useState<string>("");
 
   const [open, setOpen] = React.useState(false)
@@ -51,10 +51,10 @@ export const Combobox = (props: ComboboxProps) => {
 
   React.useEffect(() => {
     if (open)
-      setQuery(""); 
+      setQuery("");
   }, [open])
 
-  
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild disabled={isDisabled}>
@@ -64,10 +64,10 @@ export const Combobox = (props: ComboboxProps) => {
           aria-expanded={open}
           className={cn("justify-between", className)}
         >
-        <label className="truncate">
+          <label className="truncate ">
             {
               value
-                ? items.find((item) => item.id === value)?.[label]
+                ? (items.find((item) => item.id === value)?.[label] as string)?.substring(0 , valueLength)
                 : (placeholder ? placeholder : "Select items...")}
           </label>
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />

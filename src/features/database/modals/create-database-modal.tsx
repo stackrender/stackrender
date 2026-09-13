@@ -1,4 +1,4 @@
- 
+
 import Modal, { ModalProps } from "@/components/modal"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,14 +32,14 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
     }
 
     const createNewDatabase = useCallback(async (withImport: boolean = false) => {
-        const databaseId: string = v4() ; 
+        const databaseId: string = v4();
 
         return new Promise(async (res, rej) => {
             try {
                 await createDatabase({
                     id: databaseId,
                     name: dbName,
-                    dialect: selectedDbType  as any
+                    dialect: selectedDbType as any
                 });
                 await switchDatabase(databaseId);
                 if (withImport)
@@ -50,11 +50,11 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
             } catch (error) {
                 rej(error);
             }
-        }) 
+        })
     }, [selectedDbType, dbName])
 
     useEffect(() => {
-        setIsValid((selectedDbType  && dbName.trim().length > 0) as boolean)
+        setIsValid((selectedDbType && dbName.trim().length > 0) as boolean)
     }, [selectedDbType, dbName]);
 
     return (
@@ -64,7 +64,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
             onOpenChange={onOpenChange}
             title={t("modals.pick_database")}
             actionName={t("modals.create")}
- 
+
             isDisabled={!isValid}
             actionHandler={createNewDatabase}
             description={t("modals.create_database_header")}
@@ -81,10 +81,11 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
                             aria-invalid={dbName.trim().length == 0}
                             onChange={(event: any) => setDbName(event.target.value)}
                             placeholder={t("modals.db_name")}
+                            maxLength={255}
                         />
                         {
                             dbName.trim().length == 0 &&
-                            <p className="text-destructive">
+                            <p className="text-destructive text-xs">
                                 {t("modals.db_name_error")}
                             </p>
                         }
@@ -99,9 +100,9 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
 
                                     <Label htmlFor={db.dialect}
                                         className={cn("w-full p-3 rounded-md border hover:bg-secondary cursor-pointer",
-                                            (selectedDbType == db.dialect && !db.comming )? "border-primary bg-primary/20 " : "" , 
-                                            ( db.comming )? "opacity-75 hover:bg-background cursor-default" : ""
-                                            
+                                            (selectedDbType == db.dialect && !db.comming) ? "border-primary bg-primary/20 " : "",
+                                            (db.comming) ? "opacity-75 hover:bg-background cursor-default" : ""
+
 
                                         )}>
                                         <RadioGroupItem disabled={db.comming} value={db.dialect} id={db.dialect} className="sr-only" />
@@ -113,7 +114,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
                                             {db.name}
                                         </span>
                                         {
-                                            db.comming && 
+                                            db.comming &&
                                             <Badge className="absolute -top-2 left-[50%] -translate-x-[50%] bg-chart-5 dark:bg-chart-3">
                                                 Comming
                                             </Badge>
@@ -123,7 +124,7 @@ export const CreateDatabaseModal: React.FC<ModalProps> = (props) => {
                             ))
                         }
                     </RadioGroup>
-                
+
                     <div className="py-4 space-y-2">
                         <Button
                             variant="ghost"

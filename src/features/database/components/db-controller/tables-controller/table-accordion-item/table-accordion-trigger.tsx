@@ -12,22 +12,27 @@ import { cloneTable } from "@/utils/tables";
 import { IndexInsertType } from "@/lib/schemas/index-schema";
 import { FieldInsertType } from "@/lib/schemas/field-schema";
 import { AccordionTrigger } from "@/components/ui/accordion";
-import { IconBolt, IconCheck, IconCopy, IconDotsVertical, IconFocus2, IconFolder, IconGripVertical, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconAlertTriangle, IconBolt, IconCheck, IconCopy, IconDotsVertical, IconFocus2, IconFolder, IconGripVertical, IconPencil, IconTrash } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuShortcut } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useSortable } from "@dnd-kit/sortable";
+import { DatabaseDialect } from "@/lib/database";
+import { useDatabaseInvalidIdentifier } from "@/features/database/hooks/use-invalid-identifier";
+import { isValidIdentifier } from "@/utils/database";
+import { cn } from "@/lib/utils";
 
 
 
 export interface TableAccordionHeaderProps {
     table: TableType,
     isOpen?: boolean,
+    dialect?: DatabaseDialect
 }
 
 
-const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOpen }) => {
+const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOpen, dialect }) => {
 
     const { editTable, deleteTable, createField, createTable, createIndex, getInteger } = useDatabaseOperations();
 
@@ -36,14 +41,31 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
     const [editMode, setEditMode] = useState<boolean>(false);
     const { focusOnTable } = useDiagramOps();
 
+    const { identifierError, setIdentifierError, showIdentifierError, identifierMaxLength } = useDatabaseInvalidIdentifier(tableName, dialect);
+
+
     useEffect(() => {
         setTableName(table.name);
-    }, [table.name])
+    }, [table.name]);
+
+    useEffect(() => {
+        setIdentifierError(isValidIdentifier(
+            tableName.trim(),
+            dialect
+        ))
+    }, [tableName]);
 
     const saveTableName = useCallback(async () => {
-        await editTable({ id: table.id, name: tableName } as TableInsertType);
+        if (identifierError == "empty") {
+            setTableName(table.name);
+            setEditMode(false);
+            return;
+        }
+
+        await editTable({ id: table.id, name: tableName.trim() } as TableInsertType);
         setEditMode(false);
-    }, [tableName])
+    }, [tableName, identifierError, table])
+
 
     const onDeleteTable = useCallback(async (event: any) => {
         event.stopPropagation();
@@ -74,10 +96,10 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
             unique: false,
             tableId: table.id
         } as IndexInsertType);
- 
+
     }, [table])
 
-    const duplicate = useCallback(async (event : any) => {
+    const duplicate = useCallback(async (event: any) => {
         event.stopPropagation()
         const clonedTable: TableType = cloneTable(table);
         await createTable(clonedTable)
@@ -110,9 +132,10 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                     <div className="w-full flex items-center ">
                         <Tooltip>
                             <TooltipTrigger asChild>
-
                                 <label
-                                    className=" py-2 truncate  text-sm cursor-pointer max-w-60"
+                                    className={cn("py-2 truncate  text-sm cursor-pointer max-w-50 ", {
+                                        "text-destructive": identifierError != null
+                                    })}
                                     onDoubleClick={() => setEditMode(true)}
                                     onClick={((event: any) => event.stopPropagation())}
                                 >
@@ -129,7 +152,6 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                         <Button variant="outline" size="icon" className="size-8 shrink-0" onClick={(event: any) => {
                             event.stopPropagation();
                             setEditMode(true)
-
                         }}>
                             <IconPencil className="size-4 text-muted-foreground " />
                         </Button>
@@ -140,8 +162,24 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                             <IconFocus2 className="size-4 text-muted-foreground " />
                         </Button>
                     </div>
+                    {
+                        identifierError &&
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant={"ghost"} size="icon" className="size-8 shrink-0 hover:bg-destructive/10 hover:border-destructive/30 dark:hover:bg-destructive/10 dark:hover:border-destructive/30" onClick={(event: any) => {
+                                    event.stopPropagation();
+                                    showIdentifierError();
+                                    setEditMode(true);
+                                }} >
+                                    <IconAlertTriangle className="size-4 text-destructive " />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent className="bg-destructive fill-destructive [&_svg]:bg-destructive [&_svg]:fill-destructive">
+                                {t("db_controller.validation.error_message")}
+                            </TooltipContent>
+                        </Tooltip>
+                    }
                 </>
-
             }
             {
                 editMode && <>
@@ -152,9 +190,13 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                         onBlur={saveTableName}
                         autoFocus
                         type="text"
+                        aria-invalid={identifierError != null}
                         onClick={(event) => event.stopPropagation()}
-                        className="h-8"
-                            onKeyDown={(e: any) => {
+                        className={cn("h-8", {
+                            "text-destructive": identifierError != null
+                        })}
+                        maxLength={identifierMaxLength}
+                        onKeyDown={(e: any) => {
                             if (e.key === "Enter") {
                                 e.preventDefault();
                                 saveTableName();

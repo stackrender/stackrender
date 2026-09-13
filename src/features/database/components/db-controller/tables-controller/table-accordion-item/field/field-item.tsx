@@ -5,11 +5,11 @@ import { Settings2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { CSS } from "@dnd-kit/utilities";
 import { FieldType } from "@/lib/schemas/field-schema";
-import { Key, useEffect, useState } from "react";
+import { Key, useEffect, useRef, useState } from "react";
 import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import FieldSetting from "./field-setting";
 import { DataType } from "@/lib/schemas/data-type-schema";
-import { IconGripVertical, IconKey, IconKeyframe } from "@tabler/icons-react";
+import { IconAlertTriangle, IconGripVertical, IconKey, IconKeyframe } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
 import { Combobox } from "@/components/combobox";
 import { Toggle } from "@/components/ui/toggle";
@@ -17,14 +17,19 @@ import { Toggle } from "@/components/ui/toggle";
 import { TooltipTrigger, Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { DatabaseDialect } from "@/lib/database";
+import { useDatabaseInvalidIdentifier } from "@/features/database/hooks/use-invalid-identifier";
+import { cn } from "@/lib/utils";
 
 interface Props {
-    field: FieldType
+    field: FieldType;
+    dialect?: DatabaseDialect
+
 }
 
 
 
-const FieldItem: React.FC<Props> = ({ field }) => {
+const FieldItem: React.FC<Props> = ({ field, dialect }) => {
 
     const [fieldName, setFieldName] = useState<string>(field.name);
 
@@ -33,6 +38,9 @@ const FieldItem: React.FC<Props> = ({ field }) => {
 
     const [selectedType, setSelectedType] = useState<string | undefined>(field.typeId as string | undefined);
     const { t } = useTranslation();
+
+    const { identifierError, showIdentifierError, identifierMaxLength } = useDatabaseInvalidIdentifier(fieldName, dialect, "column");
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const { attributes, listeners, setNodeRef, transform } = useSortable({ id: field.id });
 
@@ -49,10 +57,17 @@ const FieldItem: React.FC<Props> = ({ field }) => {
     }, [field.typeId])
 
 
+
+
     const saveFieldName = () => {
+
+        if (identifierError == "empty") {
+            setFieldName(field.name);
+            return;
+        }
         editField({
             id: field.id,
-            name: fieldName
+            name: fieldName.trim()
         } as FieldType);
     }
     const updateFieldType = (key: Key | null) => {
@@ -93,28 +108,59 @@ const FieldItem: React.FC<Props> = ({ field }) => {
                 <IconGripVertical className="size-4 text-muted-foreground hover:text-foreground cursor-move shrink-0" />
             </div>
             <div className="flex gap-2 w-full">
-                <Input
-                    aria-label={t("db_controller.name")}
-                    placeholder={t("db_controller.name")}
-                    value={fieldName}
-                    onChange={(event: any) => setFieldName(event.target.value)}
-                    onBlur={saveFieldName}
-                    className=" flex flex-1 !bg-transparent"
-                     onKeyDown={(e : any) => {
-                        if (e.key === "Enter") {
-                            e.preventDefault();
-                            saveFieldName() ; 
-                            e.target.blur() ; 
-                        }
-                    }}
-                />
+                <div className="flex flex-1  relative items-center min-w-0  ">
+
+                    <Input
+                        aria-label={t("db_controller.name")}
+                        placeholder={t("db_controller.name")}
+                        value={fieldName}
+                        onChange={(event: any) => setFieldName(event.target.value)}
+                        onBlur={saveFieldName}
+                        maxLength={identifierMaxLength}
+                        aria-invalid={identifierError != null}
+                        ref={inputRef}
+                        onKeyDown={(e: any) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                saveFieldName();
+                                e.target.blur();
+                            }
+                        }}
+                        className={cn("flex flex-1 !bg-transparent !opacity-100", {
+                            "text-destructive pr-10": identifierError != null
+                        })}
+                    />
+                    {
+                        identifierError &&
+                        <Tooltip >
+                            <TooltipTrigger asChild className="absolute">
+                                <Button variant={"ghost"} size="icon"
+                                    className="size-7 shrink-0 hover:bg-destructive/10  dark:hover:bg-destructive/10  right-1 bg-background  rounded-sm"
+                                    onClick={(event: any) => {
+                                        event.stopPropagation();
+                                        showIdentifierError();
+                                        inputRef.current?.focus();
+                                    }}>
+                                    <IconAlertTriangle className="size-4 text-destructive " />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent className="bg-destructive fill-destructive [&_svg]:bg-destructive [&_svg]:fill-destructive">
+                                {t("db_controller.validation.error_message")}
+                            </TooltipContent>
+                        </Tooltip>
+                    }
+                </div>
                 <Combobox
                     items={data_types}
                     label="name"
                     placeholder={t("db_controller.type")}
                     selectedItem={selectedType}
+
                     onSelectionChange={updateFieldType}
-                    className="flex flex-1  !bg-transparent !font-normal min-w-0"
+                    className={cn("flex flex-1  !bg-transparent !font-normal  !opacity-100 min-w-0 w-full ", {
+                        "text-destructive border-destructive hover:text-destructive": !selectedType
+                    })}
+                    valueLength={20}
                 />
             </div>
             <div className="flex gap-2 ml-2 ">

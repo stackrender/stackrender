@@ -77,6 +77,22 @@ export enum ImportMethodType {
 
 }
 
+export const IDENTIFIER_REGEX = /^[\p{L}_][\p{L}\p{N}_]*$/u;
+
+
+export const IDENTIFIER_MAX_LENGTH: Record<DatabaseDialect, number> = {
+  [DatabaseDialect.POSTGRES]: 63,  // NAMEDATALEN - 1 (63 bytes)
+  [DatabaseDialect.MYSQL]: 64,     // 64 characters
+  [DatabaseDialect.MARIADB]: 64,     // 64 characters
+  [DatabaseDialect.MSSQL]: 128,    // 128 characters
+  [DatabaseDialect.ORACLE]: 128,   // 128 characters (30 in pre-12c)
+  [DatabaseDialect.SQLITE]: 255   // Practically unlimited; application budget
+};
+
+
+export type IDENTIFIER_ERROR = null | "max_length" | "empty" | "invalid" ; 
+
+
 export interface ImportDatabaseMethod {
     id: string;
     name: string;

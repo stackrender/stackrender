@@ -9,7 +9,7 @@ import { v4 } from "uuid";
 import { useDiagram } from "@/providers/diagram-provider/diagram-provider";
 import { useReactFlow } from "@xyflow/react";
 import SqlPreview from "../sql-preview";
-import EmptyList from "@/components/empty-list"; 
+import EmptyList from "@/components/empty-list";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IconListDetails, IconPlus } from "@tabler/icons-react";
@@ -38,9 +38,9 @@ const TablesController: React.FC = ({ }) => {
     const { tables: allTables } = database || { tables: [] };
     const [tables, setTables] = useState<TableType[]>(allTables);
     const { t } = useTranslation();
-   
+
     const [showSqlPreview, setShowSqlPreview] = useState<boolean>(false);
-    const { focusedTableId , setFocusedTableId} = useDiagram();
+    const { focusedTableId, setFocusedTableId } = useDiagram();
     const nameRef: Ref<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
     const sensors = useSensors(
@@ -100,7 +100,7 @@ const TablesController: React.FC = ({ }) => {
     }, [database, tables, getViewport, getInteger]);
 
     useEffect(() => {
-       if (focusedTableId) {
+        if (focusedTableId) {
             const accordionItem = document.getElementById(focusedTableId)
             if (accordionItem)
                 accordionItem?.scrollIntoView({
@@ -177,7 +177,7 @@ const TablesController: React.FC = ({ }) => {
                         type="single"
                         collapsible
                         className="w-full"
-                             value={focusedTableId}
+                        value={focusedTableId}
                         onValueChange={setFocusedTableId}
                     >
                         <DndContext
@@ -193,7 +193,7 @@ const TablesController: React.FC = ({ }) => {
 
                                 {tables.map((table: TableType) => (
                                     <>
-                                        <TableAccordionItem table={table} key={table.id} />
+                                        <TableAccordionItem table={table} key={table.id} dialect={database?.dialect} />
                                         <Separator className="my-1" />
                                     </>
                                 ))}

@@ -68,11 +68,11 @@ export abstract class BaseSQLRenderer extends BaseDatabaseRenderer {
         return {
             column: {
                 type: "column_ref",
-                column: {
+                column: (this.dialect == DatabaseDialect.MYSQL || this.dialect == DatabaseDialect.MARIADB) ? field.name : ({
                     expr: {
-                        type: "default", value: field.name,
+                        type: "double_quote_string", value: field.name,
                     }
-                },
+                }),
             },
             default_val,
             unique,
@@ -139,12 +139,12 @@ export abstract class BaseSQLRenderer extends BaseDatabaseRenderer {
                         {
                             type: "column_ref",
                             table: null,
-                            column: {
+                             column: (this.dialect == DatabaseDialect.MYSQL || this.dialect == DatabaseDialect.MARIADB) ? foreignKey.name : ({
                                 expr: {
-                                    type: "default",
+                                    type: "double_quote_string",
                                     value: foreignKey.name
                                 }
-                            },
+                            }),
                         }
                     ],
                     constraint_type: "FOREIGN KEY",
@@ -155,12 +155,12 @@ export abstract class BaseSQLRenderer extends BaseDatabaseRenderer {
                             {
                                 type: "column_ref",
                                 table: null,
-                                column: {
+                              column: (this.dialect == DatabaseDialect.MYSQL || this.dialect == DatabaseDialect.MARIADB) ? primaryKey.name : ({
                                     expr: {
-                                        type: "default",
+                                        type: "double_quote_string",
                                         value: primaryKey.name
                                     }
-                                },
+                                })
                             }
                         ],
                         table: [
@@ -292,8 +292,9 @@ export abstract class BaseSQLRenderer extends BaseDatabaseRenderer {
     }
 
 
+    
     protected startTransaction(): string {
-        return "BEGIN TRANSACTION;" ;  
+        return "START TRANSACTION;";
     }
 
     protected commit(): string {

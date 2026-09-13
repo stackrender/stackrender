@@ -107,4 +107,9 @@ ${this.commit()}
         throw new Error("Method not implemented.");
     }
 
+    
+     protected startTransaction(): string {
+        return "BEGIN;";
+    }
+
 }

@@ -6,7 +6,7 @@ export const ru = {
       tables: "Таблицы",
       relationships: "Связи",
       database: "База данных",
-      documentation : "Документация"
+      documentation: "Документация"
     },
     color_picker: {
       default_color: "Цвет по умолчанию"
@@ -27,6 +27,9 @@ export const ru = {
       show_code: "Показать код",
       fields: "Поля",
       indexes: "Индексы",
+       no_index: "Индексы не найдены",
+      create_new_index: "Создать новый",
+     
       note: "Заметка",
       name: "Имя",
       type: "Тип",
@@ -82,6 +85,13 @@ export const ru = {
         text_setting: "Настройки текста",
         charset: "Кодировка",
         collation: "Сравнение",
+        no_charset: "Кодировка не указана",
+        no_collation: "Сортировка не указана",
+        input_tag_placeholder: "Введите значения через запятую...",
+        multi_select_placeholder: "Выберите поля...",
+        date_placeholder: "Выберите дату",
+        time: "Время",
+
         scale: "Масштаб",
         max_length: "Макс. длина",
         integer_width: "Ширина целого числа",
@@ -94,7 +104,7 @@ export const ru = {
         precision_def: "Общее количество допустимых цифр (до и после запятой).",
         scale_def: "Допустимое количество цифр после запятой.",
         no_default: "Нет значения по умолчанию",
-random_uuid: "Случайный UUID",
+        random_uuid: "Случайный UUID",
         time_default_value: {
           no_value: "Нет значения",
           custom: "Произвольное время",
@@ -127,6 +137,21 @@ random_uuid: "Случайный UUID",
         description: "В вашей схеме есть циклическая связь между таблицами. Чтобы устранить её,",
         suggestion: "удалите одну из перечисленных ниже связей, вызывающих цикл.",
         remove_relationship: "Удалить связь"
+      },
+      validation: {
+        identifiers: {
+          table: "Таблица",
+          column: "Столбец",
+          index: "Индекс",
+          constraint: "Ограничение"
+        },
+        error_message: "Недопустимый идентификатор",
+        identifier_required: "Имя ${identifier} обязательно",
+        identifier_required_description: "Пожалуйста, укажите имя для этого ${identifier}.",
+        invalid_identifier: "Недопустимое имя ${identifier}",
+        invalid_identifier_description: "Используйте только буквы, цифры и символы подчёркивания. Имя ${identifier} должно начинаться с буквы.",
+        identifier_length: "Имя ${identifier} слишком длинное",
+        identifier_length_description: "Это имя ${identifier} превышает максимальную длину в ${length} байт, разрешённую ${dialect}."
       }
     },
     table: {
@@ -191,12 +216,12 @@ random_uuid: "Случайный UUID",
       delete_database_content: "Это действие необратимо и навсегда удалит диаграмму.",
       delete: "Удалить",
       empty_diagram: "Пустая диаграмма",
-      create_and_import : "Создать и импортировать" ,
+      create_and_import: "Создать и импортировать",
 
       import_database: {
         title: "Импортируйте вашу базу данных",
         import: "Импорт",
-        view_docs : "Просмотреть документацию" , 
+        view_docs: "Просмотреть документацию",
         import_options: "Вы хотите импортировать с помощью:",
         import_error: "Ошибка разбора SQL",
         import_error_description: "Не удалось импортировать SQL, так как он содержит недопустимый синтаксис.",
@@ -260,7 +285,7 @@ random_uuid: "Случайный UUID",
         step4: "Выберите <bold>Экспортировать только схему</bold> и нажмите <bold>Сохранить</bold>.",
         step5: "Скопируйте содержимое <code>.sql</code> файла в редактор ниже."
       },
-           ssms: {
+      ssms: {
         "step1": "Откройте SQL Server Management Studio (SSMS).",
         "step2": "Щёлкните правой кнопкой мыши по вашей базе данных, затем выберите Tasks → Generate Scripts в контекстном меню.",
         "step3": "В шаге Choose Objects выберите Select specific database objects и отметьте все таблицы.",

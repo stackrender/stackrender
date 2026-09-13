@@ -30,6 +30,8 @@ export const fr = {
             show_code: "Afficher le code",
             fields: "Champs",
             indexes: "Index",
+            no_index: "Aucun index trouvé",
+            create_new_index: "En créer un nouveau",
             note: "Note",
             name: "Nom",
             type: "Type",
@@ -86,6 +88,12 @@ export const fr = {
                 text_setting: "Paramètres de texte",
                 charset: "Jeu de caractères",
                 collation: "Collation",
+                no_charset: "Aucun jeu de caractères",
+                no_collation: "Aucune collation",
+                input_tag_placeholder: "Saisissez des valeurs, séparées par des virgules...",
+                multi_select_placeholder: "Sélectionnez des champs...",
+                date_placeholder: "Sélectionnez une date",
+                time: "Heure",
                 scale: "Échelle",
                 max_length: "Longueur max",
                 integer_width: "Largeur entière",
@@ -131,6 +139,21 @@ export const fr = {
                 description: "Votre schéma contient une relation de clé étrangère circulaire entre les tables. Pour corriger cela,",
                 suggestion: "supprimez l’une des relations ci-dessous qui provoque le cycle.",
                 remove_relationship: "Supprimer la relation"
+            },
+            validation: {
+                identifiers: {
+                    table: "Table",
+                    column: "Colonne",
+                    index: "Index",
+                    constraint: "Contrainte"
+                },
+                error_message: "Identifiant invalide",
+                identifier_required: "Le nom de ${identifier} est requis",
+                identifier_required_description: "Veuillez fournir un nom pour ce ${identifier}.",
+                invalid_identifier: "Nom de ${identifier} invalide",
+                invalid_identifier_description: "Utilisez uniquement des lettres, des chiffres et des underscores. Un nom de ${identifier} doit commencer par une lettre.",
+                identifier_length: "Le nom de ${identifier} est trop long",
+                identifier_length_description: "Ce nom de ${identifier} dépasse la longueur maximale de ${length} octets autorisée par ${dialect}."
             }
         },
         table: {

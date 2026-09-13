@@ -31,6 +31,8 @@ export const en = {
             show_code: "Show code",
             fields: "Fields",
             indexes: "Indexes",
+            no_index: "No Indices found",
+            create_new_index: "create new one",
             note: "Note",
             name: "Name",
             type: "Type",
@@ -93,6 +95,12 @@ export const en = {
                 text_setting: "Text Setting",
                 charset: "Charset",
                 collation: "Collation",
+                no_charset: "No charset",
+                no_collation: "No collation",
+                input_tag_placeholder: "Enter values, comma separated...",
+                multi_select_placeholder: "Select fields...",
+                date_placeholder: "Pick date",
+                time: "Time",
                 scale: "Scale",
                 max_length: "Max length",
                 integer_width: "Integer Width",
@@ -141,6 +149,21 @@ export const en = {
                 description: "Your schema contains a circular foreign key relationship between tables. To fix it",
                 suggestion: "remove one of the relationships listed below that are causing the cycle.",
                 remove_relationship: "Remove relationship"
+            },
+            validation: {
+                identifiers: {
+                    table: "Table",
+                    column: "Column",
+                    index: "Index",
+                    constraint: "Constraint"
+                },
+                error_message: "Invalid identifier",
+                identifier_required: "${identifier} name is required",
+                identifier_required_description: "Please provide a name for this ${identifier}.",
+                invalid_identifier: "Invalid ${identifier} name",
+                invalid_identifier_description: "Use only letters, numbers, and underscores. a ${identifier} name must start with a letter.",
+                identifier_length: "${identifier} name is too long",
+                identifier_length_description: "This ${identifier} name exceeds ${dialect}'s maximum length of ${length} bytes."
             }
         },
         table: {

@@ -28,6 +28,8 @@ export const de = {
       show_code: "Code anzeigen",
       fields: "Felder",
       indexes: "Indizes",
+      no_index: "Keine Indizes gefunden",
+      create_new_index: "Neuen erstellen",
       note: "Notiz",
       name: "Name",
       type: "Typ",
@@ -84,6 +86,12 @@ export const de = {
         text_setting: "Texteinstellung",
         charset: "Zeichensatz",
         collation: "Sortierung",
+        no_charset: "Kein Zeichensatz",
+        no_collation: "Keine Sortierung",
+        input_tag_placeholder: "Werte eingeben, durch Kommas getrennt...",
+        multi_select_placeholder: "Felder auswählen...",
+        date_placeholder: "Datum auswählen",
+        time: "Uhrzeit",
         scale: "Skalierung",
         max_length: "Maximale Länge",
         integer_width: "Ganzzahlbreite",
@@ -96,7 +104,7 @@ export const de = {
         precision_def: "Zulässige Gesamtanzahl an Ziffern (vor + nach dem Dezimalpunkt).",
         scale_def: "Ziffern nach dem Dezimalpunkt.",
         no_default: "Kein Standardwert",
-random_uuid: "Zufällige UUID",
+        random_uuid: "Zufällige UUID",
         time_default_value: {
           no_value: "Kein Wert",
           custom: "Benutzerdefinierte Zeit",
@@ -129,6 +137,21 @@ random_uuid: "Zufällige UUID",
         description: "Dein Schema enthält eine zirkuläre Fremdschlüssel-Beziehung zwischen Tabellen. Um dies zu beheben,",
         suggestion: "entferne eine der unten aufgeführten Beziehungen, die den Kreis verursachen.",
         remove_relationship: "Beziehung entfernen"
+      },
+      validation: {
+        identifiers: {
+          table: "Tabelle",
+          column: "Spalte",
+          index: "Index",
+          constraint: "Einschränkung"
+        },
+        error_message: "Ungültiger Bezeichner",
+        identifier_required: "Der Name von ${identifier} ist erforderlich",
+        identifier_required_description: "Bitte geben Sie einen Namen für diesen ${identifier} an.",
+        invalid_identifier: "Ungültiger Name für ${identifier}",
+        invalid_identifier_description: "Verwenden Sie nur Buchstaben, Zahlen und Unterstriche. Der Name von ${identifier} muss mit einem Buchstaben beginnen.",
+        identifier_length: "Der Name von ${identifier} ist zu lang",
+        identifier_length_description: "Dieser Name von ${identifier} überschreitet die von ${dialect} zulässige maximale Länge von ${length} Bytes."
       }
     },
     table: {

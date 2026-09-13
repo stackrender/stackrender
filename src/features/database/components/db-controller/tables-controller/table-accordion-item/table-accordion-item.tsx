@@ -8,13 +8,15 @@ import TableAccordionContent from "./table-accordion-content";
 import React, { forwardRef } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { DatabaseDialect } from "@/lib/database";
 
 interface TableAccordionItemProps {
     table: TableType;
+    dialect?: DatabaseDialect
 }
 
 const TableAccordionItem = forwardRef<HTMLDivElement, TableAccordionItemProps>(
-    ({ table }, ref) => {
+    ({ table , dialect }, ref) => {
         const { attributes, setNodeRef, transform, transition } = useSortable({ id: table.id });
 
         if (transform?.scaleY)
@@ -35,9 +37,9 @@ const TableAccordionItem = forwardRef<HTMLDivElement, TableAccordionItemProps>(
                     {...attributes}
                     className="w-full  "
                 >
-                    <TableAccordionTrigger table={table} />
+                    <TableAccordionTrigger table={table} dialect={dialect}  />
                     <AccordionContent className="flex flex-col gap-4 text-balance">
-                        <TableAccordionContent table={table} />
+                        <TableAccordionContent table={table} dialect={dialect} />
                     </AccordionContent>
                 </div>
             </AccordionItem>

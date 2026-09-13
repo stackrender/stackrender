@@ -9,7 +9,7 @@ import { DataType } from "@/lib/schemas/data-type-schema";
 import { DatabaseDialect } from "@/lib/database";
 import { format } from 'sql-formatter';
 import { AST } from "node-sql-parser";
- 
+
 export default class MSSqlRenderer extends BaseDatabaseRenderer {
 
 
@@ -33,7 +33,7 @@ ${this.commit()}
 
     protected createTableAst(table: TableType): ASTStatment[] | ASTStatment {
         const ast: any = super.createTableAst(table);
-    
+
         let indexes: string = ast.indices_ast.filter((index: string) => index != null).join("\n")
 
         // get primary keys and check if we hame more than one  
@@ -43,7 +43,7 @@ ${this.commit()}
             constraints = this.getPrimaryKeyContraint(primaryKeys, table)
         }
         return `
-        CREATE TABLE ${table.name} (
+        CREATE TABLE "${table.name}" (
             ${(ast as any).field_definitions.join(",\n")}
             ${constraints ? ',\n' + constraints : ""}
         );
@@ -80,21 +80,21 @@ ${this.commit()}
         let defaultValue: any = "";
 
         if (ast.default_value !== undefined && ast.default_value !== null && !dropDefaultValue) {
-            defaultValue = `CONSTRAINT DF_${table.name}_${field.name} DEFAULT ${ast.default_value}`;
+            defaultValue = `CONSTRAINT "DF_${table.name}_${field.name}" DEFAULT ${ast.default_value}`;
         }
         if (!ast.primary_key) {
-            unique = field.unique ? `CONSTRAINT UQ_${table.name}_${field.name} UNIQUE` : "";
+            unique = field.unique ? `CONSTRAINT "UQ_${table.name}_${field.name}" UNIQUE` : "";
         }
 
         const dataType = field.type.name == "uuid" ? "RAW(16)" : ast.dataType;
 
-        return `${field.name} ${dataType}${options} ${autoIncrement} ${nullable} ${defaultValue} ${unique} `;
+        return `"${field.name}" ${dataType}${options} ${autoIncrement} ${nullable} ${defaultValue} ${unique} `;
     }
 
     protected processDefaultValue(field: FieldType): AST | null {
         const ast: any = super.processDefaultValue(field);
-      
-        if (ast && ast.default_value_type) { 
+
+        if (ast && ast.default_value_type) {
             if (ast.default_value_type == "single_quote_string") {
                 ast.default_value = `'${ast.default_value}'`
             }
@@ -128,25 +128,25 @@ ${this.commit()}
                     else
                         ast.default_value = "NEWID()"
                 }
-                   
+
             }
-            if ( ast.default_value_type == "bool") {  
-                if (ast.default_value) { 
-                    ast.default_value = 1 ; 
-                }else { 
-                    ast.default_value = 0 ; 
+            if (ast.default_value_type == "bool") {
+                if (ast.default_value) {
+                    ast.default_value = 1;
+                } else {
+                    ast.default_value = 0;
                 }
             }
-            
+
         }
 
         return ast;
     }
-    
+
     protected createRelationshipAst(relationship: RelationshipType): ASTStatment {
         const { primaryKey, foreignKey, sourceTable, targetTable } = super.createRelationshipAst(relationship) as any;
 
-        const constraintName: string = relationship.name ? " CONSTRAINT " + relationship.name : "";
+        const constraintName: string = relationship.name ? " CONSTRAINT \"" + relationship.name + "\"" : "";
 
         const onDeleteFKAction: string | null = this.foreignKeyActionToAst(relationship.onDelete as ForeignKeyActions);
         const onUpdateFKAction: string | null = this.foreignKeyActionToAst(relationship.onUpdate as ForeignKeyActions);
@@ -157,9 +157,9 @@ ${this.commit()}
         const FKActions: string = [onDeleteAction, onUpdateAction].join(" ");
 
         return `
-            ALTER TABLE ${targetTable.name}
-            ADD ${constraintName} FOREIGN KEY (${foreignKey.name})
-            REFERENCES ${sourceTable.name}(${primaryKey.name}) ${FKActions};
+            ALTER TABLE "${targetTable.name}"
+            ADD ${constraintName} FOREIGN KEY ("${foreignKey.name}")
+            REFERENCES "${sourceTable.name}"("${primaryKey.name}") ${FKActions};
         `
     }
 
@@ -175,29 +175,30 @@ ${this.commit()}
         }
         return null;
     }
-  
+
     protected createIndexAst(table: TableType, index: IndexType): ASTStatment {
         const unique: string = index.unique ? " UNIQUE" : "";
 
-        let columns: string[] | string = index.fields.map((field: FieldType) => field.name);
+        let columns: string[] | string = index.fields.map((field: FieldType) => `"${field.name}"`);
         if (columns.length == 0)
             return null;
+
         columns = `(${columns.join(",")})`
-        return `CREATE${unique} INDEX ${index.name} ON ${table.name} ${columns} ;`
+
+        return `CREATE${unique} INDEX "${index.name}" ON "${table.name}" ${columns} ;`
 
     }
-  
+
     protected getPrimaryKeyContraint(fields: FieldType[], table?: TableType): ASTStatment {
-        const pks: string[] = fields.map((field: FieldType) => field.name);
-        return `CONSTRAINT PK_${table?.name} PRIMARY KEY (${pks.join(",")})`
-    } 
-     
+        const pks: string[] = fields.map((field: FieldType) => `"${field.name}"`);
+        return `CONSTRAINT "PK_${table?.name}" PRIMARY KEY (${pks.join(",")})`
+    }
     protected startTransaction(): string {
         return `BEGIN TRANSACTION;`
     }
     protected commit(): string {
         return "COMMIT;"
     }
- 
-   
+
+
 } 

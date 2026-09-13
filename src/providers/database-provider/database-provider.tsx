@@ -256,18 +256,21 @@ const DatabaseProvider: React.FC<Props> = ({ children }) => {
     const editIndex = useCallback(async (index: IndexInsertType): Promise<QueryResult> => {
         return await db.update(indices).set(index).where(eq(indices.id, index.id));
     }, [db]);
-
-    const editFieldIndices = useCallback((indexId: string, fieldIds: string[]): Promise<void> => {
+    const editFieldIndices = useCallback((indexId: string, fieldIds: string[], deleteIds: string[]): Promise<void> => {
+        if (!currentDatabaseId) {
+            throw Error("No Database selected")
+        }
         return db.transaction(async (tx) => {
-            await tx.delete(field_indices).where(eq(field_indices.indexId, indexId));
+            await tx.delete(field_indices).where(inArray(field_indices.id, deleteIds));
             if (fieldIds.length > 0)
                 await tx.insert(field_indices).values(fieldIds.map((fieldId: string) => ({
                     id: v4(),
                     fieldId,
                     indexId,
+                    databaseId: currentDatabaseId
                 })))
         })
-    }, [db])
+    }, [db, currentDatabaseId])
     // CRUD operations for Relationships
     const createRelationship = useCallback(async (relationship: RelationshipInsertType): Promise<QueryResult> => {
         if (currentDatabaseId) {
