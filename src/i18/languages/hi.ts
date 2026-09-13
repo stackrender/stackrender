@@ -6,7 +6,7 @@ export const hi = {
             tables: "तालिकाएँ",
             relationships: "रिलेशनशिप्स",
             database: "डेटाबेस",
-            documentation : "दस्तावेज़"
+            documentation: "दस्तावेज़"
         },
 
         color_picker: {
@@ -28,6 +28,8 @@ export const hi = {
             show_code: "कोड दिखाएं",
             fields: "फ़ील्ड्स",
             indexes: "इंडेक्सेस",
+            no_index: "कोई इंडेक्स नहीं मिला",
+            create_new_index: "नया इंडेक्स बनाएं",
             note: "नोट",
             name: "नाम",
             type: "प्रकार",
@@ -82,13 +84,18 @@ export const hi = {
                 zeroFill: "शून्य भरें",
                 autoIncrement: "स्वतः वृद्धि",
                 note: "नोट",
-
                 delete_field: "फ़ील्ड हटाएं",
                 field_note: "फ़ील्ड नोट",
                 precision: "सटीकता",
                 text_setting: "टेक्स्ट सेटिंग",
                 charset: "अक्षरसेट",
                 collation: "कोलेशन",
+                no_charset: "कोई कैरेक्टर सेट नहीं",
+                no_collation: "कोई कॉलेशन नहीं",
+                input_tag_placeholder: "मान दर्ज करें, अल्पविराम से अलग करें...",
+                multi_select_placeholder: "फ़ील्ड चुनें...",
+                date_placeholder: "तारीख चुनें",
+                time: "समय",
                 scale: "स्केल",
                 max_length: "अधिकतम लंबाई",
                 integer_width: "पूर्णांक चौड़ाई",
@@ -101,7 +108,7 @@ export const hi = {
                 precision_def: "कुल अनुमत अंक (दशमलव से पहले और बाद)।",
                 scale_def: "दशमलव के बाद अनुमत अंक।",
                 no_default: "कोई डिफ़ॉल्ट मान नहीं",
-random_uuid: "रैंडम UUID",
+                random_uuid: "रैंडम UUID",
                 time_default_value: {
                     no_value: "कोई मान नहीं",
                     custom: "कस्टम समय",
@@ -136,6 +143,21 @@ random_uuid: "रैंडम UUID",
                 description: "आपकी स्कीमा में तालिकाओं के बीच एक परिपत्र विदेशी कुंजी संबंध है। इसे ठीक करने के लिए",
                 suggestion: "नीचे दी गई चक्र उत्पन्न करने वाली रिलेशनशिप में से एक को हटाएं।",
                 remove_relationship: "रिलेशनशिप हटाएं"
+            },
+            validation: {
+                identifiers: {
+                    table: "तालिका",
+                    column: "कॉलम",
+                    index: "इंडेक्स",
+                    constraint: "बाधा"
+                },
+                error_message: "अमान्य पहचानकर्ता",
+                identifier_required: "${identifier} का नाम आवश्यक है",
+                identifier_required_description: "कृपया इस ${identifier} के लिए एक नाम प्रदान करें।",
+                invalid_identifier: "${identifier} का नाम अमान्य है",
+                invalid_identifier_description: "केवल अक्षरों, संख्याओं और अंडरस्कोर का उपयोग करें। ${identifier} का नाम किसी अक्षर से शुरू होना चाहिए।",
+                identifier_length: "${identifier} का नाम बहुत लंबा है",
+                identifier_length_description: "यह ${identifier} नाम ${dialect} द्वारा अनुमत अधिकतम ${length} बाइट की लंबाई से अधिक है।"
             }
         },
         table: {
@@ -206,7 +228,7 @@ random_uuid: "रैंडम UUID",
             import_database: {
                 title: "अपना डेटाबेस आयात करें",
                 import: "आयात करें",
-                view_docs : "दस्तावेज़ देखें" , 
+                view_docs: "दस्तावेज़ देखें",
                 import_options: "क्या आप निम्न के माध्यम से आयात करना चाहेंगे:",
                 import_error: "SQL पार्सिंग त्रुटि",
                 import_error_description: "हम आपका SQL आयात नहीं कर सके क्योंकि इसमें अमान्य सिंटैक्स है।",
@@ -270,8 +292,8 @@ random_uuid: "रैंडम UUID",
                 step3: "शीर्ष मेनू से <bold>File > Export > Database to SQL file</bold> पर जाएं।",
                 step4: "डायलॉग में <bold>Export schema only</bold> चुनें और <bold>Save</bold> पर क्लिक करें।",
                 step5: "अंत में, <code>.sql</code> फ़ाइल की सामग्री को नीचे दिए गए <bold>code editor</bold> में कॉपी करें।"
-            } , 
-                ssms: {
+            },
+            ssms: {
                 "step1": "SQL Server Management Studio (SSMS) खोलें।",
                 "step2": "अपना डेटाबेस पर राइट-क्लिक करें, फिर संदर्भ मेनू से Tasks → Generate Scripts चुनें।",
                 "step3": "Choose Objects चरण में, Choose specific database objects चुनें, फिर सभी टेबल्स को चेक करें।",

@@ -79,8 +79,8 @@ const RelationshipAccordionContent: React.FC<RelationshipAccordionContentProps> 
 
     return (
         <div className="w-full p-2 space-y-4">
-            <div className="flex">
-                <div className="w-full space-y-1">
+           <div className="flex gap-2">
+                <div className="space-y-1 w-full truncate">
                     <Label >
                         {t("db_controller.source_table")}
                     </Label>
@@ -96,7 +96,7 @@ const RelationshipAccordionContent: React.FC<RelationshipAccordionContentProps> 
                     </Tooltip>
                 </div>
 
-                <div className="w-full space-y-1">
+                <div className="space-y-1  w-full truncate">
                     <Label >
                         {t("db_controller.referenced_table")}
                     </Label>

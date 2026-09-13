@@ -11,33 +11,44 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 
 
 interface DatePickerProps {
     value?: Date | undefined;
-    onValueChange?: (value?: Date) => void
+    onValueChange?: (value?: Date) => void;
+    noLabel?: boolean;
+    className?: string; 
+    placeholder?: string ;  
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({value, onValueChange}) => {
+const DatePicker: React.FC<DatePickerProps> = ({ value, onValueChange, noLabel = false, className , placeholder = "Pick a date"}) => {
     const [open, setOpen] = React.useState(false)
     const [date, setDate] = React.useState<Date | undefined>(value)
 
     React.useEffect(() => {
+        setDate (value) ; 
+    } , [ value])
+
+    React.useEffect(() => {
         onValueChange && onValueChange(date)
-    }, [date]) 
+    }, [date])
     return (
         <div className="flex flex-col gap-3">
-            <Label htmlFor="date" className="px-1">
-                Date of birth
-            </Label>
+            {
+                !noLabel &&
+                <Label htmlFor="date" className="px-1">
+                    {placeholder}
+                </Label>
+            }
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
                         variant="outline"
                         id="date"
-                        className="w-full justify-between font-normal"
+                        className={cn("w-full justify-between font-normal" , className)}
                     >
-                        {date ? date.toLocaleDateString() : "Select date"}
+                        {date ? date.toLocaleDateString() : placeholder }
                         <ChevronDownIcon />
                     </Button>
                 </PopoverTrigger>

@@ -18,8 +18,8 @@ import { TableInsertType } from "@/lib/schemas/table-schema";
 
 // Custom context providers and hooks
 import { useDatabase, useDatabaseOperations } from "@/providers/database-provider/database-provider";
-import { useTableToNode } from "@/hooks/use-table-to-node";
-import { useRelationshipToEdge } from "@/hooks/use-relationship-to-edge";
+import { useTableToNode } from "@/features/database/hooks/use-table-to-node";
+import { useRelationshipToEdge } from "@/features/database/hooks/use-relationship-to-edge";
 import { RelationshipInsertType } from "@/lib/schemas/relationship-schema";
 
 // Utils and constants
@@ -33,9 +33,9 @@ import { AlertTriangle, Menu } from "lucide-react";
 import { adjustTablesPositions } from "@/utils/tables";
 //import DatabaseControlButtons from "./database-control-buttons";
 import { FieldType } from "@/lib/schemas/field-schema";
-import useHighlightedEdges from "@/hooks/use-highlighted-edges";
+import useHighlightedEdges from "@/features/database/hooks/use-highlighted-edges";
 import { useTranslation } from "react-i18next";
-import useOverlappingTables from "@/hooks/use-overlapping-tables";
+import useOverlappingTables from "@/features/database/hooks/use-overlapping-tables";
 
 
 import { getRelationshipSourceAndTarget } from "@/utils/relationship";
@@ -73,7 +73,7 @@ const DatabaseDiagram: React.FC = () => {
 
     // Diagram-related state (e.g. connection in progress)
     const { setIsConnectionInProgress, cardinalityStyle, showController, openController } = useDiagramOps();
-    const raise = useToast() ; 
+    const raise = useToast();
     // Destructure tables and relationships from database
     const { tables, relationships } = database || { tables: [], relationships: [] };
 
@@ -146,10 +146,10 @@ const DatabaseDiagram: React.FC = () => {
         } else {
 
 
-                 raise(
+            raise(
                 t("db_controller.invalid_relationship.title"),
                 t("db_controller.invalid_relationship.description"),
-                "ERROR" 
+                "ERROR"
             )
         }
 
@@ -215,7 +215,7 @@ const DatabaseDiagram: React.FC = () => {
 
 
     // Convert tables and relationships into flow elements
-    useTableToNode(tables);
+    useTableToNode(tables, database?.dialect);
     useRelationshipToEdge(relationships);
     useHighlightedEdges(nodes, relationships, edges);
     const { isOverlapping, puls } = useOverlappingTables(tables);

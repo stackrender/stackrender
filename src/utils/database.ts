@@ -6,6 +6,7 @@ import { TableType } from "@/lib/schemas/table-schema";
 import { excludeFields } from "./utils";
 import { IndexType } from "@/lib/schemas/index-schema";
 import { FieldIndexType } from "@/lib/schemas/field_index-schema";
+import { DatabaseDialect, IDENTIFIER_ERROR, IDENTIFIER_MAX_LENGTH, IDENTIFIER_REGEX } from "@/lib/database";
 
 // Define the possible operations that can be performed when diffing databases
 export type DBDiffOperation =
@@ -305,6 +306,23 @@ export function normalizeDatabase(db: DatabaseType): any {
             ])
         )
     };
+}
+
+
+
+export const isValidIdentifier = (value: string , dialect : DatabaseDialect | undefined): IDENTIFIER_ERROR => {
+
+    if (value.length == 0) 
+        return "empty" ; 
+    if (  !IDENTIFIER_REGEX.test(value) ) {
+        return "invalid" ; 
+    }
+
+    const max_length = dialect ?  IDENTIFIER_MAX_LENGTH[dialect]  : 255 ; 
+    if (value.length > max_length) 
+        return "max_length" ; 
+
+    return null ; 
 }
 
 

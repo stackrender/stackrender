@@ -25,13 +25,14 @@ export type TableProps = Node<{
     table: TableType,
     overlapping?: boolean,
     pulsing?: boolean,
-    highlightedEdges: Edge[]
+    highlightedEdges: Edge[],
+    identifierMaxLength: number
 }>
 
 const MAX_FIELDS = 10;
 const Table: React.FC<NodeProps<TableProps>> = (props) => {
 
-    const { selected, data: { table, overlapping = false, pulsing = false, highlightedEdges = [] } } = props
+    const { selected, data: { table, overlapping = false, pulsing = false, highlightedEdges = [], identifierMaxLength } } = props
 
     const [editMode, setEditMode] = useState<boolean>(false);
     const [tableName, setTableName] = useState<string>(table.name);
@@ -46,9 +47,14 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
     }, [table.name])
 
     const saveTableName = useCallback(async () => {
-        await editTable({ id: table.id, name: tableName } as TableInsertType);
+        if (tableName.trim().length == 0) {
+            setTableName(table.name);
+            setEditMode(false);
+            return;
+        }
+        await editTable({ id: table.id, name: tableName.trim() } as TableInsertType);
         setEditMode(false);
-    }, [tableName]);
+    }, [tableName, table]);
 
     const focus = useCallback(() => {
         focusOnTable(table.id, false);
@@ -56,7 +62,7 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
 
 
     const fields: React.ReactNode[] = useMemo(() => {
-        return table.fields.map((field: FieldType , index : number) => {
+        return table.fields.map((field: FieldType, index: number) => {
 
             const highlight: boolean = highlightedEdges.find((edge: any) =>
                 (edge.data?.relationship as RelationshipType).sourceFieldId == field.id ||
@@ -68,10 +74,11 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                 showHandles={selected}
                 highlight={highlight}
                 color={table.color as string}
-                className={ index == table.fields.length - 1 ? "!rounded-b-md" : undefined }
+                className={index == table.fields.length - 1 ? "!rounded-b-md" : undefined}
+                maxLength={identifierMaxLength}
             />)
         })
-    }, [table.fields, selected, highlightedEdges]);
+    }, [table.fields, selected, highlightedEdges, identifierMaxLength]);
 
 
     const toggleShowMore = useCallback(() => {
@@ -79,7 +86,7 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
     }, []);
 
     return (
-          <Card
+        <Card
             className={cn(
                 "rounded-lg p-0.5  gap-0  transition-all duration-200  border-none ring-1 ring-slate-300 shadow-xs dark:ring-border  ",
                 overlapping
@@ -116,17 +123,17 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                 {!editMode ? <>
                     <label
                         className=" w-full text-editable truncate  py-0.5 text-sm font-bold  text-primary"
-                        onDoubleClick={ () => setEditMode(true)  }
+                        onDoubleClick={() => setEditMode(true)}
                         style={{ color: table.color as string }}
                     >
                         {tableName}
                     </label>
                     <div className="flex gap-1 hidden shrink-0 flex-row group-hover:flex  ">
-                        
-                            <Button variant="outline" size="icon" className="size-6 shrink-0 shadow-sm rounded-sm" onClick={() => setEditMode(true)}>
-                                <IconPencil className="size-3 text-muted-foreground " />
-                            </Button>
-                        
+
+                        <Button variant="outline" size="icon" className="size-6 shrink-0 shadow-sm rounded-sm" onClick={() => setEditMode(true)}>
+                            <IconPencil className="size-3 text-muted-foreground " />
+                        </Button>
+
                         <Button variant="outline" size="icon" className="size-6 shrink-0 shadow-sm rounded-sm" onClick={focus}>
                             <IconFocus2 className="size-3 text-muted-foreground " />
                         </Button>
@@ -144,6 +151,7 @@ const Table: React.FC<NodeProps<TableProps>> = (props) => {
                             onChange={(event: any) => setTableName(event.target.value)}
                             value={tableName}
                             onBlur={saveTableName}
+                            maxLength={identifierMaxLength}
                             style={{ color: table.color as string }}
                             onKeyDown={(e: any) => {
                                 if (e.key === "Enter") {

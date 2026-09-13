@@ -277,6 +277,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                         ref={defaultValueRef}
                         aria-invalid={!defaultValueValidation.isValid}
                         onChange={defaultValueChange}
+                        maxLength={255}
                         defaultValue={field.defaultValue as string}
                         onBlur={saveDefaultValue as any}
                         placeholder={t("db_controller.field_settings.value")}
@@ -307,14 +308,12 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
             {
 
                 (defaultValueType.select) &&
-
                 <Select
                     aria-label="value"
                     value={selectedValues as any}
                     onValueChange={enumValueChange as any}
-
                 >
-                    <SelectTrigger id="charset" className="w-full flex ">
+                    <SelectTrigger className="w-full flex ">
                         <SelectValue placeholder={t('db_controller.field_settings.pick_value')} />
                     </SelectTrigger>
 
@@ -322,13 +321,11 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                         <SelectItem value={"none"} >
                             {t("db_controller.field_settings.no_default")}
                         </SelectItem>
-
                         {
                             values.map((value: string) => (
                                 <SelectItem
                                     key={value}
-                                    value={value}
-                                >
+                                    value={value}>
                                     {value}
                                 </SelectItem>
                             ))
@@ -347,7 +344,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                     onValueChange={enumValueChange as any}
 
                 >
-                    <SelectTrigger id="charset" className="w-full flex ">
+                    <SelectTrigger className="w-full flex ">
                         <SelectValue placeholder={t('db_controller.field_settings.pick_value')} />
                     </SelectTrigger>
 
@@ -372,7 +369,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                     }
                     onValueChange={enumValueChange}
                     defaultValue={selectedValues as any}
-                    placeholder="Select fields..."
+                    placeholder={t("db_controller.field_settings.multi_select_placeholder")}
                     variant={"secondary"}
                     hideSelectAll
                 />
@@ -408,6 +405,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                         <DatePicker
                             value={defaultDateTime}
                             onValueChange={saveDefaultDateTime}
+                            placeholder={t("db_controller.field_settings.date_placeholder")}
                         />
 
                     }
@@ -415,7 +413,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                         timeSelection == TimeDefaultValues.CUSTOM && field.type.name == "time" &&
                         <>
                             <Label htmlFor="time">
-                                Time
+                                {t("db_controller.field_settings.time")}
                             </Label>
                             <Input
                                 id="time"
@@ -424,6 +422,7 @@ const fieldDefautlValue: React.FC<FieldDefaultValueProps> = ({ field }) => {
                                 defaultValue={defaultDateTime}
                                 onChange={(event) => setDefaultDateTime(event.target.value)}
                                 onBlur={saveDefaultDateTime as any}
+                                maxLength={255}
                                 className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                             />
                         </>

@@ -6,7 +6,7 @@ import { DataType } from '@/lib/schemas/data-type-schema';
 import { FieldInsertType } from '@/lib/schemas/field-schema';
 import { IndexInsertType } from '@/lib/schemas/index-schema';
 import { Cardinality, RelationshipInsertType } from '@/lib/schemas/relationship-schema';
-import { TableInsertType  } from '@/lib/schemas/table-schema';
+import { TableInsertType } from '@/lib/schemas/table-schema';
 import { init, parse, ReferentialAction } from '@guanmingchiu/sqlparser-ts';
 import { v4 } from 'uuid';
 
@@ -51,7 +51,7 @@ export class BaseSqlImporter {
                             fk_constraints.push(...tableFkConstraints);
 
                     }
-                } catch (error) { 
+                } catch (error) {
                     errors.push(error as Error);
                 }
 
@@ -145,14 +145,27 @@ export class BaseSqlImporter {
                 } catch (error) {
                     errors.push(error as Error);
                 }
-            } 
+            }
 
             if (tables.length == 0)
-                throw Error("Can't parse sql") 
+                throw Error("Can't parse sql")
             return {
-                tables,
-                relationships,
-                indexes,
+                tables: tables.map((table: TableInsertType) => ({
+                    ...table,
+                    name: table.name.slice(0, 255),
+                    fields: table.fields?.map((field: FieldInsertType) => ({
+                        ...field,
+                        name: field.name.slice(0, 255)
+                    }))
+                })),
+                relationships: relationships.map((relationship: RelationshipInsertType) => ({
+                    ...relationship,
+                    name: relationship.name?.slice(0, 255)
+                })),
+                indexes: indexes.map((index: IndexInsertType) => ({
+                    ...index,
+                    name: index.name.slice(0, 255)
+                })),
                 errors
             }
 
@@ -258,12 +271,12 @@ export class BaseSqlImporter {
         let fk_constraint: any | undefined;
         let params: any[] | undefined;
 
-      
+
         // if it's a basic type like (texts , booleans .. ect) we get the name directly
         // if it's a type that take params , the data type become an object
         if (typeof ast.data_type === "string") {
             typeName = ast.data_type.toLowerCase();
-            
+
 
         } else if (typeof ast.data_type === "object" && !ast.data_type.Custom) {
             const attributeName = Object.keys(ast.data_type)[0];
@@ -289,10 +302,10 @@ export class BaseSqlImporter {
             }
             typeName = attributeName.toLowerCase();
 
-            
-            if (typeName == "timestamp" && this.dialect == DatabaseDialect.ORACLE && ast.data_type[attributeName].length >= 2 && ast.data_type[attributeName][1] == "WithTimeZone") { 
-                typeName += "withtimezone" ; 
-            } 
+
+            if (typeName == "timestamp" && this.dialect == DatabaseDialect.ORACLE && ast.data_type[attributeName].length >= 2 && ast.data_type[attributeName][1] == "WithTimeZone") {
+                typeName += "withtimezone";
+            }
         }
 
         else if (ast.data_type.Custom && Array.isArray(ast.data_type.Custom)) {
@@ -300,9 +313,9 @@ export class BaseSqlImporter {
                 extraParam = Number(ast.data_type.Custom[1]?.[0]);
 
             typeName = ast.data_type.Custom[0]?.[0]?.Identifier?.value.toLowerCase();
-            
+
         }
- 
+
         const dataType: DataType | undefined = this.processDataType(typeName as string);
 
         if (!dataType) {
@@ -478,9 +491,9 @@ export class BaseSqlImporter {
         return ForeignKeyActions.NO_ACTION;
     }
 
-    protected processDataType(typeName: string): DataType | undefined   {
-        
-        
+    protected processDataType(typeName: string): DataType | undefined {
+
+
         // get data type from the supported ones
         return this.data_types.find((dataType: DataType) => {
             let synonyms: string[] = dataType.synonyms ? JSON.parse(dataType.synonyms) : [];
@@ -491,28 +504,28 @@ export class BaseSqlImporter {
     }
 
     protected processDefaultValue(ast: any, dataType: DataType): string | undefined {
-       
+
         if (ast.Value && ast.Value.value) {
-        
+
             const value: any = ast.Value.value;
             if (value.Number && Array.isArray(value.Number) && value.Number.length > 0 && !isNaN(Number(value.Number[0]))) {
                 return value.Number[0];
             }
-        
+
             else if (value.SingleQuotedString || value.DoubleQuotedString) {
                 const valuesArray = Object.values(value);
                 if (valuesArray.length > 0)
                     return valuesArray[0] as string;
             }
-        
+
             else if (value.Boolean) {
                 return "true";
             }
-        
+
             else if (value.NationalStringLiteral) {
                 return value.NationalStringLiteral
             }
-        
+
         } else if (ast.Function) {
             if (dataType.type == DataTypes.TIME) {
                 if (ast.Function.name?.[0]?.Identifier?.value && this.isCurrentTimesTampFunction(ast.Function.name?.[0]?.Identifier?.value))
@@ -529,7 +542,7 @@ export class BaseSqlImporter {
                     return valuesArray[0] as string;
             }
         }
-        
+
         return undefined;
     }
 

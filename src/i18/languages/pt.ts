@@ -6,7 +6,7 @@ export const pt = {
       tables: "Tabelas",
       relationships: "Relacionamentos",
       database: "Banco de dados",
-      documentation : "Documentação"
+      documentation: "Documentação"
     },
 
     color_picker: {
@@ -15,7 +15,7 @@ export const pt = {
     navbar: {
       rename_db: "Renomear banco de dados",
       search: "Pesquisar",
-      
+
       command: "Digite um comando ou pesquise...",
     },
     db_controller: {
@@ -29,10 +29,12 @@ export const pt = {
       show_code: "Mostrar código",
       fields: "Campos",
       indexes: "Índices",
+      no_index: "Nenhum índice encontrado",
+      create_new_index: "Criar um novo",
       note: "Nota",
       name: "Nome",
       type: "Tipo",
-      
+
       required: "Obrigatório",
       nullable: "Aceita Nulo",
       select_fields: "Selecionar campos",
@@ -90,6 +92,12 @@ export const pt = {
         text_setting: "Configuração de Texto",
         charset: "Charset",
         collation: "Colação",
+        no_charset: "Nenhum conjunto de caracteres",
+        no_collation: "Nenhuma ordenação",
+        input_tag_placeholder: "Insira valores, separados por vírgulas...",
+        multi_select_placeholder: "Selecione os campos...",
+        date_placeholder: "Escolha uma data",
+        time: "Hora",
         scale: "Escala",
         max_length: "Comprimento Máximo",
         integer_width: "Largura do Inteiro",
@@ -102,7 +110,7 @@ export const pt = {
         precision_def: "Dígitos totais permitidos (antes + depois do decimal).",
         scale_def: "Dígitos permitidos após o decimal.",
         no_default: "Sem valor padrão",
-random_uuid: "UUID aleatório",
+        random_uuid: "UUID aleatório",
         time_default_value: {
           no_value: "Sem valor",
           custom: "Hora personalizada",
@@ -137,6 +145,21 @@ random_uuid: "UUID aleatório",
         description: "Seu esquema contém uma relação circular de chave estrangeira entre tabelas. Para corrigir,",
         suggestion: "remova um dos relacionamentos listados abaixo que está causando o ciclo.",
         remove_relationship: "Remover relacionamento"
+      },
+      validation: {
+        identifiers: {
+          table: "Tabela",
+          column: "Coluna",
+          index: "Índice",
+          constraint: "Restrição"
+        },
+        error_message: "Identificador inválido",
+        identifier_required: "O nome de ${identifier} é obrigatório",
+        identifier_required_description: "Forneça um nome para este ${identifier}.",
+        invalid_identifier: "Nome de ${identifier} inválido",
+        invalid_identifier_description: "Use apenas letras, números e sublinhados. O nome de ${identifier} deve começar com uma letra.",
+        identifier_length: "O nome de ${identifier} é muito longo",
+        identifier_length_description: "Este nome de ${identifier} excede o comprimento máximo de ${length} bytes permitido pelo ${dialect}."
       }
     },
     table: {
@@ -207,7 +230,7 @@ random_uuid: "UUID aleatório",
       import_database: {
         title: "Importar seu Banco de Dados",
         import: "Importar",
-        view_docs : "Ver documentação" , 
+        view_docs: "Ver documentação",
         import_options: "Gostaria de importar usando:",
         import_error: "Erro de Análise SQL",
         import_error_description: "Não foi possível importar seu SQL porque contém sintaxe inválida.",
@@ -271,8 +294,8 @@ random_uuid: "UUID aleatório",
         step3: "Vá para <bold>Arquivo > Exportar > Banco de Dados para Arquivo SQL</bold>.",
         step4: "Na janela de diálogo, escolha <bold>Exportar apenas o esquema</bold> e clique em <bold>Salvar</bold>.",
         step5: "Finalmente, copie o conteúdo do arquivo <code>.sql</code> para o <bold>editor de código</bold> abaixo."
-      } ,
-            ssms: {
+      },
+      ssms: {
         "step1": "Abra o SQL Server Management Studio (SSMS).",
         "step2": "Clique com o botão direito no seu banco de dados e selecione Tarefas → Gerar Scripts no menu de contexto.",
         "step3": "Na etapa Escolher Objetos, selecione Escolher objetos específicos do banco de dados e marque todas as tabelas.",

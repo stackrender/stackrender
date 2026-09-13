@@ -273,7 +273,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
 
 
     return (
-        <div className="w-full flex flex-col gap-2   max-w-[260px]">
+        <div className="w-full flex flex-col gap-2  max-w-[260px]">
             <h3 className="font-medium text-sm">
                 {t("db_controller.field_settings.title")}
             </h3>
@@ -366,8 +366,6 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                         {
                             modifiers.includes(Modifiers.SCALE) &&
                             <div className="flex flex-col gap-2 w-full">
-
-
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Label className="flex items-center justify-between font-medium" htmlFor="scale">
@@ -438,7 +436,8 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value={"none"} >
-                                        No charset
+                                        {t("db_controller.field_settings.no_charset")}
+
                                     </SelectItem>
 
                                     {
@@ -464,7 +463,6 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                                 aria-label="collation"
                                 value={collation as any}
                                 onValueChange={changeCollation as any}
-
                             >
                                 <SelectTrigger id="collation" className="w-full">
                                     <SelectValue placeholder={t("db_controller.field_settings.collation")} />
@@ -472,7 +470,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                                 <SelectContent>
 
                                     <SelectItem value={"none"} >
-                                        No collation
+                                        {t("db_controller.field_settings.no_collation")}
                                     </SelectItem>
                                     {
                                         Object.values(collations).map((collation: string) => (<SelectItem 
@@ -530,7 +528,7 @@ const FieldSetting: React.FC<FieldSettingProps> = ({ field }) => {
                     <InputTags
                         value={jsonValues}
                         onChange={updateValues as any}
-                        placeholder="Enter values, comma separated..."
+                        placeholder={t("db_controller.field_settings.input_tag_placeholder")}
                     />
                 </>
             }

@@ -33,7 +33,7 @@ export default class OracleRenderer extends BaseDatabaseRenderer {
             pk_constraint = "";
         let indexes: string = ast.indices_ast.filter((index: string) => index != null).join("\n")
         return `
-        CREATE TABLE ${table.name} (
+        CREATE TABLE "${table.name}" (
             ${(ast as any).field_definitions.join(",\n")}
             ${pk_constraint}
         );
@@ -88,19 +88,19 @@ export default class OracleRenderer extends BaseDatabaseRenderer {
         }
         else if (dataType === "INTERVAL DAY TO SECOND" && options) {
             dataType = `INTERVAL DAY${options} TO SECOND`
-        } 
-        else if (dataType === "INTERVAL YEAR TO MONTH" && options) { 
-            dataType = `INTERVAL YEAR${options} TO MONTH`
-            
         }
-        
-        else 
+        else if (dataType === "INTERVAL YEAR TO MONTH" && options) {
+            dataType = `INTERVAL YEAR${options} TO MONTH`
+
+        }
+
+        else
             dataType = dataType + options
 
-   
+
         //const dataType = field.type.name == "uuid" ? "RAW(16)" : ast.dataType;
 
-        return `${field.name} ${dataType} ${defaultValue} ${nullable} ${unique} ${autoIncrement} ${primaryKey}`;
+        return `"${field.name}" ${dataType} ${defaultValue} ${nullable} ${unique} ${autoIncrement} ${primaryKey}`;
     }
     protected processDefaultValue(field: FieldType): AST | null {
 
@@ -144,26 +144,26 @@ export default class OracleRenderer extends BaseDatabaseRenderer {
     protected createIndexAst(table: TableType, index: IndexType): ASTStatment {
         const unique: string = index.unique ? " UNIQUE" : "";
 
-        let columns: string[] | string = index.fields.map((field: FieldType) => field.name);
+        let columns: string[] | string = index.fields.map((field: FieldType) => `"${field.name}"`);
         if (columns.length == 0)
             return null;
         columns = `(${columns.join(",")})`
-        return `CREATE${unique} INDEX ${index.name} ON ${table.name} ${columns} ;`
+        return `CREATE${unique} INDEX "${index.name}" ON "${table.name}" ${columns} ;`
 
     }
 
     protected createRelationshipAst(relationship: RelationshipType): ASTStatment {
         const { primaryKey, foreignKey, sourceTable, targetTable } = super.createRelationshipAst(relationship) as any;
 
-        const constraintName: string = relationship.name ? " CONSTRAINT " + relationship.name : "";
+        const constraintName: string = relationship.name ? " CONSTRAINT \"" + relationship.name + "\"" : "";
 
         const FKAction: string | null = this.foreignKeyActionToAst(relationship.onDelete as ForeignKeyActions);
         const onDeleteAction: string = FKAction ? `ON DELETE ${FKAction}` : ""
 
         return `
-            ALTER TABLE ${targetTable.name}
-            ADD ${constraintName} FOREIGN KEY (${foreignKey.name})
-            REFERENCES ${sourceTable.name}(${primaryKey.name}) ${onDeleteAction};
+            ALTER TABLE "${targetTable.name}"
+            ADD ${constraintName} FOREIGN KEY ("${foreignKey.name}")
+            REFERENCES "${sourceTable.name}"("${primaryKey.name}") ${onDeleteAction};
         `
     }
 
@@ -180,9 +180,9 @@ export default class OracleRenderer extends BaseDatabaseRenderer {
         return null;
     }
 
-     protected getPrimaryKeyContraint(fields: FieldType[]): ASTStatment {
+    protected getPrimaryKeyContraint(fields: FieldType[]): ASTStatment {
         //throw new Error("Method not implemented.");
-        const pks: string[] = fields.map((field: FieldType) => field.name);
+        const pks: string[] = fields.map((field: FieldType) => `"${field.name}"`);
         return `
          PRIMARY KEY (${pks.join(",")})
         `

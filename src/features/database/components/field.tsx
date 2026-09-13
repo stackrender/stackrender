@@ -2,10 +2,8 @@
 import { FieldType } from "@/lib/schemas/field-schema";
 import { useDatabaseOperations } from "@/providers/database-provider/database-provider";
 import { useDiagramOps } from "@/providers/diagram-provider/diagram-provider";
-
 import { Handle, Position } from "@xyflow/react";
 import React, { useCallback, useEffect, useState } from "react";
-
 import hash from 'object-hash';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { IconCheck, IconKey, IconKeyframe, IconMessageCircle, IconPencil, IconTrash } from "@tabler/icons-react";
@@ -18,7 +16,8 @@ interface Props {
     showHandles?: boolean,
     highlight?: boolean,
     color?: string,
-    className?: string
+    className?: string,
+    maxLength?: number
 }
 
 
@@ -29,7 +28,7 @@ export const TARGET_PREFIX = "target_";
 
 const Field: React.FC<Props> = (props) => {
 
-    const { field, showHandles, highlight, color, className } = props;
+    const { field, showHandles, highlight, color, className, maxLength } = props;
     const [editMode, setEditMode] = useState<boolean>(false);
     const { deleteField, editField } = useDatabaseOperations();
     const [fieldName, setFieldName] = useState<string>(field.name);
@@ -46,13 +45,18 @@ const Field: React.FC<Props> = (props) => {
 
     const saveFieldName = useCallback(() => {
 
+        if (fieldName.trim().length == 0) {
+            setFieldName(field.name);
+            setEditMode(false);
+            return;
+        }
         editField({
             id: field.id,
-            name: fieldName
+            name: fieldName.trim()
         } as FieldType);
 
         setEditMode(false);
-    }, [fieldName]);
+    }, [fieldName, field]);
 
 
     return (
@@ -103,6 +107,7 @@ const Field: React.FC<Props> = (props) => {
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => setFieldName(e.target.value)}
                             className="h-6 font-bold pb-1.5 rounded-sm px-1"
+                            maxLength={maxLength}
                             onKeyDown={(e: any) => {
                                 if (e.key === "Enter") {
                                     e.preventDefault();

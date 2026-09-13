@@ -44,8 +44,11 @@ i18n.use(LanguageDetector)
     .use(initReactI18next)
     .init({
         resources,
-        lng: 'en',
-
+ 
+      detection: {
+            order: ['localStorage'],
+            caches: ['localStorage'],
+        },
         interpolation: {
             escapeValue: false,
         },

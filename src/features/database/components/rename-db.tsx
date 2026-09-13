@@ -95,17 +95,23 @@ const RenameDB: React.FC = ({ }) => {
                         value={dbName}
                         onBlur={saveDatabaseName}
                         autoFocus
+                        onKeyDown={(e: any) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                saveDatabaseName();
+                                e.target.blur();
+                            }
+                        }}
                         className="h-8 min-w-[164px]"
+                        maxLength={255}
+                        aria-invalid={dbName.length == 0}
                     />
                     <Button
                         variant="default"
-
                         size="sm"
                         color="primary"
                         onClick={saveDatabaseName}
-
-
-                        disabled={isLoading}
+                        disabled={isLoading || dbName.length == 0}
                     >
                         {isLoading && <Spinner />}
                         <Save className="size-3" />

@@ -85,7 +85,7 @@ export function CommandMenu() {
                         </CommandGroup>
                     ))}
                     <CommandSeparator />
-                    <CommandGroup heading='Theme'>
+                    <CommandGroup heading={t("menu.theme")}>
                         <CommandItem onSelect={() => runCommand(() => setTheme('light'))}>
                             <IconSun /> <span>{t("menu.light")}</span>
                         </CommandItem>

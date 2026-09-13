@@ -9,17 +9,22 @@ import hash from "object-hash";
 import { getDefaultRelationshipName } from "@/utils/relationship";
 import { AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { IconCheck, IconDotsVertical, IconFocus2, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconAlertTriangle, IconCheck, IconDotsVertical, IconFocus2, IconPencil, IconTrash } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DatabaseDialect } from "@/lib/database";
+import { useDatabaseInvalidIdentifier } from "@/features/database/hooks/use-invalid-identifier";
+import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 
 interface RelationshipAccordionTriggerProps {
     isOpen?: boolean;
-    relationship: RelationshipType
+    relationship: RelationshipType , 
+    dialect?: DatabaseDialect
 }
 
-const RelationshipAccordionTrigger: React.FC<RelationshipAccordionTriggerProps> = ({ isOpen, relationship }) => {
+const RelationshipAccordionTrigger: React.FC<RelationshipAccordionTriggerProps> = ({ isOpen, relationship , dialect }) => {
     const defaultName: string = useMemo(() => {
         return getDefaultRelationshipName(relationship);
     }, [relationship])
@@ -30,20 +35,27 @@ const RelationshipAccordionTrigger: React.FC<RelationshipAccordionTriggerProps> 
     const { editRelationship, deleteRelationship } = useDatabaseOperations();
     const { t } = useTranslation();
 
-    
     const [name, setName] = useState<string>(relationship.name ? relationship.name : defaultName);
     const { focusOnRelationship } = useDiagramOps();
 
-
+    const { identifierError , showIdentifierError, identifierMaxLength } = useDatabaseInvalidIdentifier(name, dialect, "constraint");
+    
     const editRelationshipName = () => {
+        
+        
+        if (identifierError == "empty") {
+            setName(relationship.name ? relationship.name : defaultName);
+            setEditMode(false);
+            return;
+        }
         if (relationship.name || name.trim().toLocaleLowerCase() != defaultName)
             editRelationship({
                 id: relationship.id,
-                name
+                name : name.trim()
             } as RelationshipInsertType);
+            
         setEditMode(false);
     }
-
     const onDeleteRelationship = () => {
         deleteRelationship(relationship.id);
 
@@ -60,7 +72,9 @@ const RelationshipAccordionTrigger: React.FC<RelationshipAccordionTriggerProps> 
                 <>
                     <div className="w-full flex">
                         <label
-                            className="py-2 !truncate  text-sm cursor-pointer max-w-80"
+                            className={cn("py-2 truncate  text-sm cursor-pointer max-w-50 ", {
+                                "text-destructive": identifierError != null
+                            })}
                         >
                             {relationship.name ? relationship.name : defaultName}
                         </label>
@@ -79,11 +93,28 @@ const RelationshipAccordionTrigger: React.FC<RelationshipAccordionTriggerProps> 
                             <IconFocus2 className="size-4 text-muted-foreground " />
                         </Button>
                     </div>
+                      {
+                        identifierError &&
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant={"ghost"} size="icon" className="size-8 shrink-0 hover:bg-destructive/10 hover:border-destructive/30 dark:hover:bg-destructive/10 dark:hover:border-destructive/30" onClick={(event: any) => {
+                                    event.stopPropagation();
+                                    showIdentifierError();
+                                    setEditMode(true);
+                                }} >
+                                    <IconAlertTriangle className="size-4 text-destructive " />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent className="bg-destructive fill-destructive [&_svg]:bg-destructive [&_svg]:fill-destructive">
+                                {t("db_controller.validation.error_message")}
+                            </TooltipContent>
+                        </Tooltip>
+                    }
                 </>
             }
             {
                 editMode && <>
-                    <Input
+                     <Input
                         placeholder={"Relationship name"}
                         value={name}
                         onChange={(event: any) => setName(event.target.value)}
@@ -91,8 +122,12 @@ const RelationshipAccordionTrigger: React.FC<RelationshipAccordionTriggerProps> 
                         autoFocus
                         type="text"
                         onClick={(event) => event.stopPropagation()}
-                        className="h-8"
-                            onKeyDown={(e: any) => {
+                        aria-invalid={identifierError != null}
+                        className={cn("h-8", {
+                            "text-destructive": identifierError != null
+                        })}
+                        maxLength={identifierMaxLength}
+                        onKeyDown={(e: any) => {
                             if (e.key === "Enter") {
                                 e.preventDefault();
                                 editRelationshipName();

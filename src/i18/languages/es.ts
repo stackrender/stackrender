@@ -5,8 +5,8 @@ export const es = {
     translation: {
         sidebar: {
             tables: "Tablas",
-            relationships: "Relaciones", 
-            documentation : "Documentación"
+            relationships: "Relaciones",
+            documentation: "Documentación"
         },
 
         color_picker: {
@@ -27,6 +27,8 @@ export const es = {
             show_code: "Mostrar código",
             fields: "Campos",
             indexes: "Índices",
+            no_index: "No se encontraron índices",
+            create_new_index: "Crear uno nuevo",
             note: "Nota",
             name: "Nombre",
             type: "Tipo",
@@ -88,6 +90,12 @@ export const es = {
                 text_setting: "Configuración de texto",
                 charset: "Charset",
                 collation: "Intercalación",
+                no_charset: "Sin juego de caracteres",
+                no_collation: "Sin intercalación",
+                input_tag_placeholder: "Introduzca valores separados por comas...",
+                multi_select_placeholder: "Seleccione campos...",
+                date_placeholder: "Seleccione una fecha",
+                time: "Hora",
                 scale: "Escala",
                 max_length: "Longitud máxima",
                 integer_width: "Ancho de entero",
@@ -100,7 +108,7 @@ export const es = {
                 precision_def: "Total de dígitos permitidos (antes + después del decimal).",
                 scale_def: "Dígitos permitidos después del decimal.",
                 no_default: "Sin valor predeterminado",
-random_uuid: "UUID aleatorio",
+                random_uuid: "UUID aleatorio",
                 time_default_value: {
                     no_value: "Sin valor",
                     custom: "Hora personalizada",
@@ -136,6 +144,21 @@ random_uuid: "UUID aleatorio",
                 description: "Tu esquema contiene una relación foránea circular entre tablas. Para corregirlo",
                 suggestion: "elimina una de las relaciones que se indican a continuación y que están causando el ciclo.",
                 remove_relationship: "Eliminar relación"
+            },
+            validation: {
+                identifiers: {
+                    table: "Tabla",
+                    column: "Columna",
+                    index: "Índice",
+                    constraint: "Restricción"
+                },
+                error_message: "Identificador no válido",
+                identifier_required: "El nombre de ${identifier} es obligatorio",
+                identifier_required_description: "Proporcione un nombre para este ${identifier}.",
+                invalid_identifier: "Nombre de ${identifier} no válido",
+                invalid_identifier_description: "Use únicamente letras, números y guiones bajos. El nombre de ${identifier} debe comenzar con una letra.",
+                identifier_length: "El nombre de ${identifier} es demasiado largo",
+                identifier_length_description: "Este nombre de ${identifier} supera la longitud máxima de ${length} bytes permitida por ${dialect}."
             }
         },
         table: {
@@ -202,12 +225,12 @@ random_uuid: "UUID aleatorio",
             delete_database_content: "Esta acción es irreversible y eliminará permanentemente el diagrama.",
             delete: "Eliminar",
             empty_diagram: "Diagrama vacío",
-            create_and_import : "Crear e importar" ,
+            create_and_import: "Crear e importar",
 
             import_database: {
                 title: "Importar tu base de datos",
                 import: "Importar",
-                view_docs : "Ver la documentación" , 
+                view_docs: "Ver la documentación",
                 import_options: "¿Te gustaría importar usando :",
                 import_error: "Error al analizar SQL",
                 import_error_description: "No pudimos importar tu SQL porque contiene sintaxis inválida.",
@@ -275,7 +298,7 @@ random_uuid: "UUID aleatorio",
                 step5: "Finalmente, copia el contenido del archivo <code>.sql</code> en el <bold>editor de código</bold> a continuación."
 
             },
-                  
+
             ssms: {
                 "step1": "Abra SQL Server Management Studio (SSMS).",
                 "step2": "Haga clic derecho en su base de datos y luego seleccione Tareas → Generar scripts en el menú contextual.",

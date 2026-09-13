@@ -122,7 +122,7 @@ const RelationshipController: React.FC = ({ }) => {
                     >
                         {relationships.map((relationship: RelationshipType) => (
                             <>
-                                <RelationshipAccordionItem relationship={relationship} key={relationship.id} />
+                                <RelationshipAccordionItem relationship={relationship} key={relationship.id} dialect={database?.dialect}/>
                                 <Separator className="my-1" />
                             </>
                         ))}

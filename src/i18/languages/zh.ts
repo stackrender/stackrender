@@ -28,6 +28,9 @@ export const zh = {
       show_code: "显示代码",
       fields: "字段",
       indexes: "索引",
+      
+      no_index: "未找到索引",
+      create_new_index: "创建新的索引",
       note: "备注",
       name: "名称",
       type: "类型",
@@ -90,6 +93,13 @@ export const zh = {
         text_setting: "文本设置",
         charset: "字符集",
         collation: "排序规则",
+           no_charset: "无字符集",
+        no_collation: "无排序规则",
+        input_tag_placeholder: "输入值，使用逗号分隔...",
+        multi_select_placeholder: "选择字段...",
+        date_placeholder: "选择日期",
+        time: "时间",
+     
         scale: "小数位数",
         max_length: "最大长度",
         integer_width: "整数宽度",
@@ -102,7 +112,7 @@ export const zh = {
         precision_def: "允许的总位数（小数点前+后）。",
         scale_def: "小数点后的位数。",
         no_default: "无默认值",
-random_uuid: "随机 UUID",
+        random_uuid: "随机 UUID",
         time_default_value: {
           no_value: "无值",
           custom: "自定义时间",
@@ -138,6 +148,21 @@ random_uuid: "随机 UUID",
         description: "您的架构中存在表之间的循环外键关系。要修复它，",
         suggestion: "请移除以下导致循环的关系之一。",
         remove_relationship: "移除关系"
+      },
+      validation: {
+        identifiers: {
+          table: "表",
+          column: "列",
+          index: "索引",
+          constraint: "约束"
+        },
+        error_message: "标识符无效",
+        identifier_required: "${identifier} 名称是必需的",
+        identifier_required_description: "请为此 ${identifier} 提供一个名称。",
+        invalid_identifier: "${identifier} 名称无效",
+        invalid_identifier_description: "只能使用字母、数字和下划线。${identifier} 名称必须以字母开头。",
+        identifier_length: "${identifier} 名称过长",
+        identifier_length_description: "此 ${identifier} 名称超过了 ${dialect} 允许的最大长度 ${length} 字节。"
       }
     },
 
