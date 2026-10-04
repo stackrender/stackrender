@@ -65,38 +65,41 @@ const Field: React.FC<Props> = (props) => {
             highlight ? "bg-secondary" : "",
             className
         )}>
-            <div className="text-muted-foreground flex items-center truncate w-full   gap-1.5 min-w-0  ">
+            <div className="text-muted-foreground flex items-center  w-full   gap-1.5 min-w-0  ">
                 {
                     field.isPrimary &&
-                    <IconKey className="size-3" />
+                    <IconKey className="size-3 shrink-0" />
                 }
                 {
                     field.nullable && !field.isPrimary &&
-                    <IconKeyframe className="size-3 stroke-3" />
+                    <IconKeyframe className="size-3 stroke-3 shrink-0" />
                 }
                 {
                     !field.nullable && !field.isPrimary &&
-                    <IconKeyframe className="size-3 fill-muted-foreground" />
+                    <IconKeyframe className="size-3 fill-muted-foreground shrink-0" />
                 }
                 {
                     !editMode ?
-                        <label
-                            className={"truncate flex gap-1 text-xs text-foreground font-medium "}
-                            onDoubleClick={() => setEditMode(true)}
-                        >
-                            {fieldName}
+                        <div className="flex w-full min-w-0 w-full items-center gap-2  ">
+                            <label
+                            className={"truncate  text-xs text-foreground font-medium min-w-0"}
+                                onDoubleClick={() => setEditMode(true)}
+                            >
+                                {fieldName}
+
+                            </label>
                             {
                                 field.note &&
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <IconMessageCircle className="size-3 text-muted-foreground  " />
+                                        <IconMessageCircle className="size-3 text-muted-foreground shrink-0 " />
                                     </TooltipTrigger>
                                     <TooltipContent>
                                         {field.note}
                                     </TooltipContent>
                                 </Tooltip>
                             }
-                        </label>
+                        </div>
                         :
                         <Input
                             onBlur={saveFieldName}
@@ -121,11 +124,11 @@ const Field: React.FC<Props> = (props) => {
             {
                 !editMode ?
                     <div className="text-xs text-muted-foreground flex   shrink-0 ">
-                        <div className={cn(" !text-muted-foreground font-medium group-hover:opacity-0")}>
+                        <div className={cn(" !text-muted-foreground font-medium group-hover:hidden")}>
                             {field.type?.name?.split(' ')[0]}
                         </div>
 
-                        <div className="flex gap-1 opacity-0 shrink-0 flex-row group-hover:opacity-100 transition-opacity duration-200 absolute right-1 top-1 ">
+                        <div className="flex gap-1 hidden shrink-0 flex-row group-hover:flex transition-opacity duration-200  ">
                             <Button variant="outline" size="icon" className="size-6 shrink-0 shadow-sm rounded-sm" onClick={() => setEditMode(true)}>
                                 <IconPencil className="size-3 text-muted-foreground " />
                             </Button>

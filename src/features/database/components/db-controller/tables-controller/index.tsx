@@ -172,7 +172,8 @@ const TablesController: React.FC = ({ }) => {
             </div>
             {
                 allTables.length > 0 && !showSqlPreview &&
-                <ScrollArea className="px-3 h-full  w-full overflow-hidden">
+
+                <div className="px-3 !h-full  w-full !overflow-y-scroll ">
                     <Accordion
                         type="single"
                         collapsible
@@ -202,7 +203,7 @@ const TablesController: React.FC = ({ }) => {
 
                         </DndContext>
                     </Accordion>
-                </ScrollArea>
+                </div>
             }
             {
                 allTables.length > 0 && showSqlPreview &&

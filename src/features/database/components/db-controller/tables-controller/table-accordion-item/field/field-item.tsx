@@ -103,13 +103,12 @@ const FieldItem: React.FC<Props> = ({ field, dialect }) => {
     }
 
     return (
-        <div className="flex w-full gap-1 items-center  " style={style} ref={setNodeRef} {...attributes}>
+        <div className="flex w-full gap-1 items-center" style={style} ref={setNodeRef} {...attributes}>
             <div {...listeners}>
                 <IconGripVertical className="size-4 text-muted-foreground hover:text-foreground cursor-move shrink-0" />
             </div>
             <div className="flex gap-2 w-full">
-                <div className="flex flex-1  relative items-center min-w-0  ">
-
+                <div className="flex flex-1  relative items-center min-w-0">
                     <Input
                         aria-label={t("db_controller.name")}
                         placeholder={t("db_controller.name")}

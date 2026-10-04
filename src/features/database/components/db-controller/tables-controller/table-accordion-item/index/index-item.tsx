@@ -97,7 +97,7 @@ const IndexItem: React.FC<Props> = ({ index, fields, dialect }) => {
     return (
         <div className="flex gap-2 w-full items-center justify-stretch">
 
-            <div className="flex w-full flex-1 ">
+            <div className="flex w-full flex-1 min-w-0">
                 <MultiSelect
                     options={
                         fields.map((field: FieldType) => ({ value: field.id, label: field.name })) as any

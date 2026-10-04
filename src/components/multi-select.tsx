@@ -813,7 +813,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 								getAllOptions().length
 							} options selected. ${placeholder}`}
 							className={cn(
-								"flex p-1 rounded-md border min-h-10 h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto",
+								"flex p-1 rounded-md border min-h-10 h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto ",
 								autoSize ? "w-auto" : "w-full",
 								responsiveSettings.compactMode && "min-h-8 text-sm",
 								screenSize === "mobile" && "min-h-12 text-base",
@@ -825,7 +825,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 								maxWidth: `min(${widthConstraints.maxWidth}, 100%)`,
 							}}>
 							{selectedValues.length > 0 ? (
-								<div className="flex justify-between items-center w-full">
+								<div className="flex justify-between items-center w-full  min-w-0   ">
 									<div
 										className={cn(
 											"flex items-center gap-1",
@@ -867,13 +867,13 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 															getBadgeAnimationClass(),
 															multiSelectVariants({ variant }),
 															customStyle?.gradient &&
-																"text-white border-transparent",
+																"text-white border-transparent ",
 															responsiveSettings.compactMode &&
-																"text-xs px-1.5 py-0.5",
+																"text-xs px-1.5 py-0.5 ",
 															screenSize === "mobile" &&
-																"max-w-[120px] truncate",
-															singleLine && "flex-shrink-0 whitespace-nowrap",
-															"[&>svg]:pointer-events-auto"
+																"!max-w-[120px] truncate ",
+															singleLine && "flex-shrink-0 whitespace-nowrap ",
+															"[&>svg]:pointer-events-auto  " 
 														)}
 														style={{
 															...badgeStyle,
@@ -897,8 +897,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 														)}
 														<span
 															className={cn(
-																screenSize === "mobile" && "truncate"
-															)}>
+																screenSize === "mobile" && "truncate" , 
+																"max-w-[120px] truncate" 
+															) }>
 															{option.label}
 														</span>
 														<div

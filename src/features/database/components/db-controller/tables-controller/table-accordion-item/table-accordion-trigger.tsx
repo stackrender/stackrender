@@ -108,13 +108,8 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
 
 
     const { listeners } = useSortable({ id: table.id });
-
-
-
-
     return (
-
-        <AccordionTrigger className="group h-12 py-3 "
+        <AccordionTrigger className="group h-12 py-3  min-w-0"
             leftContent={
                 <div className="h-full bg-secondary  w-1 rounded-lg shrink-0 bg-primary" style={{
                     backgroundColor: table.color as string
@@ -122,18 +117,17 @@ const TableAccordionHeader: React.FC<TableAccordionHeaderProps> = ({ table, isOp
                 </div>
             }
         >
-
             <div {...listeners}>
                 <IconGripVertical className="size-4 text-muted-foreground hover:text-foreground cursor-move shrink-0" />
             </div>
             {
                 !editMode &&
                 <>
-                    <div className="w-full flex items-center ">
+                    <div className="w-full flex items-center min-w-0">
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <label
-                                    className={cn("py-2 truncate  text-sm cursor-pointer max-w-50 ", {
+                                    className={cn("truncate  text-sm cursor-pointer", {
                                         "text-destructive": identifierError != null
                                     })}
                                     onDoubleClick={() => setEditMode(true)}

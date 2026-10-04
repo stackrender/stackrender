@@ -112,7 +112,8 @@ const RelationshipController: React.FC = ({ }) => {
 
             {
                 allRelationships.length > 0 &&
-                <ScrollArea className="flex-1 px-3  overflow-hidden">
+                
+                <div className="px-3 !h-full  w-full !overflow-y-scroll ">
                     <Accordion
                         type="single"
                         collapsible
@@ -127,7 +128,7 @@ const RelationshipController: React.FC = ({ }) => {
                             </>
                         ))}
                     </Accordion>
-                </ScrollArea>
+                </div>
             }
 
             {

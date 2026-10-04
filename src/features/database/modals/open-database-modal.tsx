@@ -63,13 +63,13 @@ const OpenDatabaseModal: React.FC<ModalProps> = (props) => {
                                     data-state={selectedDatabase == database.id ? "selected" : undefined}
                                     onClick={() => setSelectedDatabase(database.id)}
                                     >
-                                    <TableCell className="flex  justify-center ">
+                                    <TableCell className="flex justify-center  ">
                                         <img
                                             src={getDatabaseByDialect(database.dialect).small_logo}
                                             width={24}
                                         />
                                     </TableCell>
-                                    <TableCell className="font-medium ">{database.name}</TableCell>
+                                    <TableCell className="font-medium max-w-[86px] truncate">{database.name}</TableCell>
                                     <TableCell className="text-muted-foreground">{
                                         new Date(database.createdAt as string).toLocaleString("en-US")
                                     }</TableCell>

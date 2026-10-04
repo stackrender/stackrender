@@ -66,13 +66,13 @@ const RelationshipAccordionTrigger: React.FC<RelationshipAccordionTriggerProps> 
     }, [relationship.name]);
 
     return (
-        <AccordionTrigger className="group h-12 py-3">
+        <AccordionTrigger className="group h-12 py-3 min-w-0">
             {
                 !editMode &&
                 <>
-                    <div className="w-full flex">
+                    <div className="w-full flex min-w-0">
                         <label
-                            className={cn("py-2 truncate  text-sm cursor-pointer max-w-50 ", {
+                            className={cn("py-2 truncate  text-sm cursor-pointer  ", {
                                 "text-destructive": identifierError != null
                             })}
                         >
